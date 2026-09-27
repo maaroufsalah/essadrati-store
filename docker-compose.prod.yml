@@ -1,0 +1,113 @@
+# Production on the VPS.
+# - PostgreSQL runs on the host, outside Docker. Containers reach it through
+#   host.docker.internal (mapped to the Docker host gateway).
+# - Nginx runs on the host and proxies to 127.0.0.1:9000 and 127.0.0.1:3000.
+#   Nothing is published on a public interface.
+# - Redis lives on an internal network with no route to the outside.
+# Compose-level values come from .env.prod (see .env.prod.example).
+name: ${COMPOSE_PROJECT_NAME:-essadrati}
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+x-hardening: &hardening
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  logging: *logging
+
+services:
+  backend:
+    <<: *hardening
+    image: ghcr.io/${GHCR_OWNER:?set GHCR_OWNER}/${IMAGE_PREFIX:-essadrati}-backend:${IMAGE_TAG:-latest}
+    env_file:
+      - ./infra/env/backend.prod.env
+    environment:
+      NODE_ENV: production
+      REDIS_URL: redis://:${REDIS_PASSWORD:?set REDIS_PASSWORD}@redis:6379
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-9000}:9000"
+    volumes:
+      - ${UPLOADS_DIR:?set UPLOADS_DIR}:/app/uploads
+    networks:
+      - edge
+      - internal
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  storefront:
+    <<: *hardening
+    image: ghcr.io/${GHCR_OWNER:?set GHCR_OWNER}/${IMAGE_PREFIX:-essadrati}-storefront:${IMAGE_TAG:-latest}
+    env_file:
+      - ./infra/env/storefront.prod.env
+    environment:
+      NODE_ENV: production
+      # Server-side calls stay on the Docker network.
+      MEDUSA_INTERNAL_URL: http://backend:9000
+    ports:
+      - "127.0.0.1:${STOREFRONT_PORT:-3000}:3000"
+    networks:
+      - edge
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    <<: *hardening
+    image: redis:7-alpine
+    user: redis
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD:?set REDIS_PASSWORD}
+      - --appendonly
+      - "yes"
+      - --maxmemory
+      - 256mb
+      - --maxmemory-policy
+      - noeviction
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD:?set REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+networks:
+  # Fixed subnet so the host PostgreSQL pg_hba.conf and UFW can allow it.
+  edge:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${DOCKER_EDGE_SUBNET:-172.30.10.0/24}
+  internal:
+    driver: bridge
+    internal: true
+
+volumes:
+  redis-data:

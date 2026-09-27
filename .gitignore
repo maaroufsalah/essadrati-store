@@ -1,0 +1,53 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+build/
+.next/
+out/
+.medusa/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# expo
+.expo/
+ios/
+android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# env: only *.example files are committed
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# uploads and local data
+uploads/
+static/
+backups/
+
+# tests
+coverage/
+playwright-report/
+test-results/
+.lighthouseci/
+
+# os / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.log
+
+# app env files used by docker-compose.prod.yml (examples are committed)
+*.env
+!*.env.example
