@@ -1,0 +1,56 @@
+{
+  "name": "@nocido/theme",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Theme presets, token generator (CSS + NativeWind), WCAG contrast, fonts and defaults.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./defaults": {
+      "import": {
+        "types": "./dist/defaults.d.ts",
+        "default": "./dist/defaults.js"
+      },
+      "require": {
+        "types": "./dist/defaults.d.cts",
+        "default": "./dist/defaults.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@nocido/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@nocido/config": "workspace:*",
+    "@types/node": "22.20.4",
+    "eslint": "9.39.5",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3",
+    "vitest": "5.0.2"
+  }
+}
