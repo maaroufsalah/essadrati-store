@@ -1,0 +1,78 @@
+import type { z } from "zod";
+import type { storeSettingsSchema } from "../settings/store-settings";
+
+/** A complete, valid settings payload used across tests. */
+export const validSettings = (): z.input<typeof storeSettingsSchema> => ({
+  identity: {
+    storeName: { ar: "متجر", fr: "Boutique", en: "Store" },
+    tagline: { fr: "Slogan" },
+    logoLight: { id: "file_1", url: "https://api.example.ma/uploads/logo.png" },
+    logoDark: null,
+    favicon: null,
+    ogImage: null,
+  },
+  contact: {
+    phone: "06 12 34 56 78",
+    whatsapp: "+212 7 00 00 00 00",
+    email: "contact@example.ma",
+    address: { fr: "1 rue Exemple" },
+    city: "Casablanca",
+    country: "ma",
+    mapUrl: null,
+    openingHours: {},
+    socials: { instagram: null, facebook: null, tiktok: null, youtube: null, snapchat: null },
+  },
+  billing: {
+    legalName: "Example SARL",
+    ice: "001234567000089",
+    rc: "12345",
+    if: "",
+    patente: "",
+    cnss: "",
+    tva: { subject: true, rate: 20 },
+    invoicePrefix: "fac",
+    invoiceFooter: {},
+    bankName: "Banque",
+    rib: "",
+  },
+  localization: {
+    defaultLocale: "ar",
+    enabledLocales: ["ar", "fr", "en"],
+    defaultCurrency: "mad",
+    timezone: "Africa/Casablanca",
+    numberingSystem: "latn",
+  },
+  theme: {
+    presetId: "heritage-dore",
+    overrides: { light: { primary: "#e9b44c" }, dark: {} },
+    radius: { base: 12, card: 24, button: "pill" },
+    fonts: { display: "amiri", body: "ibm-plex-sans-arabic" },
+    defaultMode: "system",
+  },
+  commerce: {
+    codEnabled: true,
+    freeShippingThreshold: null,
+    returnDays: 7,
+    whatsappOrderEnabled: true,
+    minOrderAmount: 0,
+    technicalEmailDomain: "orders.example.ma",
+  },
+  smtp: {
+    host: "",
+    port: 587,
+    secure: false,
+    user: "",
+    fromName: "",
+    fromEmail: "",
+    passwordSet: false,
+  },
+  marketing: {
+    gtmId: "",
+    metaPixelId: "1234567890123",
+    tiktokPixelId: "",
+    ga4Id: "G-ABC123",
+    announcementBar: { enabled: true, text: { ar: "توصيل مجاني" }, href: "/c/honey" },
+  },
+  seo: { metaTitle: {}, metaDescription: {} },
+  updatedAt: "2026-09-28T10:00:00.000Z",
+});
