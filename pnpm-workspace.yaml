@@ -1,6 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "!apps/backend/.medusa/**"
 
 # pnpm 10 blocks dependency build scripts by default.
 # Only the packages listed here may run install scripts.
@@ -17,3 +18,10 @@ onlyBuiltDependencies:
 ignoredBuiltDependencies:
   - "@medusajs/telemetry"
   - protobufjs
+
+# One set of React types for the whole repo (as in medusajs/dtc-starter):
+# the backend has no React code, the storefront and admin plugin type-check
+# against React 19 types even where React 18 runs.
+overrides:
+  "@types/react": 19.3.0
+  "@types/react-dom": 19.3.0

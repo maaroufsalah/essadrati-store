@@ -82,7 +82,14 @@ pnpm dev                                # toutes les apps via Turborepo
   texte JSX en dur sont des erreurs.
 - **Secrets** : jamais dans le repo. Seuls les fichiers `*.example` sont versionnés.
 
-## Pourquoi `node-linker=hoisted`
+## Linker pnpm isolé
 
-Medusa v2 et Expo attendent tous les deux un `node_modules` plat. Le mode hoisted de pnpm
-est la disposition qu'ils supportent officiellement dans un monorepo pnpm.
+Le monorepo utilise le linker par défaut de pnpm (isolé), comme le starter monorepo officiel
+de Medusa (`medusajs/dtc-starter`). Chaque app résout ses propres dépendances paires : le
+backend garde React 18 pour l'admin Medusa, le storefront tourne en React 19. Avec
+`node-linker=hoisted`, Next.js était hissé à la racine et résolvait le React 18 du backend,
+ce qui cassait le build.
+
+Les paquets que le bundler de l'admin Medusa charge à l'exécution (`@medusajs/dashboard`,
+`@medusajs/ui`, `react-router-dom`, `vite`...) sont déclarés explicitement dans
+`apps/backend/package.json`.

@@ -11,7 +11,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | Domaine        | Choix                                                                      |
 | -------------- | -------------------------------------------------------------------------- |
 | Runtime        | Node 22.23.3 (`.nvmrc`, via fnm), pnpm 10.34.5 (corepack)                  |
-| Monorepo       | pnpm workspaces + Turborepo 2.11, `node-linker=hoisted`                    |
+| Monorepo       | pnpm workspaces (linker isolé) + Turborepo 2.11                            |
 | Langage        | TypeScript 5.9 strict, ESLint 9 flat config, Prettier 3                    |
 | Backend        | Medusa **2.21.1** (`apps/backend`), API store + admin + dashboard          |
 | Admin          | Plugin Medusa UI-only (`apps/admin`, étape 6)                              |
