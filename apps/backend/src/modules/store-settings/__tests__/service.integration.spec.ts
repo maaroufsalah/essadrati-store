@@ -32,6 +32,25 @@ moduleIntegrationTestRunner<StoreSettingsModuleService>({
         expect(await service.listStoreSettingsRecords()).toHaveLength(1);
       });
 
+      it("replaces the JSON instead of merging it, so cleared texts stay cleared", async () => {
+        const filled = applyUpdate(DEFAULT_STORE_SETTINGS, {
+          identity: { tagline: { fr: "Slogan" } },
+          contact: { socials: { instagram: "https://instagram.com/example" } },
+        });
+        await service.saveSettings(filled.settings, filled.password);
+
+        const cleared = applyUpdate(await service.getSettings(), {
+          identity: { tagline: {} },
+          contact: { socials: { instagram: null } },
+        });
+        const saved = await service.saveSettings(cleared.settings, cleared.password);
+
+        expect(saved.identity.tagline).toEqual({});
+        expect(saved.contact.socials.instagram).toBeNull();
+        expect(await service.listStoreSettingsRecords()).toHaveLength(1);
+        expect(await service.listStoreSettingsRecords({}, { withDeleted: true })).toHaveLength(2);
+      });
+
       it("encrypts the SMTP password and never returns it", async () => {
         const update = applyUpdate(DEFAULT_STORE_SETTINGS, { smtp: { password: "s3cret" } });
         const saved = await service.saveSettings(update.settings, update.password);

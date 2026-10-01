@@ -33,11 +33,11 @@ export default class StoreSettingsModuleService extends MedusaService({ StoreSet
     this.encryptionKey_ = options.encryptionKey;
   }
 
-  /** The current row, or null before the first save. */
+  /** The current (latest active) row, or null before the first save. */
   async getSnapshot(): Promise<StoreSettingsSnapshot | null> {
     const [record] = await this.listStoreSettingsRecords(
       {},
-      { take: 1, order: { created_at: "ASC" } },
+      { take: 1, order: { created_at: "DESC", id: "DESC" } },
     );
     if (!record) return null;
     return {
@@ -71,7 +71,12 @@ export default class StoreSettingsModuleService extends MedusaService({ StoreSet
     return decryptSecret(snapshot.smtp_password, this.requireKey_());
   }
 
-  /** Persists settings already merged and validated by `applyUpdate`. */
+  /**
+   * Persists settings already merged and validated by `applyUpdate`.
+   * Each save inserts a new row and soft-deletes the previous one: Medusa's
+   * update deep-merges JSON columns, so a removed key (an emptied text, a
+   * cleared social link) would otherwise survive. Old rows stay as history.
+   */
   async saveSettings(settings: StoreSettings, password: PasswordChange): Promise<StoreSettings> {
     const snapshot = await this.getSnapshot();
     const smtpPassword =
@@ -81,27 +86,23 @@ export default class StoreSettingsModuleService extends MedusaService({ StoreSet
           ? null
           : (snapshot?.smtp_password ?? null);
 
-    const data = toStoredData(settings);
-    if (snapshot) {
-      await this.updateStoreSettingsRecords({ id: snapshot.id, data, smtp_password: smtpPassword });
-    } else {
-      await this.createStoreSettingsRecords({ data, smtp_password: smtpPassword });
-    }
+    await this.createStoreSettingsRecords({
+      data: toStoredData(settings),
+      smtp_password: smtpPassword,
+    });
+    if (snapshot) await this.softDeleteStoreSettingsRecords(snapshot.id);
     return this.getSettings();
   }
 
-  /** Puts a previous snapshot back (workflow compensation). */
+  /** Makes a previous snapshot current again (workflow compensation). */
   async restoreSnapshot(previous: StoreSettingsSnapshot | null): Promise<void> {
     const current = await this.getSnapshot();
-    if (!previous) {
-      if (current) await this.deleteStoreSettingsRecords(current.id);
-      return;
+    if (current && current.id !== previous?.id) {
+      await this.deleteStoreSettingsRecords(current.id);
     }
-    await this.updateStoreSettingsRecords({
-      id: previous.id,
-      data: previous.data,
-      smtp_password: previous.smtp_password,
-    });
+    if (previous && current?.id !== previous.id) {
+      await this.restoreStoreSettingsRecords(previous.id);
+    }
   }
 
   private requireKey_(): string {
