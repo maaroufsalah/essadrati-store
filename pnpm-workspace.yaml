@@ -12,3 +12,8 @@ onlyBuiltDependencies:
   - msgpackr-extract
   - sharp
   - unrs-resolver
+
+# Install scripts we deliberately skip (telemetry, unused native builds).
+ignoredBuiltDependencies:
+  - "@medusajs/telemetry"
+  - protobufjs

@@ -23,7 +23,6 @@ packages/
 infra/
   docker/       Dockerfiles multi-stage + entrypoint
   env/          Exemples d'env de production par app
-docker-compose.yml       Postgres 16 + Redis 7 pour le dev local
 docker-compose.prod.yml  Production VPS : backend, storefront, redis
 ```
 
@@ -32,38 +31,44 @@ l'autre. Seuls le contenu, les settings et les URLs changent.
 
 ## Prérequis
 
-| Outil          | Version                  |
-| -------------- | ------------------------ |
-| Node.js        | 22.12 ou plus (`.nvmrc`) |
-| pnpm           | 10, via corepack         |
-| Docker Desktop | pour Postgres et Redis   |
+| Outil   | Version                                  |
+| ------- | ---------------------------------------- |
+| Node.js | 22.23.3 (`.nvmrc`), installé avec fnm    |
+| pnpm    | 10.34.5, via corepack (`packageManager`) |
+| SSH     | accès au VPS (alias `nocido`)            |
 
 ```sh
+fnm use            # lit .nvmrc
 corepack enable
 pnpm install
 ```
 
 ## Développement local
 
-```sh
-cp .env.example .env      # puis ajuster le mot de passe local
-pnpm db:up                # Postgres sur 127.0.0.1:5433, Redis sur 127.0.0.1:6379
-pnpm dev                  # toutes les apps via Turborepo
-```
+Pas de Docker en dev. La base de dev (`essadrati_dev`) et la base de tests
+(`essadrati_test`) vivent sur le PostgreSQL du VPS, jamais exposé : on y accède par un
+tunnel SSH. Cache, bus d'événements, moteur de workflows et verrous tournent en mémoire ;
+Redis n'est utilisé qu'en production.
 
-Le port 5433 évite le conflit avec un PostgreSQL déjà installé sur la machine.
+```sh
+pnpm db:tunnel                          # terminal dédié : localhost:5433 -> VPS 127.0.0.1:5432
+cp apps/backend/.env.example apps/backend/.env   # puis renseigner le mot de passe
+pnpm --filter @nocido/backend db:migrate
+pnpm --filter @nocido/backend store:setup     # région, devise, canal de vente, clé publiable
+pnpm dev                                # toutes les apps via Turborepo
+```
 
 ## Scripts racine
 
-| Script              | Rôle                              |
-| ------------------- | --------------------------------- |
-| `pnpm dev`          | Lance toutes les apps en mode dev |
-| `pnpm build`        | Build de tout le monorepo         |
-| `pnpm lint`         | ESLint partout                    |
-| `pnpm typecheck`    | TypeScript strict partout         |
-| `pnpm test`         | Tests unitaires                   |
-| `pnpm format`       | Prettier                          |
-| `pnpm db:up / down` | Services Docker de dev            |
+| Script           | Rôle                              |
+| ---------------- | --------------------------------- |
+| `pnpm dev`       | Lance toutes les apps en mode dev |
+| `pnpm build`     | Build de tout le monorepo         |
+| `pnpm lint`      | ESLint partout                    |
+| `pnpm typecheck` | TypeScript strict partout         |
+| `pnpm test`      | Tests unitaires                   |
+| `pnpm format`    | Prettier                          |
+| `pnpm db:tunnel` | Tunnel SSH vers la base de dev    |
 
 ## Conventions
 

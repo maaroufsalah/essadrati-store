@@ -44,3 +44,17 @@ export function resolveLocalized(
   }
   return "";
 }
+
+/**
+ * Medusa stores locales as BCP 47 tags (`x-medusa-locale` header). The kit
+ * derives them from the store country, e.g. ("ar", "MA") -> "ar-MA".
+ */
+export function toMedusaLocale(locale: Locale, country: string): string {
+  return `${locale}-${country.trim().toUpperCase()}`;
+}
+
+/** "ar-MA" -> "ar". Returns null for a language the kit does not support. */
+export function fromMedusaLocale(code: string): Locale | null {
+  const language = code.split("-")[0]?.toLowerCase();
+  return isLocale(language) ? language : null;
+}

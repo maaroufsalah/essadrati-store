@@ -68,7 +68,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 0     | Monorepo pnpm + Turborepo, config partagée                                  | fait |
 | 1     | `@nocido/types` : schémas zod StoreSettings, ThemeConfig                    | fait |
 | 2     | `@nocido/theme` : 7 presets, tokens, contraste WCAG                         | fait |
-| 3     | Backend Medusa : scaffold, région Maroc/MAD, module Translation             |      |
+| 3     | Backend Medusa : scaffold, région Maroc/MAD, module Translation             | fait |
 | 3bis  | `@nocido/api-client` : client Medusa typé partagé                           |      |
 | 4     | Module Medusa `store-settings` (API admin + store)                          |      |
 | 5     | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer |      |

@@ -1,0 +1,48 @@
+{
+  "name": "@nocido/backend",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Medusa v2 backend: store API, admin API and admin dashboard.",
+  "license": "UNLICENSED",
+  "files": [
+    ".medusa/server"
+  ],
+  "scripts": {
+    "build": "medusa build",
+    "dev": "medusa develop",
+    "start": "medusa start",
+    "predeploy": "medusa db:migrate",
+    "db:migrate": "medusa db:migrate",
+    "store:setup": "medusa exec ./src/scripts/setup-store.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "clean": "node -e \"require('fs').rmSync('.medusa',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@medusajs/admin-sdk": "2.21.1",
+    "@medusajs/cli": "2.21.1",
+    "@medusajs/framework": "2.21.1",
+    "@medusajs/medusa": "2.21.1",
+    "@nocido/theme": "workspace:*",
+    "@nocido/types": "workspace:*",
+    "ioredis": "5.8.2"
+  },
+  "devDependencies": {
+    "@medusajs/test-utils": "2.21.1",
+    "@nocido/config": "workspace:*",
+    "@swc/core": "1.16.2",
+    "@types/node": "22.20.4",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "eslint": "9.39.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3",
+    "vitest": "5.0.2"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

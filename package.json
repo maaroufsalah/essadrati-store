@@ -16,10 +16,8 @@
     "clean": "turbo run clean && node -e \"require('fs').rmSync('node_modules',{recursive:true,force:true})\"",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:up": "docker compose up -d",
-    "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:tunnel": "ssh -N -L 5433:127.0.0.1:5432 nocido"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.3",

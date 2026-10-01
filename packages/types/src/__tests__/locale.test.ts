@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { directionOf, isLocale, resolveLocalized } from "../locale";
+import {
+  directionOf,
+  fromMedusaLocale,
+  isLocale,
+  resolveLocalized,
+  toMedusaLocale,
+} from "../locale";
 
 describe("resolveLocalized", () => {
   const value = { ar: "عسل", fr: "Miel" };
@@ -33,5 +39,18 @@ describe("locale helpers", () => {
     expect(isLocale("ar")).toBe(true);
     expect(isLocale("es")).toBe(false);
     expect(isLocale(42)).toBe(false);
+  });
+});
+
+describe("medusa locales", () => {
+  it("derives BCP 47 tags from the store country", () => {
+    expect(toMedusaLocale("ar", "ma")).toBe("ar-MA");
+    expect(toMedusaLocale("fr", "MA")).toBe("fr-MA");
+  });
+
+  it("maps Medusa tags back to kit locales", () => {
+    expect(fromMedusaLocale("fr-MA")).toBe("fr");
+    expect(fromMedusaLocale("EN-us")).toBe("en");
+    expect(fromMedusaLocale("de-DE")).toBeNull();
   });
 });
