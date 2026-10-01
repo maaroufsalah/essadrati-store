@@ -1,0 +1,47 @@
+{
+  "common": {
+    "skipToContent": "Aller au contenu",
+    "home": "Accueil",
+    "close": "Fermer"
+  },
+  "header": {
+    "mainNavigation": "Navigation principale",
+    "openMenu": "Ouvrir le menu",
+    "menu": "Menu",
+    "homeLink": "{storeName}, accueil"
+  },
+  "theme": {
+    "label": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "language": {
+    "label": "Langue"
+  },
+  "footer": {
+    "contact": "Contact",
+    "followUs": "Suivez-nous",
+    "openingHours": "Horaires",
+    "phone": "Téléphone",
+    "whatsapp": "WhatsApp",
+    "email": "E-mail",
+    "ice": "ICE {ice}",
+    "rights": "© {year} {storeName}. Tous droits réservés."
+  },
+  "social": {
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok",
+    "youtube": "YouTube",
+    "snapchat": "Snapchat"
+  },
+  "home": {
+    "welcome": "Bienvenue chez {storeName}"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "La page demandée n'existe pas ou a été déplacée.",
+    "backHome": "Retour à l'accueil"
+  }
+}

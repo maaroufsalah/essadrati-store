@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@nocido/config/tailwind/preset.css";
+
+/*
+ * Theme values are not defined here: the root layout injects the tokens
+ * generated from StoreSettings.theme as an unlayered <style> in <head>.
+ */
+
+@layer base {
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-fg);
+  }
+}

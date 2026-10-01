@@ -1,0 +1,47 @@
+{
+  "common": {
+    "skipToContent": "Skip to content",
+    "home": "Home",
+    "close": "Close"
+  },
+  "header": {
+    "mainNavigation": "Main navigation",
+    "openMenu": "Open menu",
+    "menu": "Menu",
+    "homeLink": "{storeName}, home"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "footer": {
+    "contact": "Contact",
+    "followUs": "Follow us",
+    "openingHours": "Opening hours",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "ice": "ICE {ice}",
+    "rights": "© {year} {storeName}. All rights reserved."
+  },
+  "social": {
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok",
+    "youtube": "YouTube",
+    "snapchat": "Snapchat"
+  },
+  "home": {
+    "welcome": "Welcome to {storeName}"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has moved.",
+    "backHome": "Back to home"
+  }
+}

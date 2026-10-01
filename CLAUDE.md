@@ -71,7 +71,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 3     | Backend Medusa : scaffold, région Maroc/MAD, module Translation             | fait |
 | 3bis  | `@nocido/api-client` : client Medusa typé partagé                           | fait |
 | 4     | Module Medusa `store-settings` (API admin + store)                          | fait |
-| 5     | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer |      |
+| 5     | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer | fait |
 |       | **Checkpoint 1**                                                            |      |
 | 6     | Plugin admin : pages Settings                                               |      |
 | 7–13  | À détailler (plan fourni par Salah-Eddine)                                  |      |

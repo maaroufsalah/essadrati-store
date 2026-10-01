@@ -1,0 +1,47 @@
+{
+  "common": {
+    "skipToContent": "انتقل إلى المحتوى",
+    "home": "الرئيسية",
+    "close": "إغلاق"
+  },
+  "header": {
+    "mainNavigation": "التنقل الرئيسي",
+    "openMenu": "فتح القائمة",
+    "menu": "القائمة",
+    "homeLink": "{storeName}، الصفحة الرئيسية"
+  },
+  "theme": {
+    "label": "المظهر",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "النظام"
+  },
+  "language": {
+    "label": "اللغة"
+  },
+  "footer": {
+    "contact": "تواصل معنا",
+    "followUs": "تابعونا",
+    "openingHours": "أوقات العمل",
+    "phone": "الهاتف",
+    "whatsapp": "واتساب",
+    "email": "البريد الإلكتروني",
+    "ice": "ICE {ice}",
+    "rights": "© {year} {storeName}. جميع الحقوق محفوظة."
+  },
+  "social": {
+    "instagram": "إنستغرام",
+    "facebook": "فيسبوك",
+    "tiktok": "تيك توك",
+    "youtube": "يوتيوب",
+    "snapchat": "سناب شات"
+  },
+  "home": {
+    "welcome": "مرحبًا بكم في {storeName}"
+  },
+  "notFound": {
+    "title": "الصفحة غير موجودة",
+    "description": "الصفحة المطلوبة غير موجودة أو تم نقلها.",
+    "backHome": "العودة إلى الرئيسية"
+  }
+}
