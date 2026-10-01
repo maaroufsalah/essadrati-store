@@ -17,13 +17,16 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
-    "clean": "node -e \"require('fs').rmSync('.medusa',{recursive:true,force:true})\""
+    "clean": "node -e \"require('fs').rmSync('.medusa',{recursive:true,force:true})\"",
+    "db:generate": "medusa db:generate storeSettings",
+    "test:integration": "vitest run --config vitest.integration.config.mts"
   },
   "dependencies": {
     "@medusajs/admin-sdk": "2.21.1",
     "@medusajs/cli": "2.21.1",
     "@medusajs/framework": "2.21.1",
     "@medusajs/medusa": "2.21.1",
+    "@nocido/api-client": "workspace:*",
     "@nocido/theme": "workspace:*",
     "@nocido/types": "workspace:*",
     "ioredis": "5.8.2"

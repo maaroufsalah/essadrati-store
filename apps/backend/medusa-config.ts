@@ -89,6 +89,10 @@ module.exports = defineConfig({
   modules: [
     { resolve: "@medusajs/medusa/translation" },
     {
+      resolve: "./src/modules/store-settings",
+      options: { encryptionKey: productionEnv("SETTINGS_ENCRYPTION_KEY", "dev-only-settings-key") },
+    },
+    {
       resolve: "@medusajs/medusa/file",
       options: {
         providers: [
