@@ -100,6 +100,29 @@ un déploiement).
 Une catégorie inconnue renvoie un vrai 404. Les handles `c`, `p`, `products`, `checkout`,
 `order` et `ui-kit` sont refusés pour les pages CMS (`RESERVED_PAGE_HANDLES`).
 
+## SEO avancé (données structurées, redirections, erreurs)
+
+- **Métadonnées** : titre et description par page et par langue (gabarit `%s | boutique`),
+  « – page n » sur les pages 2+ d'un catalogue, un seul `h1` par page, hreflang ar/fr/en +
+  `x-default`, canonical propre (catalogue : sans filtres ni tri, page conservée), `noindex` sur
+  les combinaisons filtrées, la recherche, le panier, le checkout et le suivi.
+- **Pagination** : `<link rel="prev|next">` (hissés dans le `head` par React 19) ; une page au-delà
+  de la dernière renvoie 404.
+- **JSON-LD** (`lib/json-ld.ts`, testé ; `<JsonLd>` échappe `<`) : Organization + WebSite avec
+  SearchAction vers `/products?q=` (accueil), BreadcrumbList (composant `Breadcrumb` avec
+  `locale`), ItemList (pages catalogue, positions continues entre pages), Product/Offer (SKU,
+  stock réel, devise de la boutique, état neuf, vendeur), FAQPage (page CMS dont au moins deux
+  titres `##`/`###` finissent par « ? »).
+- **Sitemaps** par langue avec `lastmod` (accueil = dernière sauvegarde des réglages,
+  `/products` = produit le plus récemment modifié).
+- **Redirections 301** : le middleware lit `GET /store/redirects` (une minute en mémoire) et
+  redirige `/<langue>/p|c/<ancien>` et `/<langue>/<ancienne-page>` en gardant la langue
+  (`lib/redirects.ts`, testé).
+- **Erreurs** : 404 brandée (lien vers le catalogue) et 500 brandée `[locale]/error.tsx` dans le
+  layout (réessayer, retour à l'accueil, code d'erreur). Pas de `global-error.tsx` : son chunk
+  est chargé sur chaque page.
+- **Performance** : CSS intégré au HTML (`experimental.inlineCss`), aucune feuille bloquante.
+
 ## Produit et commande COD
 
 **Carte produit** (`components/commerce/product-card.tsx`) : le lien du titre s'étend à toute

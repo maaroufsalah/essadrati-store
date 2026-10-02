@@ -71,7 +71,8 @@
   "notFound": {
     "title": "Page not found",
     "description": "The page you are looking for does not exist or has moved.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "browse": "Browse all products"
   },
   "product": {
     "sale": "-{percent}%",
@@ -125,7 +126,11 @@
     "loading": "Updating products…",
     "allTitle": "All products",
     "allDescription": "Our whole catalog, delivered across Morocco with cash on delivery.",
-    "listTitle": "Product list"
+    "listTitle": "Product list",
+    "search": "Search products",
+    "searchPlaceholder": "Search…",
+    "searchChip": "“{query}”",
+    "pageTitle": "{title} – page {page}"
   },
   "productPage": {
     "breadcrumb": "Breadcrumb",
@@ -271,5 +276,12 @@
     "accept": "Accept",
     "refuse": "Decline",
     "manage": "Manage cookies"
+  },
+  "errorPage": {
+    "code": "500",
+    "title": "Something went wrong",
+    "description": "This page could not be displayed. Try again in a moment; if it keeps happening, contact us.",
+    "retry": "Try again",
+    "backHome": "Back to home"
   }
 }

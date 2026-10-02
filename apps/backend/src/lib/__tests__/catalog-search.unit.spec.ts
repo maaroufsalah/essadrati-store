@@ -61,6 +61,7 @@ describe("catalog query", () => {
       selected: { poids: ["500g", "1kg"] },
       min: 100,
       max: 300,
+      q: null,
       sort: "price_desc",
       page: 2,
     });
@@ -71,6 +72,7 @@ describe("catalog query", () => {
       selected: {},
       min: null,
       max: null,
+      q: null,
       sort: "relevance",
       page: 1,
     });

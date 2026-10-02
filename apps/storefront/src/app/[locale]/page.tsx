@@ -21,8 +21,10 @@ import { Testimonials } from "@/components/home/testimonials";
 import { TrustBar } from "@/components/home/trust-bar";
 import { listCategories, listCollections, listProductCards } from "@/lib/catalog";
 import { formatNumber, storeFormat } from "@/lib/format";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getCategoryBanners, getHeroSlides } from "@/lib/home-content";
-import { alternatesFor, ogImage } from "@/lib/seo";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/json-ld";
+import { alternatesFor, ogImage, siteUrl } from "@/lib/seo";
 import { getStoreSettings } from "@/lib/settings";
 
 interface PageProps {
@@ -36,18 +38,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const fallbacks = [settings.localization.defaultLocale];
   const storeName = resolveLocalized(settings.identity.storeName, locale, fallbacks);
   const title = resolveLocalized(settings.seo.metaTitle, locale, fallbacks) || storeName;
+  // The kit wording backs up an empty description (unset SEO, or settings unreachable).
+  const tCategory = await getTranslations({ locale, namespace: "category" });
   const description =
     resolveLocalized(settings.seo.metaDescription, locale, fallbacks) ||
-    resolveLocalized(settings.identity.tagline, locale, fallbacks);
+    resolveLocalized(settings.identity.tagline, locale, fallbacks) ||
+    tCategory("allDescription");
   const { ogImage: uploaded } = settings.identity;
   return {
+    description,
     alternates: await alternatesFor(locale, "/"),
     openGraph: {
       type: "website",
       siteName: storeName,
       locale,
       title,
-      description: description || undefined,
+      description,
       images: [
         uploaded
           ? { url: uploaded.url, width: uploaded.width, height: uploaded.height }
@@ -278,8 +284,27 @@ export default async function HomePage({ params }: PageProps) {
       ) : null,
   };
 
+  const { contact, identity } = settings;
+  const structuredData = [
+    organizationJsonLd({
+      name: storeName,
+      url: siteUrl(`/${locale}`),
+      logo: identity.logoLight?.url ?? identity.logoDark?.url ?? null,
+      phone: contact.phone,
+      email: contact.email,
+      sameAs: Object.values(contact.socials).filter((url): url is string => Boolean(url)),
+    }),
+    websiteJsonLd({
+      name: storeName,
+      url: siteUrl(`/${locale}`),
+      locale,
+      searchUrl: siteUrl(`/${locale}/products`),
+    }),
+  ];
+
   return (
     <>
+      <JsonLd data={structuredData} />
       {normalizeHomeSections(settings.homepage.sections)
         .filter((section) => section.enabled)
         .map((section) => (

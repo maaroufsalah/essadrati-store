@@ -25,6 +25,11 @@ describe("catalog URL state", () => {
       "poids=500g%2C1kg&category=miel&min=100&sort=newest&page=3",
     );
     expect(toCatalogSearchParams(parseCatalogQuery({}, facets), facets).toString()).toBe("");
+    const search = parseCatalogQuery({ q: "  miel  " }, facets);
+    expect(search.q).toBe("miel");
+    expect(isFiltered(search)).toBe(true);
+    expect(toCatalogSearchParams(search, facets).toString()).toBe("q=miel");
+    expect(parseCatalogQuery({ q: "   " }, facets).q).toBeNull();
   });
 
   it("toggles a value, resets the page and counts active filters", () => {

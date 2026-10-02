@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: media ? [{ ...media, pathname: "/**" }] : [],
   },
+  experimental: {
+    // CSS inlined in the HTML (about 15 kB): no render-blocking stylesheet
+    // request before the first paint on mobile (LCP).
+    inlineCss: true,
+  },
 };
 
 export default withNextIntl(nextConfig);

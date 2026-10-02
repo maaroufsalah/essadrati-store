@@ -71,7 +71,8 @@
   "notFound": {
     "title": "Page introuvable",
     "description": "La page demandée n'existe pas ou a été déplacée.",
-    "backHome": "Retour à l'accueil"
+    "backHome": "Retour à l'accueil",
+    "browse": "Voir tous les produits"
   },
   "product": {
     "sale": "-{percent} %",
@@ -125,7 +126,11 @@
     "loading": "Mise à jour des produits…",
     "allTitle": "Tous les produits",
     "allDescription": "Tout notre catalogue, livré partout au Maroc avec paiement à la livraison.",
-    "listTitle": "Liste des produits"
+    "listTitle": "Liste des produits",
+    "search": "Rechercher un produit",
+    "searchPlaceholder": "Rechercher…",
+    "searchChip": "« {query} »",
+    "pageTitle": "{title} – page {page}"
   },
   "productPage": {
     "breadcrumb": "Fil d'Ariane",
@@ -271,5 +276,12 @@
     "accept": "Accepter",
     "refuse": "Refuser",
     "manage": "Gérer les cookies"
+  },
+  "errorPage": {
+    "code": "500",
+    "title": "Un souci technique",
+    "description": "Cette page n'a pas pu s'afficher. Réessayez dans un instant ; si le problème continue, contactez-nous.",
+    "retry": "Réessayer",
+    "backHome": "Retour à l'accueil"
   }
 }

@@ -14,7 +14,10 @@ Read `apps/backend/README.md` and `apps/admin/README.md` first.
   password encrypted with `SETTINGS_ENCRYPTION_KEY`), `moroccan-cities` (zones, cities, fees),
   `pages` (CMS, Markdown per locale), `hero-slides` and `category-banners` (home slider and
   « Nos univers » banners: one row per item, `rank` + `active`, reorder route that needs every
-  id), `cod-payment` (`pp_cod_cod`), `manual-cod` (fulfillment).
+  id), `redirects` (301 of renamed handles), `cod-payment` (`pp_cod_cod`), `manual-cod`
+  (fulfillment).
+- `src/lib/catalog-index.ts` + `catalog-search.ts`: faceted catalog search (cached index of
+  calculated prices, stock and sales) behind `GET /store/catalog/search`.
 - `src/workflows/cod/` — `place-cod-order` (cart from items or cart id, fee from the city,
   COD payment, completion, `metadata.cod_status=pending`), `confirm-cod`.
 - `src/api/` — store routes (`/store/store-settings`, `/store/cities`, `/store/pages`,

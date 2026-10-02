@@ -216,6 +216,18 @@ total, la plage de prix (sans le filtre prix) et le compte de chaque valeur de f
   prix combiné à une option vérifie la même variante (1 kg sous 300 MAD).
 - `GET /admin/catalog/options` liste les titres d'options proposés comme facettes.
 
+## Redirections
+
+Module `redirects` (`from_path` unique -> `to_path`, chemins sans langue : `/p/…`, `/c/…`,
+`/page`). Renommer le handle d'un produit ou d'une catégorie (middleware sur
+`POST /admin/products/:id` et `/admin/product-categories/:id`) ou d'une page CMS enregistre
+l'ancien chemin ; les chaînes sont réduites (a -> b puis b -> c donne a -> c) et un retour à
+l'ancien handle supprime la boucle. `GET/POST/DELETE /admin/redirects`, `GET /store/redirects`
+(lu par le middleware du storefront), revalidation du tag `redirects`.
+
+`?q=` sur `/store/catalog/search` : recherche texte (titre, sous-titre, handle et traductions,
+insensible à la casse) avant le calcul des facettes.
+
 ## Modules `hero-slides` et `category-banners`
 
 Contenu de l'accueil hors StoreSettings, une ligne par élément :

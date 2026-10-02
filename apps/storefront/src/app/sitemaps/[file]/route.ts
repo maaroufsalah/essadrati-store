@@ -37,8 +37,15 @@ export async function GET(
     alternates: hreflangUrls(locales, defaultLocale, path),
   });
 
+  const settings = await getStoreSettings();
+  const latestProduct = products
+    .map((product) => iso(product.updated_at))
+    .filter((value): value is string => value !== null)
+    .sort()
+    .at(-1);
   const entries: SitemapEntry[] = [
-    entry("/"),
+    entry("/", settings.updatedAt),
+    entry("/products", latestProduct ?? null),
     ...categories.map((category) => entry(`/c/${category.handle}`, iso(category.updated_at))),
     ...products.map((product) => entry(`/p/${product.handle}`, iso(product.updated_at))),
     ...pages.map((page) => entry(`/${page.handle}`, iso(page.updatedAt))),

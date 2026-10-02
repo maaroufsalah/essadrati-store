@@ -22,8 +22,10 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   ]);
   if (!category) return {};
   const query = await catalogQuery(raw, handle);
+  const name = t("metaTitle", { category: category.name });
   return {
-    title: t("metaTitle", { category: category.name }),
+    // Every page of the series has its own title.
+    title: query.page > 1 ? t("pageTitle", { title: name, page: query.page }) : name,
     description: category.description || t("metaDescription", { category: category.name }),
     ...(await catalogAlternates(locale, `/c/${handle}`, {
       page: query.page,
@@ -59,6 +61,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12">
       <Breadcrumb
+        locale={locale}
         label={t("breadcrumb")}
         items={[
           { label: tCommon("home"), href: "/" },

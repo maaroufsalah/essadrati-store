@@ -19,7 +19,7 @@
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
     "clean": "node -e \"require('fs').rmSync('.medusa',{recursive:true,force:true})\"",
-    "db:generate": "medusa db:generate storeSettings moroccanCities pages heroSlides categoryBanners",
+    "db:generate": "medusa db:generate storeSettings moroccanCities pages heroSlides categoryBanners redirects",
     "test:integration": "vitest run --config vitest.integration.config.mts",
     "cities:seed": "medusa exec ./src/scripts/seed-cities.ts",
     "catalog:seed": "medusa exec ./src/scripts/seed-catalog.ts"

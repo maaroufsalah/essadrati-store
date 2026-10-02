@@ -2,6 +2,7 @@ import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
 import type { IRegionModuleService } from "@medusajs/framework/types";
 import { MedusaError, Modules } from "@medusajs/framework/utils";
 import { getCatalogIndex } from "../../../../lib/catalog-index";
+import { productIdsMatching } from "../../../../lib/catalog-text";
 import { parseCatalogQuery } from "@nocido/types";
 import { searchCatalog } from "../../../../lib/catalog-search";
 import { STORE_SETTINGS_MODULE } from "../../../../modules/store-settings";
@@ -13,7 +14,7 @@ const one = (value: unknown) => (typeof value === "string" ? value : undefined);
 
 /**
  * GET /store/catalog/search?region_id=…[&scope_category=handle][&<facet id>=v1,v2]
- *   [&min=&max=][&sort=relevance|price_asc|price_desc|newest|bestsellers][&page=]
+ *   [&min=&max=][&q=text][&sort=relevance|price_asc|price_desc|newest|bestsellers][&page=]
  * Faceted search of the published catalog (admin › Catalogue picks the
  * facets): one page of product ids, the total, the price range and the
  * count of every facet value. The storefront then loads those products
@@ -43,11 +44,17 @@ export async function GET(req: MedusaRequest, res: MedusaResponse): Promise<void
     salesChannelId: keyContext?.sales_channel_ids?.[0] ?? null,
   });
 
-  const result = searchCatalog(entries, {
-    query: parseCatalogQuery(raw, facets),
-    facets,
-    scope: { category: one(raw.scope_category) },
-  });
+  // Text search (?q=): narrows the index before facets are counted.
+  const text = one(raw.q)?.trim();
+  const matching = text ? await productIdsMatching(req.scope, text) : null;
+  const result = searchCatalog(
+    matching ? entries.filter((entry) => matching.has(entry.id)) : entries,
+    {
+      query: parseCatalogQuery(raw, facets),
+      facets,
+      scope: { category: one(raw.scope_category) },
+    },
+  );
   res.setHeader("Cache-Control", "public, max-age=30, stale-while-revalidate=120");
   res.json(result);
 }

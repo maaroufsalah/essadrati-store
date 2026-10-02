@@ -65,6 +65,9 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 - Accueil : slides (`hero-slides`) et bannières (`category-banners`) sont des modules ;
   l'ordre et l'affichage des blocs sont dans `StoreSettings.homepage.sections`. Seule la
   première slide est prioritaire (LCP) ; ne rien animer en JS avant l'hydratation dans ce bloc.
+- Catalogue : filtrer/trier/paginer côté backend (`/store/catalog/search`), jamais sur tout le
+  catalogue dans le navigateur. Pas de Framer Motion dans les composants répétés (cartes) : CSS.
+- Pages CMS : les handles `c`, `p`, `products`, `checkout`, `order`, `ui-kit` sont réservés.
 - **Ne pas installer `apps/mobile`** : l'app mobile est reportée après la mise en
   production du storefront.
 
@@ -126,6 +129,9 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 22      | Tests : Vitest, Playwright COD 3 viewports, Lighthouse CI mobile ≥ 85, CI GitHub          | fait    |
 | 23      | README final, guide d'adaptation du kit, skills projet                                    | fait    |
 | 24      | Accueil premium : hero slider et bannières « Nos univers » administrables, blocs triables | fait    |
+| 25      | Catalogue à facettes administrables (backend), page `/products`, URL, SEO des filtres     | fait    |
+| 26      | Design premium : cartes, aperçu rapide, ajout au panier, zoom galerie, avantages, avis    | fait    |
+| 27      | SEO : JSON-LD, redirections 301, recherche texte, 404/500, prev/next, CSS inline          | fait    |
 
 ## URLs
 

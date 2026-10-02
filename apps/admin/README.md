@@ -4,17 +4,17 @@ Plugin Medusa 2.21.1, côté UI uniquement : il ajoute les pages de réglages du
 dashboard (`/app/settings/...`, section « Extensions »). Il ne contient ni module ni route
 d'API ; le backend sert `/admin/store-settings`.
 
-| Page          | Route                    | Sections StoreSettings                                                                 |
-| ------------- | ------------------------ | -------------------------------------------------------------------------------------- |
-| Identité      | `/settings/identity`     | `identity` (nom, slogan, logos, favicon, OG), `seo`                                    |
-| Contact       | `/settings/contact`      | `contact`, `smtp` (+ email de test)                                                    |
-| Facturation   | `/settings/billing`      | `billing`                                                                              |
-| Langues       | `/settings/localization` | `localization`                                                                         |
-| Marketing     | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                                                   |
-| Livraison COD | `/settings/cod-shipping` | Zones et villes COD (CRUD, import/export CSV) — API `/admin/cod/*`                     |
-| Thème         | `/settings/theme`        | `theme` (presets, tokens light/dark, polices, radius, mode)                            |
-| Catalogue     | `/settings/catalog`      | `catalog` : filtres des pages catalogue (ordre, activation, titres, options)           |
-| Accueil       | `/settings/homepage`     | `homepage` + slides et bannières — API `/admin/hero-slides`, `/admin/category-banners` |
+| Page          | Route                    | Sections StoreSettings                                                                          |
+| ------------- | ------------------------ | ----------------------------------------------------------------------------------------------- |
+| Identité      | `/settings/identity`     | `identity` (nom, slogan, logos, favicon, OG), `seo`                                             |
+| Contact       | `/settings/contact`      | `contact`, `smtp` (+ email de test)                                                             |
+| Facturation   | `/settings/billing`      | `billing`                                                                                       |
+| Langues       | `/settings/localization` | `localization`                                                                                  |
+| Marketing     | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                                                            |
+| Livraison COD | `/settings/cod-shipping` | Zones et villes COD (CRUD, import/export CSV) — API `/admin/cod/*`                              |
+| Thème         | `/settings/theme`        | `theme` (presets, tokens light/dark, polices, radius, mode)                                     |
+| Catalogue     | `/settings/catalog`      | `catalog` : filtres des pages catalogue (ordre, activation, titres, options) ; redirections 301 |
+| Accueil       | `/settings/homepage`     | `homepage` + slides et bannières — API `/admin/hero-slides`, `/admin/category-banners`          |
 
 La route native `/settings/store` de Medusa (devises, locales) reste intacte : ne jamais
 nommer une page du plugin comme une page native.

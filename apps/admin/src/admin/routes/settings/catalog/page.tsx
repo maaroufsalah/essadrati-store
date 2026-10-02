@@ -8,6 +8,7 @@ import { useEffect, useId, useState } from "react";
 import { Controller, type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { LocalizedField, Section, TextField } from "../../../components/fields";
+import { RedirectsManager } from "../../../components/redirects-manager";
 import { type FormValues, SettingsForm } from "../../../components/settings-form";
 import { SortableList } from "../../../components/sortable-list";
 import { adminFetch } from "../../../lib/api";
@@ -196,21 +197,24 @@ function FacetsEditor({ form }: { form: UseFormReturn<FormValues> }) {
 }
 
 const CatalogSettingsPage = () => (
-  <SettingsForm
-    title={t("catalog.title")}
-    description={t("catalog.description")}
-    schema={schema}
-    pick={(settings) => ({ catalog: settings.catalog })}
-  >
-    {(form) => (
-      <Section title={t("catalog.facets")}>
-        <Text size="xsmall" className="text-ui-fg-subtle">
-          {t("catalog.facetsHint")}
-        </Text>
-        <FacetsEditor form={form} />
-      </Section>
-    )}
-  </SettingsForm>
+  <div className="flex flex-col gap-y-3">
+    <SettingsForm
+      title={t("catalog.title")}
+      description={t("catalog.description")}
+      schema={schema}
+      pick={(settings) => ({ catalog: settings.catalog })}
+    >
+      {(form) => (
+        <Section title={t("catalog.facets")}>
+          <Text size="xsmall" className="text-ui-fg-subtle">
+            {t("catalog.facetsHint")}
+          </Text>
+          <FacetsEditor form={form} />
+        </Section>
+      )}
+    </SettingsForm>
+    <RedirectsManager />
+  </div>
 );
 
 export const config = defineRouteConfig({ label: t("catalog.navLabel"), icon: MagnifyingGlass });

@@ -4,6 +4,7 @@ import {
   type MedusaRequest,
   type MedusaResponse,
 } from "@medusajs/framework/http";
+import { captureHandleChange } from "../lib/handle-redirects";
 
 /**
  * COD fees are computed server-side by the place-cod-order workflow and
@@ -19,5 +20,16 @@ export default defineMiddlewares({
   routes: [
     { matcher: "/store/carts/:id/shipping-methods", method: ["POST"], middlewares: [closedForCod] },
     { matcher: "/store/carts/:id/complete", method: ["POST"], middlewares: [closedForCod] },
+    // A renamed handle keeps its old storefront URL alive with a 301.
+    {
+      matcher: "/admin/products/:id",
+      method: ["POST"],
+      middlewares: [captureHandleChange("product")],
+    },
+    {
+      matcher: "/admin/product-categories/:id",
+      method: ["POST"],
+      middlewares: [captureHandleChange("category")],
+    },
   ],
 });

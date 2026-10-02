@@ -101,6 +101,7 @@ module.exports = defineConfig({
     { resolve: "./src/modules/pages" },
     { resolve: "./src/modules/hero-slides" },
     { resolve: "./src/modules/category-banners" },
+    { resolve: "./src/modules/redirects" },
     {
       resolve: "@medusajs/medusa/payment",
       options: {

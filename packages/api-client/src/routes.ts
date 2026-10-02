@@ -14,6 +14,8 @@ export const KIT_ROUTES = {
   adminHomeLinks: "/admin/home-links",
   catalogSearch: "/store/catalog/search",
   adminCatalogOptions: "/admin/catalog/options",
+  redirects: "/store/redirects",
+  adminRedirects: "/admin/redirects",
   cities: "/store/cities",
   codOrders: "/store/cod/orders",
   codOrderLookup: "/store/cod/orders/lookup",
@@ -25,6 +27,7 @@ export const CACHE_TAGS = {
   pages: "pages",
   heroSlides: "hero-slides",
   categoryBanners: "category-banners",
+  redirects: "redirects",
   catalog: "catalog",
   cities: "cities",
 } as const;

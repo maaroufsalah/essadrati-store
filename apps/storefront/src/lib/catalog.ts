@@ -147,7 +147,7 @@ export async function getCategoryByHandle(
 }
 
 const PRODUCT_FIELDS =
-  "id,handle,title,subtitle,description,thumbnail,metadata,created_at,*images,*options,*options.values,*variants.calculated_price,*variants.options,*categories,*collection";
+  "id,handle,title,subtitle,description,thumbnail,metadata,created_at,updated_at,*images,*options,*options.values,*variants.calculated_price,*variants.options,variants.sku,variants.manage_inventory,variants.allow_backorder,+variants.inventory_quantity,*categories,*collection";
 
 /** One product with everything the product page needs, or null. */
 export async function getProductByHandle(

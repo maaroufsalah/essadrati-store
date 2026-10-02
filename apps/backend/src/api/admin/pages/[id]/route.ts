@@ -2,6 +2,7 @@ import type { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/frame
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
 import { CACHE_TAGS } from "@nocido/api-client";
 import { pageInputSchema } from "@nocido/types";
+import { recordRedirect } from "../../../../lib/handle-redirects";
 import { revalidateStorefront } from "../../../../lib/revalidate";
 import { routeParam, sendInvalid, zodIssues } from "../../../../lib/validation";
 import { PAGES_MODULE } from "../../../../modules/pages";
@@ -18,7 +19,12 @@ export async function POST(req: AuthenticatedMedusaRequest, res: MedusaResponse)
   const parsed = pageInputSchema.safeParse(req.body);
   if (!parsed.success) return sendInvalid(res, zodIssues(parsed.error));
   const service = req.scope.resolve<PagesModuleService>(PAGES_MODULE);
-  const page = await service.savePage(parsed.data, routeParam(req, "id"));
+  const id = routeParam(req, "id");
+  const previous = await service.getPage(id);
+  const page = await service.savePage(parsed.data, id);
+  if (previous.handle !== page.handle) {
+    await recordRedirect(req.scope, `/${previous.handle}`, `/${page.handle}`);
+  }
   await revalidateStorefront(
     [CACHE_TAGS.pages],
     req.scope.resolve(ContainerRegistrationKeys.LOGGER),

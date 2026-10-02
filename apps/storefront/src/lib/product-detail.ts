@@ -7,6 +7,9 @@ export interface VariantView {
   amount: number | null;
   /** Regular price when the variant is on sale. */
   original: number | null;
+  sku: string | null;
+  /** Untracked stock, backorders allowed or units left. */
+  inStock: boolean;
 }
 
 export interface ProductDetail {
@@ -44,6 +47,11 @@ export function toProductDetail(product: HttpTypes.StoreProduct): ProductDetail 
         label: variant.options?.[0]?.value ?? variant.title ?? "",
         amount,
         original: amount !== null && original !== null && original > amount ? original : null,
+        sku: variant.sku ?? null,
+        inStock:
+          variant.manage_inventory === false ||
+          variant.allow_backorder === true ||
+          (variant.inventory_quantity ?? 0) > 0,
       };
     })
     .sort(
@@ -76,7 +84,7 @@ export function productJsonLd(
     name: detail.title,
     description: detail.description || detail.subtitle,
     image: detail.images,
-    sku: detail.variants[0]?.id,
+    sku: detail.variants[0]?.sku ?? detail.variants[0]?.id,
     brand: { "@type": "Brand", name: brand },
     ...(detail.rating !== null && detail.reviewsCount > 0
       ? {
@@ -92,9 +100,14 @@ export function productJsonLd(
       .map((variant) => ({
         "@type": "Offer",
         name: variant.label,
+        ...(variant.sku ? { sku: variant.sku } : {}),
         price: variant.amount,
         priceCurrency: currency,
-        availability: "https://schema.org/InStock",
+        availability: variant.inStock
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+        itemCondition: "https://schema.org/NewCondition",
+        seller: { "@type": "Organization", name: brand },
         url,
       })),
   };

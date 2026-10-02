@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Markdown } from "@/components/content/markdown";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
+import { JsonLd } from "@/components/seo/json-ld";
+import { faqEntries, faqJsonLd } from "@/lib/json-ld";
 import { getPage } from "@/lib/pages";
 import { alternatesFor, ogImage } from "@/lib/seo";
 import { getStoreSettings } from "@/lib/settings";
@@ -64,9 +66,14 @@ export default async function CmsPage({ params }: PageProps) {
     getTranslations("common"),
   ]);
 
+  // A page with questions as headings (FAQ) is described as a FAQPage.
+  const faq = content ? faqEntries(content) : [];
+
   return (
     <article className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 sm:px-6 lg:py-14">
+      {faq.length >= 2 ? <JsonLd data={faqJsonLd(faq)} /> : null}
       <Breadcrumb
+        locale={locale}
         label={tCommon("breadcrumb")}
         items={[{ label: tCommon("home"), href: "/" }, { label: title }]}
       />

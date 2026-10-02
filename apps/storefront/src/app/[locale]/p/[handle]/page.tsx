@@ -114,6 +114,7 @@ export default async function ProductPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <Breadcrumb
+        locale={locale}
         label={t("breadcrumb")}
         items={[{ label: tCommon("home"), href: "/" }, { label: detail.title }]}
       />

@@ -1,7 +1,7 @@
 "use client";
 
 import { CATALOG_SORTS, type CatalogSort, activeFilterCount } from "@nocido/types/client";
-import { SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { type ReactNode, useId, useState } from "react";
 import { ProductCardSkeleton } from "@/components/commerce/product-card";
@@ -51,6 +51,44 @@ export function SortSelect() {
   );
 }
 
+/** Text search of the catalog (?q=), applied on Enter. A GET form without JavaScript. */
+export function CatalogSearch() {
+  const t = useTranslations("category");
+  const id = useId();
+  const { query, navigate } = useCatalogNav();
+  return (
+    <form
+      role="search"
+      method="get"
+      onSubmit={(event) => {
+        event.preventDefault();
+        const value = new FormData(event.currentTarget).get("q");
+        const text = typeof value === "string" ? value.trim() : "";
+        navigate({ ...query, q: text ? text : null, page: 1 });
+      }}
+      className="relative"
+    >
+      <label htmlFor={id} className="sr-only">
+        {t("search")}
+      </label>
+      <Search
+        className="text-muted-fg pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2"
+        aria-hidden
+      />
+      <input
+        key={query.q ?? ""}
+        id={id}
+        name="q"
+        type="search"
+        defaultValue={query.q ?? ""}
+        placeholder={t("searchPlaceholder")}
+        enterKeyHint="search"
+        className="rounded-base border-border bg-card text-card-fg placeholder:text-muted-fg focus-visible:ring-ring/30 h-11 w-44 border ps-9 pe-3 text-sm outline-none focus-visible:ring-4 sm:w-56"
+      />
+    </form>
+  );
+}
+
 /** Removable chips of the active filters, and "clear all". */
 export function ActiveFilters({
   labels,
@@ -61,7 +99,7 @@ export function ActiveFilters({
   format: StoreFormat;
 }) {
   const t = useTranslations("category");
-  const { query, toggle, setPrice, clear } = useCatalogNav();
+  const { query, toggle, setPrice, clear, navigate } = useCatalogNav();
   const chips: { key: string; label: string; remove: () => void }[] = [];
   for (const [facetId, values] of Object.entries(query.selected)) {
     for (const value of values) {
@@ -71,6 +109,13 @@ export function ActiveFilters({
         remove: () => toggle(facetId, value),
       });
     }
+  }
+  if (query.q !== null) {
+    chips.push({
+      key: "q",
+      label: t("searchChip", { query: query.q }),
+      remove: () => navigate({ ...query, q: null, page: 1 }),
+    });
   }
   if (query.min !== null || query.max !== null) {
     const min = query.min !== null ? formatPrice(query.min, format) : null;

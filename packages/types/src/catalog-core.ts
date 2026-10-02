@@ -87,6 +87,8 @@ export interface CatalogQuery {
   selected: Record<string, string[]>;
   min: number | null;
   max: number | null;
+  /** Text search (?q=), trimmed, null when empty. */
+  q: string | null;
   sort: CatalogSort;
   page: number;
 }
@@ -96,6 +98,7 @@ export function isFiltered(query: CatalogQuery): boolean {
   return (
     query.min !== null ||
     query.max !== null ||
+    query.q !== null ||
     Object.values(query.selected).some((values) => values.length > 0)
   );
 }
@@ -139,10 +142,12 @@ export function parseCatalogQuery(
     const values = listParam(raw[facet.id]);
     if (values.length > 0) selected[facet.id] = values;
   }
+  const text = firstParam(raw.q)?.trim().slice(0, 100);
   return {
     selected,
     min,
     max,
+    q: text?.length ? text : null,
     sort: (CATALOG_SORTS as readonly string[]).includes(sort ?? "")
       ? (sort as CatalogSort)
       : "relevance",
@@ -162,6 +167,7 @@ export function toCatalogSearchParams(
   }
   if (query.min !== null) params.set("min", String(query.min));
   if (query.max !== null) params.set("max", String(query.max));
+  if (query.q) params.set("q", query.q);
   if (query.sort !== "relevance") params.set("sort", query.sort);
   if (query.page > 1) params.set("page", String(query.page));
   return params;
@@ -182,15 +188,16 @@ export function toggleFacetValue(
   return { ...query, selected, page: 1 };
 }
 
-/** The query without any filter (the sort is kept); page 1. */
+/** The query without any filter or search (the sort is kept); page 1. */
 export function clearCatalogFilters(query: CatalogQuery): CatalogQuery {
-  return { selected: {}, min: null, max: null, sort: query.sort, page: 1 };
+  return { selected: {}, min: null, max: null, q: null, sort: query.sort, page: 1 };
 }
 
 /** Number of active filters (each value counts, the price range counts once). */
 export function activeFilterCount(query: CatalogQuery): number {
   return (
     Object.values(query.selected).reduce((total, values) => total + values.length, 0) +
-    (query.min !== null || query.max !== null ? 1 : 0)
+    (query.min !== null || query.max !== null ? 1 : 0) +
+    (query.q !== null ? 1 : 0)
   );
 }

@@ -20,7 +20,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   ]);
   const query = await catalogQuery(raw);
   return {
-    title: t("allTitle"),
+    title:
+      query.page > 1 ? t("pageTitle", { title: t("allTitle"), page: query.page }) : t("allTitle"),
     description: t("allDescription"),
     ...(await catalogAlternates(locale, "/products", {
       page: query.page,
@@ -45,6 +46,7 @@ export default async function ProductsPage({ params, searchParams }: PageProps) 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12">
       <Breadcrumb
+        locale={locale}
         label={t("breadcrumb")}
         items={[{ label: tCommon("home"), href: "/" }, { label: t("allTitle") }]}
       />

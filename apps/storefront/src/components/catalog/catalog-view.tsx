@@ -9,16 +9,21 @@ import {
   toCatalogSearchParams,
 } from "@nocido/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ProductCard } from "@/components/commerce/product-card";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Link } from "@/i18n/navigation";
 import { listCategories, listCollections } from "@/lib/catalog";
 import { searchCatalogPage } from "@/lib/catalog-search";
+import { itemListJsonLd } from "@/lib/json-ld";
+import { siteUrl } from "@/lib/seo";
 import { formatNumber, type StoreFormat, storeFormat } from "@/lib/format";
 import { getStoreSettings } from "@/lib/settings";
 import { cn } from "@/lib/utils";
 import {
   ActiveFilters,
+  CatalogSearch,
   FilterDrawer,
   PendingResults,
   ResultsCount,
@@ -151,6 +156,8 @@ export async function CatalogView({
     params: toCatalogSearchParams(query, facets),
     scopeCategory,
   });
+  // A page number past the end is not a page of the series.
+  if (query.page > result.pageCount) notFound();
   const effective = { ...query, page: result.page };
 
   const defaultTitle: Record<CatalogFacet["kind"], string> = {
@@ -216,8 +223,27 @@ export async function CatalogView({
     action: `/${locale}${basePath}`,
   };
 
+  const pageHref = (page: number) => {
+    const search = toCatalogSearchParams({ ...effective, page }, facets).toString();
+    return siteUrl(`/${locale}${basePath}${search ? `?${search}` : ""}`);
+  };
+
   return (
     <CatalogNav query={effective} facetIds={facets.map((facet) => facet.id)}>
+      {/* Paginated series (React hoists these links into the head). */}
+      {result.page > 1 ? <link rel="prev" href={pageHref(result.page - 1)} /> : null}
+      {result.page < result.pageCount ? <link rel="next" href={pageHref(result.page + 1)} /> : null}
+      {products.length > 0 ? (
+        <JsonLd
+          data={itemListJsonLd(
+            products.map((product) => ({
+              name: product.title,
+              url: siteUrl(`/${locale}/p/${product.handle}`),
+            })),
+            (result.page - 1) * 12 + 1,
+          )}
+        />
+      ) : null}
       <div className="grid gap-8 lg:grid-cols-[17rem_minmax(0,1fr)]">
         <aside aria-label={t("filters")} className="hidden lg:block">
           <div className="sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto pe-2">
@@ -229,7 +255,8 @@ export async function CatalogView({
         <div className="flex min-w-0 flex-col gap-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <ResultsCount total={result.total} format={format} />
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <CatalogSearch />
               <FilterDrawer {...filterProps} total={result.total} />
               <SortSelect />
             </div>
