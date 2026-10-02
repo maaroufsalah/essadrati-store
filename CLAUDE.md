@@ -8,21 +8,21 @@ chaque package avant de modifier quoi que ce soit.
 
 Ne pas changer de version majeure ni de mineure sans accord explicite.
 
-| Domaine        | Choix                                                                      |
-| -------------- | -------------------------------------------------------------------------- |
-| Runtime        | Node 22.23.3 (`.nvmrc`, via fnm), pnpm 10.34.5 (corepack)                  |
-| Monorepo       | pnpm workspaces (linker isolé) + Turborepo 2.11                            |
-| Langage        | TypeScript 5.9 strict, ESLint 9 flat config, Prettier 3                    |
-| Backend        | Medusa **2.21.1** (`apps/backend`), API store + admin + dashboard          |
-| Admin          | Plugin Medusa UI-only (`apps/admin`, étape 6)                              |
-| Storefront     | Next.js 15.x App Router, Tailwind v4, shadcn/ui, Framer Motion,            |
-|                | next-intl (ar, fr, en, RTL pour ar), next-themes                           |
-| Mobile         | Expo + Expo Router + NativeWind (`apps/mobile`, **pas avant l'étape 16a**) |
-| Packages       | `@nocido/config`, `@nocido/types` (zod 4), `@nocido/theme`,                |
-|                | `@nocido/api-client`                                                       |
-| Base           | PostgreSQL 17 de l'hôte VPS, hors Docker                                   |
-| Cache / events | In-memory en dev. Redis 7 (conteneur) en prod uniquement                   |
-| Fichiers       | Medusa File Module, provider local, servi par Nginx                        |
+| Domaine        | Choix                                                                     |
+| -------------- | ------------------------------------------------------------------------- |
+| Runtime        | Node 22.23.3 (`.nvmrc`, via fnm), pnpm 10.34.5 (corepack)                 |
+| Monorepo       | pnpm workspaces (linker isolé) + Turborepo 2.11                           |
+| Langage        | TypeScript 5.9 strict, ESLint 9 flat config, Prettier 3                   |
+| Backend        | Medusa **2.21.1** (`apps/backend`), API store + admin + dashboard         |
+| Admin          | Plugin Medusa UI-only (`apps/admin`, étape 6)                             |
+| Storefront     | Next.js 15.x App Router, Tailwind v4, shadcn/ui, Framer Motion,           |
+|                | next-intl (ar, fr, en, RTL pour ar), next-themes                          |
+| Mobile         | Expo + Expo Router + NativeWind (`apps/mobile`, **reporté**, voir étapes) |
+| Packages       | `@nocido/config`, `@nocido/types` (zod 4), `@nocido/theme`,               |
+|                | `@nocido/api-client`                                                      |
+| Base           | PostgreSQL 17 de l'hôte VPS, hors Docker                                  |
+| Cache / events | In-memory en dev. Redis 7 (conteneur) en prod uniquement                  |
+| Fichiers       | Medusa File Module, provider local, servi par Nginx                       |
 
 ## Règles
 
@@ -54,32 +54,48 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 - Pas de `docker-compose.yml` de dev : la base de dev est sur le VPS, via le tunnel.
   `docker-compose.prod.yml` et `infra/docker/*.Dockerfile` restent la référence prod.
 - `REDIS_URL` n'est requis qu'en production.
+- Revalidation du cache storefront : le backend appelle
+  `STOREFRONT_REVALIDATE_URL/api/revalidate` (origine du storefront vue depuis le backend :
+  `http://localhost:3000` en dev, `http://storefront:3000` en Docker) avec
+  `REVALIDATE_SECRET`. Ne pas confondre avec `STOREFRONT_URL`, l'URL publique.
+- **Ne pas installer `apps/mobile`** : l'app mobile est reportée après la mise en
+  production du storefront.
+
+### Pièges connus (Windows, dev local)
+
+- Le watcher de `medusa develop` est instable sous Windows : après une modification de
+  fichier, il plante parfois au redémarrage (`taskkill` PID introuvable). Relancer le
+  serveur à la main.
+- Le build Next `standalone` n'est généré que sous Linux, donc dans Docker : sous Windows,
+  ses symlinks pnpm exigent le mode développeur, `next.config.ts` le désactive.
+- Ne jamais lancer `pnpm setup` (commande intégrée de pnpm, modifie le PATH) : le script
+  backend s'appelle `store:setup`.
 
 ### Git
 
 - Commits conventionnels **atomiques, un par étape**, scopes de `commitlint.config.mjs`.
-- Checkpoints à valider avec Salah-Eddine avant de continuer : **après l'étape 5**, **après
-  l'étape 14**, **après l'étape 16c**.
+- Checkpoints à valider avec Salah-Eddine avant de continuer : **après l'étape 5** (validé),
+  **après l'étape 14**, **après l'étape 16c** (avec l'app mobile, reportée).
 
 ## Ordre des étapes
 
-| Étape | Contenu                                                                     | État |
-| ----- | --------------------------------------------------------------------------- | ---- |
-| 0     | Monorepo pnpm + Turborepo, config partagée                                  | fait |
-| 1     | `@nocido/types` : schémas zod StoreSettings, ThemeConfig                    | fait |
-| 2     | `@nocido/theme` : 7 presets, tokens, contraste WCAG                         | fait |
-| 3     | Backend Medusa : scaffold, région Maroc/MAD, module Translation             | fait |
-| 3bis  | `@nocido/api-client` : client Medusa typé partagé                           | fait |
-| 4     | Module Medusa `store-settings` (API admin + store)                          | fait |
-| 5     | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer | fait |
-|       | **Checkpoint 1**                                                            |      |
-| 6     | Plugin admin : pages Settings                                               |      |
-| 7–13  | À détailler (plan fourni par Salah-Eddine)                                  |      |
-| 14    | **Checkpoint 2**                                                            |      |
-| 16a   | Installation `apps/mobile` (Expo)                                           |      |
-| 16c   | **Checkpoint 3**                                                            |      |
-| 21bis | Infra VPS : Nginx, scripts Postgres, sauvegardes, CI/CD                     |      |
-| 23    | README final : déploiement VPS et adaptation du kit à un client             |      |
+| Étape   | Contenu                                                                                  | État    |
+| ------- | ---------------------------------------------------------------------------------------- | ------- |
+| 0       | Monorepo pnpm + Turborepo, config partagée                                               | fait    |
+| 1       | `@nocido/types` : schémas zod StoreSettings, ThemeConfig                                 | fait    |
+| 2       | `@nocido/theme` : 7 presets, tokens, contraste WCAG                                      | fait    |
+| 3       | Backend Medusa : scaffold, région Maroc/MAD, module Translation                          | fait    |
+| 3bis    | `@nocido/api-client` : client Medusa typé partagé                                        | fait    |
+| 4       | Module Medusa `store-settings` (API admin + store)                                       | fait    |
+| 5       | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer              | fait    |
+|         | **Checkpoint 1**                                                                         | validé  |
+| 6       | Plugin admin : pages Settings                                                            |         |
+| 7–13    | À détailler (plan fourni par Salah-Eddine)                                               |         |
+| 14      | **Checkpoint 2**                                                                         |         |
+| 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |
+| 16c     | **Checkpoint 3** (avec l'app mobile)                                                     | reporté |
+| 21bis   | Infra VPS : Nginx, scripts Postgres, sauvegardes, CI/CD                                  |         |
+| 23      | README final : déploiement VPS et adaptation du kit à un client                          |         |
 
 ## URLs
 
