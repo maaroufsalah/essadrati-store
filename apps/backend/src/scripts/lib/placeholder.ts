@@ -46,19 +46,19 @@ export type PlaceholderScene = z.infer<typeof placeholderSceneSchema>;
 
 /**
  * Large placeholder for hero slides and category banners: a gradient, a
- * soft halo and the product drawing. `focusX` (0-1) places the product so
- * the slide text keeps a calm area; replaced by real photos in the admin.
+ * soft halo and the product drawing, kept away from where the storefront
+ * writes (bottom of portrait and square images, middle of landscape ones).
+ * Replaced by real photos in the admin.
  */
 export function placeholderSceneSvg(
   scene: PlaceholderScene,
   size: { width: number; height: number },
-  focusX = 0.5,
 ): string {
   const { width, height } = size;
-  const box = Math.round(Math.min(width, height) * 0.8);
-  const x = Math.round(width * focusX - box / 2);
-  const y = Math.round(height - box * 1.02);
-  const cx = Math.round(width * focusX);
+  const landscape = width > height * 1.2;
+  const box = Math.round(Math.min(width, height) * (landscape ? 0.62 : 0.6));
+  const x = Math.round(width / 2 - box / 2);
+  const y = landscape ? Math.round(height - box * 0.98) : Math.round(height * 0.06);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -71,7 +71,7 @@ export function placeholderSceneSvg(
     </radialGradient>
   </defs>
   <rect width="${width}" height="${height}" fill="url(#bg)"/>
-  <circle cx="${cx}" cy="${Math.round(height * 0.55)}" r="${Math.round(box * 0.7)}" fill="url(#halo)"/>
+  <circle cx="${Math.round(width / 2)}" cy="${y + Math.round(box / 2)}" r="${box}" fill="url(#halo)"/>
   <g transform="translate(${x} ${y}) scale(${(box / 800).toFixed(4)})">
     <ellipse cx="400" cy="640" rx="210" ry="26" fill="${scene.accent}" fill-opacity="0.25"/>
     ${shapeBody(scene)}

@@ -197,3 +197,35 @@ et SEO par langue, statut brouillon/publié, lien de pied de page et ordre. Sch�
 
 Chaque écriture revalide le tag `pages` du storefront. `catalog:seed` crée les 4 pages de
 `data/seed/pages.json`. Le contenu est rendu sans HTML brut (react-markdown).
+
+## Modules `hero-slides` et `category-banners`
+
+Contenu de l'accueil hors StoreSettings, une ligne par élément :
+
+- `hero-slides` (`hero_slide`) : images ordinateur (1920 × 900) et mobile (1080 × 1350),
+  titre, sous-titre et texte du bouton par langue, lien (catégorie, produit ou URL http(s) / chemin),
+  alignement `start | center | end`, assombrissement 0-60 %, durée 3-20 s, actif, rang.
+- `category-banners` (`category_banner`, section « Nos univers ») : images ordinateur
+  (1200 × 1500) et mobile (1080 × 1080), titre, accroche et texte du bouton par langue, lien,
+  actif, rang. Module séparé des catégories Medusa : une bannière peut aussi pointer vers un
+  produit (coffret) ou une URL.
+
+Schémas partagés dans `@nocido/types` (`heroSlideInputSchema`, `categoryBannerInputSchema`,
+`reorderInputSchema`). Images téléversées par le File Module (`POST /admin/uploads`).
+
+| Route                                     | Accès         | Rôle                                    |
+| ----------------------------------------- | ------------- | --------------------------------------- |
+| `GET /store/hero-slides`                  | clé publiable | Slides actives par rang (cache 30 s)    |
+| `GET /store/category-banners`             | clé publiable | Bannières actives par rang (cache 30 s) |
+| `GET/POST /admin/hero-slides`             | admin         | Liste complète, création                |
+| `GET/POST/DELETE /admin/hero-slides/:id`  | admin         | Lecture, mise à jour, suppression       |
+| `POST /admin/hero-slides/reorder`         | admin         | `{ ids }` : tous les ids, dans l'ordre  |
+| `…/admin/category-banners` (mêmes routes) | admin         | Idem pour les bannières                 |
+
+Chaque écriture revalide le tag `hero-slides` ou `category-banners` du storefront. Un
+réordonnancement doit lister **tous** les ids (liste périmée refusée : `reorder.mismatch`).
+L'ordre et l'affichage des blocs de l'accueil (`homepage.sections`) et les options du slider
+(`homepage.slider`) restent dans les StoreSettings.
+
+`catalog:seed` crée 3 slides et 3 bannières (`data/seed/home.json`, visuels SVG générés) tant
+que les listes sont vides ; `SEED_HOME=force` les recrée.

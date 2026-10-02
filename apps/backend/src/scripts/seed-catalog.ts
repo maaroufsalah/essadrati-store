@@ -6,6 +6,7 @@
  *
  *   pnpm --filter @nocido/backend catalog:seed
  *   SEED_SETTINGS=force pnpm --filter @nocido/backend catalog:seed   # re-apply settings
+ *   SEED_HOME=force pnpm --filter @nocido/backend catalog:seed       # recreate slides and banners
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -407,11 +408,24 @@ async function uploadScene(
   return { id: file.id, url: file.url, mimeType: "image/svg+xml", ...size };
 }
 
-/** Hero slides and category banners, created only while each list is empty. */
+/**
+ * Hero slides and category banners, created only while each list is empty.
+ * SEED_HOME=force deletes the existing ones first (uploaded files are kept).
+ */
 async function seedHome(ctx: SeedContext): Promise<void> {
   const { slides, banners } = homeSeedSchema.parse(readJson("home.json"));
+  const force = process.env.SEED_HOME === "force";
 
   const slideService = ctx.container.resolve<HeroSlidesModuleService>(HERO_SLIDES_MODULE);
+  const bannerService =
+    ctx.container.resolve<CategoryBannersModuleService>(CATEGORY_BANNERS_MODULE);
+  if (force) {
+    await slideService.deleteHeroSlides((await slideService.listSlides()).map(({ id }) => id));
+    await bannerService.deleteCategoryBanners(
+      (await bannerService.listBanners()).map(({ id }) => id),
+    );
+  }
+
   if ((await slideService.listSlides()).length === 0) {
     for (const [rank, { key, scene, ...slide }] of slides.entries()) {
       await slideService.saveSlide({
@@ -437,8 +451,6 @@ async function seedHome(ctx: SeedContext): Promise<void> {
     ctx.logger.info("Home: hero slides already exist, kept");
   }
 
-  const bannerService =
-    ctx.container.resolve<CategoryBannersModuleService>(CATEGORY_BANNERS_MODULE);
   if ((await bannerService.listBanners()).length === 0) {
     for (const [rank, { key, scene, ...banner }] of banners.entries()) {
       await bannerService.saveBanner({
