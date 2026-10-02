@@ -6,7 +6,7 @@ import type {
 } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, MedusaError, Modules } from "@medusajs/framework/utils";
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
-import type { Locale } from "@nocido/types";
+import { type Locale, toMedusaLocale } from "@nocido/types";
 import { MANUAL_COD_PROVIDER_ID } from "../../modules/manual-cod";
 import { MOROCCAN_CITIES_MODULE } from "../../modules/moroccan-cities";
 import { codShippingFee, type ResolvedCity } from "../../modules/moroccan-cities/lib/cities";
@@ -49,6 +49,8 @@ export interface CodContext {
   city: ResolvedCity;
   freeShippingThreshold: number | null;
   minOrderAmount: number;
+  /** Medusa locale of the cart ("fr-MA"): line item titles are translated into it. */
+  cartLocale: string;
   metadata: Record<string, unknown>;
 }
 
@@ -96,6 +98,10 @@ export const resolveCodContextStep = createStep(
       city,
       freeShippingThreshold: settings.commerce.freeShippingThreshold,
       minOrderAmount: settings.commerce.minOrderAmount,
+      cartLocale: toMedusaLocale(
+        input.locale ?? settings.localization.defaultLocale,
+        settings.contact.country,
+      ),
       metadata: {
         cod: true,
         customer_name: input.customer.name.trim(),

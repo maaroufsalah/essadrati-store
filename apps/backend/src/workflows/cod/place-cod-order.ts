@@ -55,6 +55,7 @@ export const placeCodOrderWorkflow = createWorkflow(
         input: transform({ input, context }, ({ input: data, context: ctx }) => ({
           region_id: ctx.regionId,
           sales_channel_id: ctx.salesChannelId,
+          locale: ctx.cartLocale,
           email: ctx.email,
           items: data.items ?? [],
           shipping_address: ctx.address,
