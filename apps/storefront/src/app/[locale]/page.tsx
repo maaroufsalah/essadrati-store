@@ -1,8 +1,18 @@
-import { isLocale, type Locale, resolveLocalized, toWhatsAppNumber } from "@nocido/types";
+import {
+  type HomeSectionId,
+  isLocale,
+  type Locale,
+  normalizeHomeSections,
+  resolveLocalized,
+  toWhatsAppNumber,
+} from "@nocido/types";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Fragment, type ReactNode } from "react";
+import { CategoryBanners } from "@/components/home/category-banners";
 import { CategoryGrid } from "@/components/home/category-grid";
 import { Hero } from "@/components/home/hero";
+import { HeroSlider } from "@/components/home/hero-slider";
 import { ProductRail } from "@/components/home/product-rail";
 import { ProductSpotlight } from "@/components/home/product-spotlight";
 import { SectionHeading } from "@/components/home/section-heading";
@@ -11,6 +21,7 @@ import { Testimonials } from "@/components/home/testimonials";
 import { TrustBar } from "@/components/home/trust-bar";
 import { listCategories, listCollections, listProductCards } from "@/lib/catalog";
 import { formatNumber, storeFormat } from "@/lib/format";
+import { getCategoryBanners, getHeroSlides } from "@/lib/home-content";
 import { alternatesFor, ogImage } from "@/lib/seo";
 import { getStoreSettings } from "@/lib/settings";
 
@@ -50,11 +61,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export const revalidate = 3600;
 
 async function loadHome(locale: Locale) {
-  const [settings, products, categories, collections] = await Promise.all([
+  const [settings, products, categories, collections, slides, banners] = await Promise.all([
     getStoreSettings(),
     listProductCards(locale, { limit: 24 }),
     listCategories(locale),
     listCollections(locale),
+    getHeroSlides(),
+    getCategoryBanners(),
   ]);
 
   const giftHandle = settings.homepage.giftCollectionHandle;
@@ -89,6 +102,8 @@ async function loadHome(locale: Locale) {
     })),
     gifts,
     giftCollection,
+    slides,
+    banners,
   };
 }
 
@@ -97,8 +112,11 @@ export default async function HomePage({ params }: PageProps) {
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
 
-  const [{ settings, bestsellers, categories, gifts, giftCollection }, t, tProduct] =
-    await Promise.all([loadHome(locale), getTranslations("home"), getTranslations("product")]);
+  const [
+    { settings, bestsellers, categories, gifts, giftCollection, slides, banners },
+    t,
+    tProduct,
+  ] = await Promise.all([loadHome(locale), getTranslations("home"), getTranslations("product")]);
   const fallbacks = [settings.localization.defaultLocale];
   const text = (value: Parameters<typeof resolveLocalized>[0]) =>
     resolveLocalized(value, locale, fallbacks);
@@ -114,22 +132,35 @@ export default async function HomePage({ params }: PageProps) {
         }
       : null;
 
-  return (
-    <>
-      <Hero
-        eyebrow={text(hero.eyebrow)}
-        title={text(hero.title) || t("welcome", { storeName })}
-        subtitle={text(hero.subtitle) || text(settings.identity.tagline)}
-        cta={
-          hero.ctaHref && text(hero.ctaLabel)
-            ? { label: text(hero.ctaLabel), href: hero.ctaHref }
-            : null
-        }
-        whatsapp={whatsapp}
-        image={hero.image ? { url: hero.image.url, alt: text(hero.title) } : null}
-        products={bestsellers.slice(0, 3)}
-      />
+  /** One renderer per block; the admin sets their order and visibility. */
+  const blocks: Record<HomeSectionId, () => ReactNode> = {
+    // Without active slides, the editorial hero of the settings takes over.
+    slider: () =>
+      slides.length > 0 ? (
+        <HeroSlider
+          slides={slides}
+          options={settings.homepage.slider}
+          locale={locale}
+          fallbacks={fallbacks}
+          heading={text(settings.seo.metaTitle) || storeName}
+        />
+      ) : (
+        <Hero
+          eyebrow={text(hero.eyebrow)}
+          title={text(hero.title) || t("welcome", { storeName })}
+          subtitle={text(hero.subtitle) || text(settings.identity.tagline)}
+          cta={
+            hero.ctaHref && text(hero.ctaLabel)
+              ? { label: text(hero.ctaLabel), href: hero.ctaHref }
+              : null
+          }
+          whatsapp={whatsapp}
+          image={hero.image ? { url: hero.image.url, alt: text(hero.title) } : null}
+          products={bestsellers.slice(0, 3)}
+        />
+      ),
 
+    trust: () => (
       <TrustBar
         label={t("trustTitle")}
         items={trust.map((item) => ({
@@ -138,8 +169,21 @@ export default async function HomePage({ params }: PageProps) {
           text: text(item.text),
         }))}
       />
+    ),
 
-      {categories.length > 0 ? (
+    // « Nos univers »: the admin banners, or the category tiles without them.
+    categories: () =>
+      banners.length > 0 ? (
+        <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 sm:px-6 lg:py-20">
+          <SectionHeading title={t("categoriesTitle")} />
+          <CategoryBanners
+            banners={banners}
+            locale={locale}
+            fallbacks={fallbacks}
+            defaultCta={t("bannerCta")}
+          />
+        </section>
+      ) : categories.length > 0 ? (
         <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 sm:px-6 lg:py-20">
           <SectionHeading title={t("categoriesTitle")} />
           <CategoryGrid
@@ -152,10 +196,11 @@ export default async function HomePage({ params }: PageProps) {
             }))}
           />
         </section>
-      ) : null}
+      ) : null,
 
-      {bestsellers.length > 0 ? (
-        <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-14 sm:px-6 lg:pb-20">
+    bestsellers: () =>
+      bestsellers.length > 0 ? (
+        <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 sm:px-6 lg:py-20">
           <SectionHeading
             title={t("bestsellersTitle")}
             subtitle={t("bestsellersSubtitle")}
@@ -167,8 +212,9 @@ export default async function HomePage({ params }: PageProps) {
           />
           <ProductRail products={bestsellers} format={format} label={t("bestsellersTitle")} />
         </section>
-      ) : null}
+      ) : null,
 
+    story: () => (
       <StorySection
         title={text(story.title)}
         text={text(story.text)}
@@ -181,8 +227,10 @@ export default async function HomePage({ params }: PageProps) {
         cta={story.ctaHref ? { label: t("storyCta"), href: story.ctaHref } : null}
         format={format}
       />
+    ),
 
-      {giftCollection && gifts.length > 0 ? (
+    gifts: () =>
+      giftCollection && gifts.length > 0 ? (
         <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 sm:px-6 lg:py-20">
           <SectionHeading
             title={giftCollection.title || t("giftsTitle")}
@@ -203,9 +251,10 @@ export default async function HomePage({ params }: PageProps) {
             <ProductRail products={gifts} format={format} label={t("giftsTitle")} />
           )}
         </section>
-      ) : null}
+      ) : null,
 
-      {testimonials.length > 0 ? (
+    testimonials: () =>
+      testimonials.length > 0 ? (
         <section className="bg-muted/50">
           <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 sm:px-6 lg:py-20">
             <SectionHeading title={t("testimonialsTitle")} />
@@ -226,7 +275,16 @@ export default async function HomePage({ params }: PageProps) {
             />
           </div>
         </section>
-      ) : null}
+      ) : null,
+  };
+
+  return (
+    <>
+      {normalizeHomeSections(settings.homepage.sections)
+        .filter((section) => section.enabled)
+        .map((section) => (
+          <Fragment key={section.id}>{blocks[section.id]()}</Fragment>
+        ))}
     </>
   );
 }

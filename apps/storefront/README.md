@@ -43,12 +43,31 @@ production). Points de contrôle : 390, 768-1024 et 1280-1440 px.
 
 ## Accueil
 
-Sections (`app/[locale]/page.tsx`, ISR 1 h + tags `store-settings` et `catalog`) : barre promo,
-hero éditorial, engagements, catégories, best-sellers (carrousel scroll-snap sur mobile, grille
-2/4 colonnes), histoire sur fond sombre (classe `dark` locale) avec chiffres animés, coffrets
-(collection `homepage.giftCollectionHandle`), avis clients, footer. Tout le contenu vient de
-`StoreSettings.homepage` (page admin « Accueil ») et du catalogue Medusa ; les titres de
-section sont des messages.
+Blocs (`app/[locale]/page.tsx`, ISR 1 h + tags `store-settings`, `catalog`, `hero-slides`,
+`category-banners`) rendus dans l'ordre de `homepage.sections` (admin › Accueil › Blocs), les
+blocs désactivés en moins, ceux ajoutés par une version du kit en fin de liste
+(`normalizeHomeSections`) :
+
+- **slider** : `HeroSlider` plein écran sous l'en-tête (85vh dès 768 px, 4:5 sur mobile).
+  Le serveur rend les slides (`<picture>` ordinateur/mobile via `getImageProps`, texte, lien) ;
+  le client (`hero-slider-client.tsx`) orchestre : fondu ou glissement Framer Motion
+  (LazyMotion), texte animé à l'entrée, autoplay piloté par la barre de progression du point
+  actif (pause au survol, au focus, onglet masqué, hors écran ou bouton pause), swipe, flèches et
+  touches fléchées inversés en RTL (`lib/slider.ts`, testé). Avec `prefers-reduced-motion` :
+  pas d'autoplay, transitions instantanées. Seule la première image est prioritaire
+  (`fetchpriority=high` + `preload` par media query) ; la suivante est chargée après `load`
+  et inactivité. Un `h1` masqué (titre SEO ou nom de la boutique) reste fixe, les titres de
+  slides sont des `h2`. Sans slide active : hero éditorial des StoreSettings.
+- engagements ;
+- **categories** (« Nos univers ») : `CategoryBanners`, 3-4 grandes bannières (carrées sur
+  mobile, 4:5 ensuite), zoom au survol en CSS, titre en police display, bouton pill ; sans
+  bannière active : tuiles des catégories du catalogue ;
+- best-sellers (carrousel scroll-snap sur mobile, grille 2/4 colonnes), histoire sur fond
+  sombre (classe `dark` locale) avec chiffres animés, coffrets (collection
+  `homepage.giftCollectionHandle`), avis clients.
+
+Textes et images viennent des StoreSettings, des modules `hero-slides` / `category-banners`
+et du catalogue Medusa ; les titres de section et libellés du slider sont des messages.
 
 Les réglages sont lus de façon tolérante (`settingsFallback`) : une section absente ou
 invalide reprend les défauts du kit sans faire tomber le reste (décalage de versions pendant
