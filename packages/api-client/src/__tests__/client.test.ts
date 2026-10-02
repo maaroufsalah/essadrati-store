@@ -76,6 +76,18 @@ describe("createStoreClient", () => {
     expect(result.ok ? null : result.error.code).toBe("invalidResponse");
   });
 
+  it("falls back section by section when a fallback is given", async () => {
+    const { homepage: _homepage, ...older } = DEFAULT_PUBLIC_STORE_SETTINGS;
+    stubFetch(json({ settings: { ...older, commerce: { ...older.commerce, returnDays: 14 } } }));
+    const result = await createStoreClient({
+      ...options,
+      settingsFallback: DEFAULT_PUBLIC_STORE_SETTINGS,
+    }).getStoreSettings();
+    expect(result.ok && result.data.commerce.returnDays).toBe(14);
+    expect(result.ok && result.data.homepage).toEqual(DEFAULT_PUBLIC_STORE_SETTINGS.homepage);
+    expect(result.warnings).toEqual(["homepage"]);
+  });
+
   it("normalizes HTTP errors", async () => {
     stubFetch(json({ message: "Not found" }, 404));
     const result = await createStoreClient(options).getStoreSettings();

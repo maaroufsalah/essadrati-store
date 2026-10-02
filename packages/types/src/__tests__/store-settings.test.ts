@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   parsePublicStoreSettings,
+  parsePublicStoreSettingsWithFallback,
   storeSettingsSchema,
   storeSettingsUpdateSchema,
   toPublicStoreSettings,
@@ -121,5 +122,31 @@ describe("storeSettingsUpdateSchema", () => {
     expect(storeSettingsUpdateSchema.safeParse({ updatedAt: "2026-01-01T00:00:00Z" }).success).toBe(
       false,
     );
+  });
+});
+
+describe("parsePublicStoreSettingsWithFallback", () => {
+  const fallback = toPublicStoreSettings(storeSettingsSchema.parse(validSettings()));
+
+  it("keeps valid sections and replaces missing or invalid ones", () => {
+    const { homepage: _homepage, ...withoutHomepage } = toPublicStoreSettings(
+      storeSettingsSchema.parse(validSettings()),
+    );
+    const input = {
+      ...withoutHomepage,
+      identity: { ...withoutHomepage.identity, storeName: { fr: "Autre" } },
+    };
+    const result = parsePublicStoreSettingsWithFallback(input, {
+      ...fallback,
+      identity: { ...fallback.identity, storeName: { fr: "Défaut" } },
+    });
+    expect(result.data.identity.storeName).toEqual({ fr: "Autre" });
+    expect(result.data.homepage).toEqual(fallback.homepage);
+    expect(result.issues).toEqual(["homepage"]);
+  });
+
+  it("returns the fallback for garbage", () => {
+    const result = parsePublicStoreSettingsWithFallback("nope", fallback);
+    expect(result.data).toEqual(fallback);
   });
 });

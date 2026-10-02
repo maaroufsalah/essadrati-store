@@ -22,7 +22,11 @@ async function storeRouting(): Promise<LocaleRouting> {
     nonEmpty(process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL);
   const publishableKey = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? "";
   const result = baseUrl
-    ? await createStoreClient({ baseUrl, publishableKey }).getStoreSettings({ cache: "no-store" })
+    ? await createStoreClient({
+        baseUrl,
+        publishableKey,
+        settingsFallback: DEFAULT_PUBLIC_STORE_SETTINGS,
+      }).getStoreSettings({ cache: "no-store" })
     : null;
 
   const resolved = routingFromSettings(result?.ok ? result.data : DEFAULT_PUBLIC_STORE_SETTINGS);

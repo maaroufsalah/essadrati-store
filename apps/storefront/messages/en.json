@@ -37,7 +37,20 @@
     "snapchat": "Snapchat"
   },
   "home": {
-    "welcome": "Welcome to {storeName}"
+    "welcome": "Welcome to {storeName}",
+    "bestsellersTitle": "Bestsellers",
+    "bestsellersSubtitle": "The products our customers recommend the most.",
+    "categoriesTitle": "Shop by category",
+    "giftsTitle": "Gift boxes",
+    "giftsSubtitle": "Ready-to-give boxes for every occasion.",
+    "testimonialsTitle": "What our customers say",
+    "viewAll": "View all",
+    "whatsappCta": "Order on WhatsApp",
+    "storyCta": "Read our story",
+    "shopCategory": "Shop {category}",
+    "trustTitle": "Our commitments",
+    "testimonialFrom": "{name}, {city}",
+    "viewProduct": "View product"
   },
   "notFound": {
     "title": "Page not found",

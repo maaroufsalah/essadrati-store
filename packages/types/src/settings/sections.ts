@@ -150,3 +150,60 @@ export const seoSchema = z.object({
   metaDescription: localizedStringSchema,
 });
 export type SeoSettings = z.infer<typeof seoSchema>;
+
+/** Icons offered for trust items (mapped to lucide icons by the apps). */
+export const TRUST_ICONS = [
+  "truck",
+  "cash",
+  "leaf",
+  "shield",
+  "star",
+  "phone",
+  "gift",
+  "heart",
+] as const;
+export type TrustIcon = (typeof TRUST_ICONS)[number];
+
+export const trustItemSchema = z.object({
+  icon: z.enum(TRUST_ICONS),
+  title: localizedStringSchema,
+  text: localizedStringSchema,
+});
+
+export const statSchema = z.object({
+  value: z.number().min(0).max(1_000_000_000),
+  /** Shown after the number, e.g. "+" or "%". */
+  suffix: z.string().trim().max(8),
+  label: localizedStringSchema,
+});
+
+export const testimonialSchema = z.object({
+  name: z.string().trim().min(1).max(80),
+  city: z.string().trim().max(80),
+  text: localizedStringSchema,
+  rating: z.number().int().min(1).max(5),
+});
+
+/** Editorial content of the home page. Section headings are UI copy (messages). */
+export const homepageSchema = z.object({
+  hero: z.object({
+    eyebrow: localizedStringSchema,
+    title: localizedStringSchema,
+    subtitle: localizedStringSchema,
+    ctaLabel: localizedStringSchema,
+    ctaHref: hrefSchema.nullable(),
+    image: optionalMediaSchema,
+  }),
+  trust: z.array(trustItemSchema).max(4),
+  story: z.object({
+    title: localizedStringSchema,
+    text: localizedStringSchema,
+    image: optionalMediaSchema,
+    stats: z.array(statSchema).max(4),
+    ctaHref: hrefSchema.nullable(),
+  }),
+  testimonials: z.array(testimonialSchema).max(12),
+  /** Collection shown as the gift boxes section, by handle. Null hides it. */
+  giftCollectionHandle: z.string().trim().max(80).nullable(),
+});
+export type HomepageSettings = z.infer<typeof homepageSchema>;

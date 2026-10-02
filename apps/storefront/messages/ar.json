@@ -37,7 +37,20 @@
     "snapchat": "سناب شات"
   },
   "home": {
-    "welcome": "مرحبًا بكم في {storeName}"
+    "welcome": "مرحبًا بكم في {storeName}",
+    "bestsellersTitle": "الأكثر مبيعاً",
+    "bestsellersSubtitle": "المنتجات التي يوصي بها زبائننا أكثر.",
+    "categoriesTitle": "تسوق حسب الصنف",
+    "giftsTitle": "باقات الهدايا",
+    "giftsSubtitle": "باقات جاهزة للإهداء في كل المناسبات.",
+    "testimonialsTitle": "آراء زبائننا",
+    "viewAll": "عرض الكل",
+    "whatsappCta": "اطلب عبر واتساب",
+    "storyCta": "اكتشف قصتنا",
+    "shopCategory": "تسوق {category}",
+    "trustTitle": "التزاماتنا",
+    "testimonialFrom": "{name}، {city}",
+    "viewProduct": "عرض المنتج"
   },
   "notFound": {
     "title": "الصفحة غير موجودة",

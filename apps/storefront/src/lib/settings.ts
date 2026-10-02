@@ -17,11 +17,17 @@ export const getStoreSettings = cache(async (): Promise<PublicStoreSettings> => 
   const client = createStoreClient({
     baseUrl: medusaServerUrl(),
     publishableKey: publicEnv.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
+    settingsFallback: DEFAULT_PUBLIC_STORE_SETTINGS,
   });
   const result = await client.getStoreSettings({
     next: { revalidate: settingsRevalidateSeconds() },
   });
-  if (result.ok) return result.data;
+  if (result.ok) {
+    if (result.warnings?.length) {
+      console.warn(`[settings] sections reset to kit defaults: ${result.warnings.join(", ")}`);
+    }
+    return result.data;
+  }
   console.error(
     `[settings] falling back to kit defaults: ${result.error.code}`,
     result.error.message,

@@ -74,5 +74,25 @@ export const validSettings = (): z.input<typeof storeSettingsSchema> => ({
     announcementBar: { enabled: true, text: { ar: "توصيل مجاني" }, href: "/c/honey" },
   },
   seo: { metaTitle: {}, metaDescription: {} },
+  homepage: {
+    hero: {
+      eyebrow: {},
+      title: { fr: "Titre" },
+      subtitle: {},
+      ctaLabel: {},
+      ctaHref: "/c/honey",
+      image: null,
+    },
+    trust: [{ icon: "truck", title: { fr: "Livraison" }, text: {} }],
+    story: {
+      title: {},
+      text: {},
+      image: null,
+      stats: [{ value: 15, suffix: "+", label: {} }],
+      ctaHref: null,
+    },
+    testimonials: [{ name: "Amina", city: "Rabat", text: { fr: "Top" }, rating: 5 }],
+    giftCollectionHandle: null,
+  },
   updatedAt: "2026-09-28T10:00:00.000Z",
 });

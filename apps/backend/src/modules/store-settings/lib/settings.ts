@@ -4,6 +4,7 @@ import {
   billingSchema,
   commerceSchema,
   contactSchema,
+  homepageSchema,
   identitySchema,
   localizationSchema,
   marketingSchema,
@@ -33,6 +34,7 @@ const SECTION_SCHEMAS: Record<StoreSettingsSection, SectionSchema> = {
   smtp: smtpSchema,
   marketing: marketingSchema,
   seo: seoSchema,
+  homepage: homepageSchema,
 };
 
 type Section<K extends StoreSettingsSection> = StoreSettings[K];

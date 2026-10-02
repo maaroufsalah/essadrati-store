@@ -41,6 +41,19 @@ site reste en ligne avec les StoreSettings neutres du kit et l'erreur est loggé
 `/[locale]/ui-kit` montre le kit avec les vrais produits, en développement seulement (404 en
 production). Points de contrôle : 390, 768-1024 et 1280-1440 px.
 
+## Accueil
+
+Sections (`app/[locale]/page.tsx`, ISR 1 h + tags `store-settings` et `catalog`) : barre promo,
+hero éditorial, engagements, catégories, best-sellers (carrousel scroll-snap sur mobile, grille
+2/4 colonnes), histoire sur fond sombre (classe `dark` locale) avec chiffres animés, coffrets
+(collection `homepage.giftCollectionHandle`), avis clients, footer. Tout le contenu vient de
+`StoreSettings.homepage` (page admin « Accueil ») et du catalogue Medusa ; les titres de
+section sont des messages.
+
+Les réglages sont lus de façon tolérante (`settingsFallback`) : une section absente ou
+invalide reprend les défauts du kit sans faire tomber le reste (décalage de versions pendant
+un déploiement).
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la

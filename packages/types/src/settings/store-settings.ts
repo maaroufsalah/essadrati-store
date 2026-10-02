@@ -4,6 +4,7 @@ import {
   billingSchema,
   commerceSchema,
   contactSchema,
+  homepageSchema,
   identitySchema,
   localizationSchema,
   marketingSchema,
@@ -24,6 +25,7 @@ export const STORE_SETTINGS_SECTIONS = [
   "smtp",
   "marketing",
   "seo",
+  "homepage",
 ] as const;
 export type StoreSettingsSection = (typeof STORE_SETTINGS_SECTIONS)[number];
 
@@ -60,6 +62,7 @@ const storeSettingsShape = {
   smtp: smtpSchema,
   marketing: marketingSchema,
   seo: seoSchema,
+  homepage: homepageSchema,
   /** ISO timestamp of the last write. Also used as the cache version. */
   updatedAt: z.iso.datetime({ offset: true }),
 };
@@ -98,6 +101,7 @@ export const storeSettingsUpdateSchema = z.strictObject({
   smtp: smtpUpdateSchema.optional(),
   marketing: marketingSchema.partial().optional(),
   seo: seoSchema.partial().optional(),
+  homepage: homepageSchema.partial().optional(),
 });
 export type StoreSettingsUpdate = z.infer<typeof storeSettingsUpdateSchema>;
 
@@ -115,4 +119,51 @@ export function toPublicStoreSettings(settings: StoreSettings): PublicStoreSetti
   const { bankName: _bank, rib: _rib, ...publicBilling } = billing;
   const { technicalEmailDomain: _domain, ...publicCommerce } = commerce;
   return { ...rest, billing: publicBilling, commerce: publicCommerce };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Tolerant read of the public settings: each section that is missing or
+ * invalid (an older or newer backend, a partial cache entry) takes the
+ * matching section of `fallback`, the rest is kept. Never throws.
+ * `issues` lists the sections that fell back.
+ */
+export function parsePublicStoreSettingsWithFallback(
+  input: unknown,
+  fallback: PublicStoreSettings,
+): { data: PublicStoreSettings; issues: string[] } {
+  const strict = publicStoreSettingsSchema.safeParse(input);
+  if (strict.success) return { data: strict.data, issues: [] };
+
+  const source = isRecord(input) ? input : {};
+  const shape = publicStoreSettingsSchema.shape;
+  const issues: string[] = [];
+  const merged: Record<string, unknown> = {};
+  for (const key of Object.keys(shape) as (keyof typeof shape)[]) {
+    const fallbackValue = fallback[key];
+    const value = source[key];
+    if (value === undefined) {
+      merged[key] = fallbackValue;
+      issues.push(key);
+      continue;
+    }
+    const candidate =
+      isRecord(value) && isRecord(fallbackValue) ? { ...fallbackValue, ...value } : value;
+    const parsed = shape[key].safeParse(candidate);
+    if (parsed.success) {
+      merged[key] = parsed.data;
+    } else {
+      merged[key] = fallbackValue;
+      issues.push(key);
+    }
+  }
+  const full = publicStoreSettingsSchema.safeParse(merged);
+  if (full.success) return { data: full.data, issues };
+  return {
+    data: publicStoreSettingsSchema.parse({ ...merged, localization: fallback.localization }),
+    issues: [...issues, "localization"],
+  };
 }

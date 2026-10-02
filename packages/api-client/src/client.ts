@@ -3,6 +3,7 @@ import {
   type Locale,
   type PublicStoreSettings,
   parsePublicStoreSettings,
+  parsePublicStoreSettingsWithFallback,
   toMedusaLocale,
 } from "@nocido/types";
 import { type ApiResult, toApiError } from "./errors";
@@ -17,6 +18,12 @@ export interface StoreClientOptions {
    * locale tag (ar + MA -> ar-MA) sent with every request.
    */
   locale?: { locale: Locale; country: string };
+  /**
+   * Defaults used section by section when the settings payload is
+   * incomplete or partly invalid (version skew between apps). Without it,
+   * any invalid payload is an `invalidResponse` error.
+   */
+  settingsFallback?: PublicStoreSettings;
   /** JWT storage. Server: "nostore" (default). Browser: "local". Expo: "custom". */
   auth?: Config["auth"];
   debug?: boolean;
@@ -38,8 +45,13 @@ export interface StoreClient {
   sdk: Medusa;
   /** Medusa locale tag sent with each request, or null. */
   medusaLocale: string | null;
-  /** Public StoreSettings, validated with the shared zod schema. */
-  getStoreSettings(options?: RequestOptions): Promise<ApiResult<PublicStoreSettings>>;
+  /**
+   * Public StoreSettings, validated with the shared zod schema. With
+   * `settingsFallback`, `warnings` lists the sections that fell back.
+   */
+  getStoreSettings(
+    options?: RequestOptions,
+  ): Promise<ApiResult<PublicStoreSettings> & { warnings?: string[] }>;
 }
 
 /** Adds kit cache tags to the Next.js fetch options, keeping the caller's tags. */
@@ -74,6 +86,13 @@ export function createStoreClient(options: StoreClientOptions): StoreClient {
           method: "GET",
           ...withTags(requestOptions, [CACHE_TAGS.storeSettings]),
         });
+        if (options.settingsFallback) {
+          const lenient = parsePublicStoreSettingsWithFallback(
+            body.settings,
+            options.settingsFallback,
+          );
+          return { ok: true, data: lenient.data, warnings: lenient.issues };
+        }
         const parsed = parsePublicStoreSettings(body.settings);
         if (!parsed.ok) {
           return {

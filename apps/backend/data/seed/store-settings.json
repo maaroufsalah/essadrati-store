@@ -1,14 +1,21 @@
 {
   "$comment": "Essadrati default StoreSettings, applied by catalog:seed only while the settings were never saved. Contact details are left empty on purpose: fill them in the admin.",
   "identity": {
-    "storeName": { "ar": "Essadrati", "fr": "Essadrati", "en": "Essadrati" },
+    "storeName": {
+      "ar": "Essadrati",
+      "fr": "Essadrati",
+      "en": "Essadrati"
+    },
     "tagline": {
       "ar": "عسل حر وزيت أركان وأملو من قلب المغرب",
       "fr": "Miel naturel, huile d'argan et amlou du cœur du Maroc",
       "en": "Natural honey, argan oil and amlou from the heart of Morocco"
     }
   },
-  "contact": { "country": "MA", "city": "" },
+  "contact": {
+    "country": "MA",
+    "city": ""
+  },
   "localization": {
     "defaultLocale": "ar",
     "enabledLocales": ["ar", "fr", "en"],
@@ -18,9 +25,19 @@
   },
   "theme": {
     "presetId": "heritage-dore",
-    "overrides": { "light": {}, "dark": {} },
-    "radius": { "base": 12, "card": 24, "button": "pill" },
-    "fonts": { "display": "amiri", "body": "ibm-plex-sans-arabic" },
+    "overrides": {
+      "light": {},
+      "dark": {}
+    },
+    "radius": {
+      "base": 12,
+      "card": 24,
+      "button": "pill"
+    },
+    "fonts": {
+      "display": "amiri",
+      "body": "ibm-plex-sans-arabic"
+    },
     "defaultMode": "system"
   },
   "commerce": {
@@ -52,5 +69,161 @@
       "fr": "Miel Ferrane et Daghmous, huile d'argan et amlou, directement des producteurs marocains. Paiement à la livraison partout au Maroc.",
       "en": "Ferrane and Daghmous honey, argan oil and amlou, straight from Moroccan producers. Cash on delivery across Morocco."
     }
+  },
+  "homepage": {
+    "hero": {
+      "eyebrow": {
+        "ar": "من مناحل المغرب",
+        "fr": "Des ruchers du Maroc",
+        "en": "From Moroccan apiaries"
+      },
+      "title": {
+        "ar": "عسل حر كما عرفه أجدادنا",
+        "fr": "Le miel pur, comme le connaissaient nos grands-parents",
+        "en": "Pure honey, the way our grandparents knew it"
+      },
+      "subtitle": {
+        "ar": "عسل الفرنان والدغموس وزيت الأركان والأملو، مباشرة من النحالين والتعاونيات إلى بابك. الدفع عند الاستلام.",
+        "fr": "Miel Ferrane et Daghmous, huile d'argan et amlou, directement des apiculteurs et coopératives jusqu'à votre porte. Paiement à la livraison.",
+        "en": "Ferrane and Daghmous honey, argan oil and amlou, straight from beekeepers and cooperatives to your door. Cash on delivery."
+      },
+      "ctaLabel": {
+        "ar": "اكتشف العسل",
+        "fr": "Découvrir nos miels",
+        "en": "Discover our honey"
+      },
+      "ctaHref": "/c/asal-hor",
+      "image": null
+    },
+    "trust": [
+      {
+        "icon": "cash",
+        "title": {
+          "ar": "الدفع عند الاستلام",
+          "fr": "Paiement à la livraison",
+          "en": "Cash on delivery"
+        },
+        "text": {
+          "ar": "ادفع نقداً عند وصول طلبك",
+          "fr": "Payez en espèces à la réception",
+          "en": "Pay in cash when it arrives"
+        }
+      },
+      {
+        "icon": "truck",
+        "title": {
+          "ar": "توصيل لكل المدن",
+          "fr": "Livraison partout au Maroc",
+          "en": "Delivery across Morocco"
+        },
+        "text": {
+          "ar": "من يوم إلى ثلاثة أيام في المدن الكبرى",
+          "fr": "1 à 3 jours dans les grandes villes",
+          "en": "1 to 3 days in major cities"
+        }
+      },
+      {
+        "icon": "leaf",
+        "title": {
+          "ar": "عسل حر 100%",
+          "fr": "Miel 100 % naturel",
+          "en": "100% natural honey"
+        },
+        "text": {
+          "ar": "غير مبستر وغير مخلوط",
+          "fr": "Non pasteurisé, sans mélange",
+          "en": "Unpasteurized, unblended"
+        }
+      },
+      {
+        "icon": "shield",
+        "title": {
+          "ar": "ضمان الجودة",
+          "fr": "Qualité garantie",
+          "en": "Quality guaranteed"
+        },
+        "text": {
+          "ar": "استبدال أو استرجاع إذا لم يعجبك",
+          "fr": "Échange ou remboursement",
+          "en": "Exchange or refund"
+        }
+      }
+    ],
+    "story": {
+      "title": {
+        "ar": "من المنحل إلى مائدتك",
+        "fr": "De la ruche à votre table",
+        "en": "From the hive to your table"
+      },
+      "text": {
+        "ar": "نعمل مع نحالين مغاربة يحترمون النحل ودورة الطبيعة. نجني العسل في موسمه دون تسخين، ونختار زيت الأركان والأملو من تعاونيات نسائية في سوس.",
+        "fr": "Nous travaillons avec des apiculteurs marocains qui respectent les abeilles et le rythme de la nature. Le miel est récolté en saison, sans chauffage, et l'huile d'argan comme l'amlou viennent de coopératives féminines du Souss.",
+        "en": "We work with Moroccan beekeepers who respect bees and the rhythm of nature. Honey is harvested in season, never heated, and our argan oil and amlou come from women's cooperatives in the Souss."
+      },
+      "image": null,
+      "stats": [
+        {
+          "value": 15,
+          "suffix": "+",
+          "label": {
+            "ar": "سنة من الخبرة",
+            "fr": "ans d'expérience",
+            "en": "years of experience"
+          }
+        },
+        {
+          "value": 12,
+          "suffix": "",
+          "label": {
+            "ar": "نحالاً شريكاً",
+            "fr": "apiculteurs partenaires",
+            "en": "partner beekeepers"
+          }
+        },
+        {
+          "value": 5000,
+          "suffix": "+",
+          "label": {
+            "ar": "زبون راضٍ",
+            "fr": "clients satisfaits",
+            "en": "happy customers"
+          }
+        }
+      ],
+      "ctaHref": "/our-story"
+    },
+    "testimonials": [
+      {
+        "name": "Fatima Z.",
+        "city": "Casablanca",
+        "rating": 5,
+        "text": {
+          "ar": "عسل الفرنان أصلي ومذاقه رائع، والتوصيل كان سريعاً.",
+          "fr": "Le miel Ferrane est authentique, un goût incroyable et une livraison rapide.",
+          "en": "The Ferrane honey is authentic, amazing taste and fast delivery."
+        }
+      },
+      {
+        "name": "Youssef B.",
+        "city": "Rabat",
+        "rating": 5,
+        "text": {
+          "ar": "طلبت الباقة الذهبية كهدية، التغليف أنيق جداً.",
+          "fr": "J'ai offert le coffret doré, l'emballage est très élégant.",
+          "en": "I gave the golden box as a gift, the packaging is very elegant."
+        }
+      },
+      {
+        "name": "Salma K.",
+        "city": "Marrakech",
+        "rating": 4,
+        "text": {
+          "ar": "الأملو لذيذ جداً ويذكرني بأملو جدتي.",
+          "fr": "L'amlou est délicieux, il me rappelle celui de ma grand-mère.",
+          "en": "The amlou is delicious, it reminds me of my grandmother's."
+        }
+      }
+    ],
+    "giftCollectionHandle": "baqat"
   }
 }

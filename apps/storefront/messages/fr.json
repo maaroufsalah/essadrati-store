@@ -37,7 +37,20 @@
     "snapchat": "Snapchat"
   },
   "home": {
-    "welcome": "Bienvenue chez {storeName}"
+    "welcome": "Bienvenue chez {storeName}",
+    "bestsellersTitle": "Nos best-sellers",
+    "bestsellersSubtitle": "Les produits que nos clients recommandent le plus.",
+    "categoriesTitle": "Nos univers",
+    "giftsTitle": "Coffrets cadeaux",
+    "giftsSubtitle": "Des coffrets prêts à offrir, pour toutes les occasions.",
+    "testimonialsTitle": "Ils nous font confiance",
+    "viewAll": "Tout voir",
+    "whatsappCta": "Commander sur WhatsApp",
+    "storyCta": "Découvrir notre histoire",
+    "shopCategory": "Voir {category}",
+    "trustTitle": "Nos engagements",
+    "testimonialFrom": "{name}, {city}",
+    "viewProduct": "Voir le produit"
   },
   "notFound": {
     "title": "Page introuvable",

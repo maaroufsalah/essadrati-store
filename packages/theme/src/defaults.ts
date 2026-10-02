@@ -86,6 +86,13 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
     announcementBar: { enabled: false, text: {}, href: null },
   },
   seo: { metaTitle: {}, metaDescription: {} },
+  homepage: {
+    hero: { eyebrow: {}, title: {}, subtitle: {}, ctaLabel: {}, ctaHref: null, image: null },
+    trust: [],
+    story: { title: {}, text: {}, image: null, stats: [], ctaHref: null },
+    testimonials: [],
+    giftCollectionHandle: null,
+  },
   updatedAt: "1970-01-01T00:00:00.000Z",
 };
 
