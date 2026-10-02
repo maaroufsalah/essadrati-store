@@ -2,7 +2,8 @@
 
 Kit e-commerce de référence Nocido. Premier client : Essadrati (miel, argan, amlou).
 Un repo par client, sans multi-tenant. Lire aussi le `README.md` racine et le README de
-chaque package avant de modifier quoi que ce soit.
+chaque package avant de modifier quoi que ce soit. Skills projet dans `.claude/skills/` :
+`medusa-v2`, `theme-tokens`, `i18n-rtl`, `vps-nginx-deploy`.
 
 ## Stack figée
 
@@ -112,12 +113,12 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 19      | SEO : métadonnées, OG dynamiques, sitemaps par langue, robots, flux Google/Meta          | fait    |
 | 20      | Notifications : emails brandés par langue (SMTP des settings), stub WhatsApp, admin      | fait    |
 | 21      | PDF facture et bon de livraison (Chromium, interface de rendu abstraite)                 | fait    |
-| 14      | **Checkpoint 2**                                                                         |         |
+| 14      | **Checkpoint 2** (étapes enchaînées en session autonome, à valider a posteriori)         | à faire |
 | 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |
 | 16c     | **Checkpoint 3** (avec l'app mobile)                                                     | reporté |
 | 21bis   | Infra VPS : Nginx, scripts Postgres, sauvegardes, CI/CD (préparé, rien lancé sur le VPS) | préparé |
 | 22      | Tests : Vitest, Playwright COD 3 viewports, Lighthouse CI mobile ≥ 90, CI GitHub         | fait    |
-| 23      | README final : déploiement VPS et adaptation du kit à un client                          |         |
+| 23      | README final, guide d'adaptation du kit, skills projet                                   | fait    |
 
 ## URLs
 
@@ -138,6 +139,10 @@ Dev local : backend `http://localhost:9000` (dashboard `/app`), storefront
 pnpm install
 pnpm --filter @nocido/backend dev        # tunnel SSH ouvert au préalable
 pnpm --filter @nocido/backend store:setup      # région Maroc / MAD, canal, clé publiable
+pnpm --filter @nocido/backend catalog:seed     # catalogue, réglages et pages d'exemple
+pnpm --filter @nocido/admin build              # puis redémarrer le backend
 pnpm --filter @nocido/storefront dev
 pnpm lint && pnpm typecheck && pnpm test
+pnpm --filter @nocido/e2e e2e                  # Playwright, apps lancées
+pnpm --filter @nocido/e2e lhci                 # Lighthouse mobile, build de prod (next start)
 ```
