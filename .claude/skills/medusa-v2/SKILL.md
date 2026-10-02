@@ -12,18 +12,25 @@ Read `apps/backend/README.md` and `apps/admin/README.md` first.
 
 - `apps/backend/src/modules/` — custom modules: `store-settings` (one JSON document, SMTP
   password encrypted with `SETTINGS_ENCRYPTION_KEY`), `moroccan-cities` (zones, cities, fees),
-  `pages` (CMS, Markdown per locale), `cod-payment` (`pp_cod_cod`), `manual-cod` (fulfillment).
+  `pages` (CMS, Markdown per locale), `hero-slides` and `category-banners` (home slider and
+  « Nos univers » banners: one row per item, `rank` + `active`, reorder route that needs every
+  id), `cod-payment` (`pp_cod_cod`), `manual-cod` (fulfillment).
 - `src/workflows/cod/` — `place-cod-order` (cart from items or cart id, fee from the city,
   COD payment, completion, `metadata.cod_status=pending`), `confirm-cod`.
 - `src/api/` — store routes (`/store/store-settings`, `/store/cities`, `/store/pages`,
+  `/store/hero-slides`, `/store/category-banners`,
   `/store/cod/orders`, `/store/cod/orders/:id`, `/store/cod/orders/lookup`) and admin routes.
   Route paths and cache tags are shared through `KIT_ROUTES` / `CACHE_TAGS` of `@nocido/api-client`.
-- `src/subscribers/` — storefront revalidation (catalog, settings, pages) and order
+- `src/subscribers/` — storefront revalidation (catalog, settings) and order
   notifications (`cod.order_*`, `shipment.created`, `delivery.created`).
 - `src/lib/notifications` (emails + WhatsApp stub), `src/lib/documents` (invoice and delivery
   note, HTML rendered by Chromium through `PdfRenderer`).
 
 ## Rules learned the hard way
+
+- **Module admin routes** (pages, hero slides, banners) revalidate their own cache tag
+  (`CACHE_TAGS`) right after the write; seeds call the services directly and revalidate
+  nothing (the storefront cache expires within the hour, or call `/api/revalidate`).
 
 - **StoreSettings are saved by insert + soft delete**, never `update`: Medusa deep-merges JSON
   columns, so removed keys would survive.
@@ -54,7 +61,7 @@ Read `apps/backend/README.md` and `apps/admin/README.md` first.
 pnpm db:tunnel                                   # dev DB on the VPS
 pnpm --filter @nocido/backend db:migrate
 pnpm --filter @nocido/backend store:setup        # idempotent, prints the publishable key
-pnpm --filter @nocido/backend catalog:seed
+pnpm --filter @nocido/backend catalog:seed       # SEED_HOME=force recreates slides and banners
 pnpm --filter @nocido/backend dev
 pnpm --filter @nocido/backend test               # unit (Vitest)
 pnpm --filter @nocido/backend test:integration   # essadrati_test through the tunnel

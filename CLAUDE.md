@@ -62,6 +62,9 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
   `STOREFRONT_REVALIDATE_URL/api/revalidate` (origine du storefront vue depuis le backend :
   `http://localhost:3000` en dev, `http://storefront:3000` en Docker) avec
   `REVALIDATE_SECRET`. Ne pas confondre avec `STOREFRONT_URL`, l'URL publique.
+- Accueil : slides (`hero-slides`) et bannières (`category-banners`) sont des modules ;
+  l'ordre et l'affichage des blocs sont dans `StoreSettings.homepage.sections`. Seule la
+  première slide est prioritaire (LCP) ; ne rien animer en JS avant l'hydratation dans ce bloc.
 - **Ne pas installer `apps/mobile`** : l'app mobile est reportée après la mise en
   production du storefront.
 
@@ -76,6 +79,9 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
   hoistée : ils masquent des dépendances non déclarées. Avant de conclure qu'un problème de CI
   n'est pas reproductible, rejouer la CI dans un clone propre (`git clone` sur D:, même store
   pnpm) avec `CI=true pnpm install --frozen-lockfile`.
+- Le cache de données Next (`apps/storefront/.next/cache/fetch-cache`) est partagé entre
+  `next dev` et `next build` : après des essais dans l'admin en dev, supprimer ce dossier avant
+  un build de mesure (sinon la page sert l'état de test).
 - Ne jamais lancer `pnpm setup` (commande intégrée de pnpm, modifie le PATH) : le script
   backend s'appelle `store:setup`.
 
@@ -87,38 +93,39 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 
 ## Ordre des étapes
 
-| Étape   | Contenu                                                                                  | État    |
-| ------- | ---------------------------------------------------------------------------------------- | ------- |
-| 0       | Monorepo pnpm + Turborepo, config partagée                                               | fait    |
-| 1       | `@nocido/types` : schémas zod StoreSettings, ThemeConfig                                 | fait    |
-| 2       | `@nocido/theme` : 7 presets, tokens, contraste WCAG                                      | fait    |
-| 3       | Backend Medusa : scaffold, région Maroc/MAD, module Translation                          | fait    |
-| 3bis    | `@nocido/api-client` : client Medusa typé partagé                                        | fait    |
-| 4       | Module Medusa `store-settings` (API admin + store)                                       | fait    |
-| 5       | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer              | fait    |
-|         | **Checkpoint 1**                                                                         | validé  |
-| 6       | Plugin admin : pages Settings                                                            | fait    |
-| 7       | Admin : thème (presets, tokens, aperçu, contraste), branding de l'admin                  | fait    |
-| 8       | Backend COD : villes marocaines, paiement `cod`, livraison `manual-cod`                  | fait    |
-| 9       | Seed catalogue Essadrati                                                                 | fait    |
-| 10      | Module CMS `pages`                                                                       | fait    |
-| 11      | Storefront UI kit                                                                        | fait    |
-| 12      | Storefront accueil                                                                       | fait    |
-| 13      | Storefront catégorie                                                                     | fait    |
-| 14      | Storefront produit + commande COD                                                        | fait    |
-| 15      | Storefront panier, checkout COD multi-produits, WhatsApp flottant                        | fait    |
-| 16      | Storefront page merci, suivi de commande, recherche numéro + téléphone                   | fait    |
-| 17      | Storefront pages CMS `/[locale]/[handle]`, liens du pied de page                         | fait    |
-| 18      | Tracking GTM/GA4/Meta/TikTok depuis les settings, consentement cookies                   | fait    |
-| 19      | SEO : métadonnées, OG dynamiques, sitemaps par langue, robots, flux Google/Meta          | fait    |
-| 20      | Notifications : emails brandés par langue (SMTP des settings), stub WhatsApp, admin      | fait    |
-| 21      | PDF facture et bon de livraison (Chromium, interface de rendu abstraite)                 | fait    |
-| 14      | **Checkpoint 2** (étapes enchaînées en session autonome, à valider a posteriori)         | à faire |
-| 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |
-| 16c     | **Checkpoint 3** (avec l'app mobile)                                                     | reporté |
-| 21bis   | Infra VPS : Nginx, scripts Postgres, sauvegardes, CI/CD (préparé, rien lancé sur le VPS) | préparé |
-| 22      | Tests : Vitest, Playwright COD 3 viewports, Lighthouse CI mobile ≥ 90, CI GitHub         | fait    |
-| 23      | README final, guide d'adaptation du kit, skills projet                                   | fait    |
+| Étape   | Contenu                                                                                   | État    |
+| ------- | ----------------------------------------------------------------------------------------- | ------- |
+| 0       | Monorepo pnpm + Turborepo, config partagée                                                | fait    |
+| 1       | `@nocido/types` : schémas zod StoreSettings, ThemeConfig                                  | fait    |
+| 2       | `@nocido/theme` : 7 presets, tokens, contraste WCAG                                       | fait    |
+| 3       | Backend Medusa : scaffold, région Maroc/MAD, module Translation                           | fait    |
+| 3bis    | `@nocido/api-client` : client Medusa typé partagé                                         | fait    |
+| 4       | Module Medusa `store-settings` (API admin + store)                                        | fait    |
+| 5       | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer               | fait    |
+|         | **Checkpoint 1**                                                                          | validé  |
+| 6       | Plugin admin : pages Settings                                                             | fait    |
+| 7       | Admin : thème (presets, tokens, aperçu, contraste), branding de l'admin                   | fait    |
+| 8       | Backend COD : villes marocaines, paiement `cod`, livraison `manual-cod`                   | fait    |
+| 9       | Seed catalogue Essadrati                                                                  | fait    |
+| 10      | Module CMS `pages`                                                                        | fait    |
+| 11      | Storefront UI kit                                                                         | fait    |
+| 12      | Storefront accueil                                                                        | fait    |
+| 13      | Storefront catégorie                                                                      | fait    |
+| 14      | Storefront produit + commande COD                                                         | fait    |
+| 15      | Storefront panier, checkout COD multi-produits, WhatsApp flottant                         | fait    |
+| 16      | Storefront page merci, suivi de commande, recherche numéro + téléphone                    | fait    |
+| 17      | Storefront pages CMS `/[locale]/[handle]`, liens du pied de page                          | fait    |
+| 18      | Tracking GTM/GA4/Meta/TikTok depuis les settings, consentement cookies                    | fait    |
+| 19      | SEO : métadonnées, OG dynamiques, sitemaps par langue, robots, flux Google/Meta           | fait    |
+| 20      | Notifications : emails brandés par langue (SMTP des settings), stub WhatsApp, admin       | fait    |
+| 21      | PDF facture et bon de livraison (Chromium, interface de rendu abstraite)                  | fait    |
+| 14      | **Checkpoint 2** (étapes enchaînées en session autonome, à valider a posteriori)          | à faire |
+| 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront**  | reporté |
+| 16c     | **Checkpoint 3** (avec l'app mobile)                                                      | reporté |
+| 21bis   | Infra VPS : Nginx, scripts Postgres, sauvegardes, CI/CD (préparé, rien lancé sur le VPS)  | préparé |
+| 22      | Tests : Vitest, Playwright COD 3 viewports, Lighthouse CI mobile ≥ 85, CI GitHub          | fait    |
+| 23      | README final, guide d'adaptation du kit, skills projet                                    | fait    |
+| 24      | Accueil premium : hero slider et bannières « Nos univers » administrables, blocs triables | fait    |
 
 ## URLs
 
@@ -139,7 +146,8 @@ Dev local : backend `http://localhost:9000` (dashboard `/app`), storefront
 pnpm install
 pnpm --filter @nocido/backend dev        # tunnel SSH ouvert au préalable
 pnpm --filter @nocido/backend store:setup      # région Maroc / MAD, canal, clé publiable
-pnpm --filter @nocido/backend catalog:seed     # catalogue, réglages et pages d'exemple
+pnpm --filter @nocido/backend catalog:seed     # catalogue, réglages, pages, slides, bannières
+SEED_HOME=force pnpm --filter @nocido/backend catalog:seed   # recrée slides et bannières
 pnpm --filter @nocido/admin build              # puis redémarrer le backend
 pnpm --filter @nocido/storefront dev
 pnpm lint && pnpm typecheck && pnpm test
