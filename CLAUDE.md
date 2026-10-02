@@ -71,6 +71,10 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
   serveur à la main.
 - Le build Next `standalone` n'est généré que sous Linux, donc dans Docker : sous Windows,
   ses symlinks pnpm exigent le mode développeur, `next.config.ts` le désactive.
+- Le `node_modules` racine local contient des paquets résiduels d'une ancienne installation
+  hoistée : ils masquent des dépendances non déclarées. Avant de conclure qu'un problème de CI
+  n'est pas reproductible, rejouer la CI dans un clone propre (`git clone` sur D:, même store
+  pnpm) avec `CI=true pnpm install --frozen-lockfile`.
 - Ne jamais lancer `pnpm setup` (commande intégrée de pnpm, modifie le PATH) : le script
   backend s'appelle `store:setup`.
 
