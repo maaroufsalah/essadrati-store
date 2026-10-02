@@ -10,7 +10,11 @@ export interface CodFieldValues {
   name: string;
   phone: string;
   cityId: string;
+  /** Optional: confirmation and status emails. */
+  email: string;
 }
+
+export const EMPTY_COD_FIELDS: CodFieldValues = { name: "", phone: "", cityId: "", email: "" };
 
 interface CodFieldsProps {
   locale: Locale;
@@ -22,7 +26,7 @@ interface CodFieldsProps {
   cityAside?: React.ReactNode;
 }
 
-/** Name, Moroccan phone and city: the COD customer fields (controlled). */
+/** Name, Moroccan phone, city and optional email: the COD customer fields (controlled). */
 export function CodFields({ locale, cities, values, onChange, errors, cityAside }: CodFieldsProps) {
   const t = useTranslations("cod");
   const id = useId();
@@ -98,6 +102,32 @@ export function CodFields({ locale, cities, values, onChange, errors, cityAside 
           ) : null}
         </div>
         {cityAside}
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor={`${id}-email`}>
+          {t("email")} <span className="text-muted-fg font-normal">({t("optional")})</span>
+        </Label>
+        <Input
+          id={`${id}-email`}
+          name="email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          dir="ltr"
+          value={values.email}
+          onChange={(event) => set({ email: event.target.value })}
+          placeholder={t("emailPlaceholder")}
+          aria-invalid={errors.email ? true : undefined}
+          aria-describedby={`${id}-email-hint${errors.email ? ` ${id}-email-error` : ""}`}
+          className="text-start"
+        />
+        <p id={`${id}-email-hint`} className="text-muted-fg text-xs">
+          {t("emailHint")}
+        </p>
+        {errors.email ? (
+          <FieldMessage id={`${id}-email-error`}>{t(`errors.${errors.email}`)}</FieldMessage>
+        ) : null}
       </div>
     </>
   );

@@ -22,6 +22,10 @@ export const codOrderInputSchema = z
     customer: z.object({
       name: z.string().trim().min(2, "cod.name.invalid").max(120, "cod.name.invalid"),
       phone: moroccanPhoneSchema,
+      /** Optional: order confirmation and status emails. */
+      email: z
+        .union([z.literal(""), z.email("cod.email.invalid").max(254, "cod.email.invalid")])
+        .optional(),
     }),
     city_id: z.string().min(1, "cod.city.required"),
     address: z.string().trim().max(300).optional(),

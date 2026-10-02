@@ -5,7 +5,7 @@ import { ShieldCheck, ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import { useCart } from "@/components/cart/cart-provider";
-import { type CodFieldValues, CodFields } from "@/components/cod/cod-fields";
+import { type CodFieldValues, CodFields, EMPTY_COD_FIELDS } from "@/components/cod/cod-fields";
 import { CodSummary } from "@/components/cod/cod-summary";
 import { ProductImage } from "@/components/commerce/product-image";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export function CheckoutForm({ locale, cities, codEnabled }: CheckoutFormProps) 
   const { cart, loaded, format, freeShippingThreshold, setOpen } = useCart();
   const [state, action, pending] = useActionState(placeCheckoutOrder, IDLE);
   const [, startTransition] = useTransition();
-  const [fields, setFields] = useState<CodFieldValues>({ name: "", phone: "", cityId: "" });
+  const [fields, setFields] = useState<CodFieldValues>(EMPTY_COD_FIELDS);
   const idempotencyKey = useRef<string | null>(null);
   const started = useRef(false);
   const city = cities.find((candidate) => candidate.id === fields.cityId) ?? null;

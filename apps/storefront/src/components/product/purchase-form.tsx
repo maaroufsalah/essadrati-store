@@ -5,7 +5,7 @@ import { MessageCircle, Minus, Plus, ShieldCheck, ShoppingBag } from "lucide-rea
 import { useTranslations } from "next-intl";
 import { useActionState, useEffect, useId, useRef, useState, useTransition } from "react";
 import { useCart } from "@/components/cart/cart-provider";
-import { type CodFieldValues, CodFields } from "@/components/cod/cod-fields";
+import { type CodFieldValues, CodFields, EMPTY_COD_FIELDS } from "@/components/cod/cod-fields";
 import { CodSummary } from "@/components/cod/cod-summary";
 import { Price } from "@/components/commerce/price";
 import { Button } from "@/components/ui/button";
@@ -51,7 +51,7 @@ export function PurchaseForm({
   const [, startTransition] = useTransition();
   const [variantId, setVariantId] = useState(variants[0]?.id ?? "");
   const [quantity, setQuantity] = useState(1);
-  const [fields, setFields] = useState<CodFieldValues>({ name: "", phone: "", cityId: "" });
+  const [fields, setFields] = useState<CodFieldValues>(EMPTY_COD_FIELDS);
   const [adding, setAdding] = useState(false);
   const [formVisible, setFormVisible] = useState(true);
   // Same key for every attempt of this form: retries never duplicate the order.

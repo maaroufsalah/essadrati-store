@@ -139,8 +139,13 @@
       "disabled": "Le paiement à la livraison est momentanément indisponible.",
       "belowMinimum": "Le montant minimum de commande n'est pas atteint.",
       "cityNotFound": "Cette ville n'est plus desservie, choisissez-en une autre.",
-      "generic": "La commande n'a pas pu être enregistrée. Réessayez ou contactez-nous sur WhatsApp."
-    }
+      "generic": "La commande n'a pas pu être enregistrée. Réessayez ou contactez-nous sur WhatsApp.",
+      "email": "Adresse email invalide"
+    },
+    "email": "Email",
+    "optional": "facultatif",
+    "emailPlaceholder": "vous@exemple.ma",
+    "emailHint": "Pour recevoir la confirmation et le suivi par email."
   },
   "cart": {
     "title": "Panier",

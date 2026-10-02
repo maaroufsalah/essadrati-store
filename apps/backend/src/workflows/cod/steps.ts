@@ -20,6 +20,8 @@ export interface CodCustomerInput {
   name: string;
   /** E.164, already normalized by moroccanPhoneSchema. */
   phone: string;
+  /** Optional real address for notifications. */
+  email?: string;
 }
 
 export interface CodContextInput {
@@ -93,7 +95,10 @@ export const resolveCodContextStep = createStep(
       regionId: store.default_region_id,
       salesChannelId: store.default_sales_channel_id,
       shippingOptionId: option.id,
-      email: codEmail(input.customer.phone, settings.commerce.technicalEmailDomain),
+      // A real address when given (notifications), else the technical one.
+      email: input.customer.email?.trim()
+        ? input.customer.email.trim().toLowerCase()
+        : codEmail(input.customer.phone, settings.commerce.technicalEmailDomain),
       address,
       city,
       freeShippingThreshold: settings.commerce.freeShippingThreshold,

@@ -139,8 +139,13 @@
       "disabled": "Cash on delivery is temporarily unavailable.",
       "belowMinimum": "The minimum order amount is not reached.",
       "cityNotFound": "This city is no longer served, please choose another one.",
-      "generic": "The order could not be placed. Try again or contact us on WhatsApp."
-    }
+      "generic": "The order could not be placed. Try again or contact us on WhatsApp.",
+      "email": "Invalid email address"
+    },
+    "email": "Email",
+    "optional": "optional",
+    "emailPlaceholder": "you@example.com",
+    "emailHint": "To receive the confirmation and tracking by email."
   },
   "cart": {
     "title": "Cart",

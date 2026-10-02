@@ -8,11 +8,20 @@ export type CodFormState =
 
 /** Message keys under `cod.errors` in the messages files. */
 export type CodErrorKey =
-  "phone" | "name" | "city" | "quantity" | "disabled" | "belowMinimum" | "cityNotFound" | "generic";
+  | "phone"
+  | "name"
+  | "email"
+  | "city"
+  | "quantity"
+  | "disabled"
+  | "belowMinimum"
+  | "cityNotFound"
+  | "generic";
 
 const CODES: Record<string, CodErrorKey> = {
   "phone.invalid": "phone",
   "cod.name.invalid": "name",
+  "cod.email.invalid": "email",
   "cod.city.required": "city",
   "cod.quantity.invalid": "quantity",
   "cod.disabled": "disabled",

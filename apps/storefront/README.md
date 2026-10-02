@@ -79,7 +79,8 @@ La commande passe par la server action `lib/cod-action.ts` → `POST /store/cod/
 (workflow `place-cod-order`). Le schéma d'entrée est partagé (`codOrderInputSchema`). Chaque
 formulaire envoie un en-tête `Idempotency-Key` : un renvoi après un délai dépassé retourne la
 commande déjà créée au lieu d'un doublon (cache + verrou côté backend, 24 h). La saisie est
-conservée si la commande est refusée. Champ piège anti-robots.
+conservée si la commande est refusée. Champ piège anti-robots. Email facultatif : s'il est
+donné, le client reçoit la confirmation et le suivi par email.
 
 ## Panier et checkout
 

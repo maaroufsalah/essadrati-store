@@ -106,6 +106,38 @@ Les clients sans email reçoivent une adresse technique `<téléphone>@<technica
 calculée, providers sur la région) et les villes de `data/moroccan-cities.json`
 (`pnpm --filter @nocido/backend cities:seed` pour les seules villes).
 
+## Notifications de commande
+
+`src/lib/notifications` envoie, à chaque événement COD, un email HTML brandé (logo, couleurs du
+thème, coordonnées et raison sociale des StoreSettings) dans la langue de la commande
+(`metadata.locale`, RTL en arabe) et un message WhatsApp :
+
+| Événement Medusa                     | Message                               |
+| ------------------------------------ | ------------------------------------- |
+| `cod.order_placed`                   | commande reçue + alerte boutique      |
+| `cod.order_confirmed` / `_cancelled` | confirmée / annulée                   |
+| `shipment.created`                   | expédiée (`no_notification` respecté) |
+| `delivery.created`                   | livrée                                |
+
+- Email client seulement si le client a donné une adresse (champ facultatif du formulaire
+  COD) ; les adresses techniques `@technicalEmailDomain` sont ignorées.
+- Alerte boutique (langue par défaut) vers `contact.email`, sinon l'expéditeur SMTP, avec un
+  lien vers la commande dans l'admin (`ADMIN_URL`, défaut `MEDUSA_BACKEND_URL/app`).
+- Transport Nodemailer construit à chaque envoi depuis `StoreSettings.smtp` (mot de passe
+  chiffré) ; sans SMTP, l'envoi est ignoré et journalisé. Une erreur d'envoi n'affecte jamais
+  la commande.
+- WhatsApp : interface `WhatsAppChannel`, implémentation `log` (stub, numéro masqué) en
+  attendant un fournisseur (WhatsApp Cloud API…).
+- Liens de suivi : `STOREFRONT_URL/<locale>/order/<id>`.
+- Textes génériques dans `messages.ts` (ar, fr, en, mêmes placeholders vérifiés par test).
+- Admin : page **Paramètres › Notifications** : aperçu de chaque message dans chaque langue
+  avec la dernière commande COD (`GET /admin/notifications/preview`) et envoi test
+  (`POST /admin/notifications/test`).
+
+Choix : pas de provider du module Notification de Medusa. Un provider ne peut pas lire le
+module `store-settings` et il faudrait faire transiter le mot de passe SMTP dans les données de
+notification stockées en base.
+
 ## Seed du catalogue client
 
 ```sh

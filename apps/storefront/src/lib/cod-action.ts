@@ -42,7 +42,11 @@ async function submitCodOrder(form: FormData): Promise<SubmitResult> {
             ? [{ variant_id: variantId, quantity: Number(text(form, "quantity") ?? "1") }]
             : [],
         }),
-    customer: { name: text(form, "name") ?? "", phone: text(form, "phone") ?? "" },
+    customer: {
+      name: text(form, "name") ?? "",
+      phone: text(form, "phone") ?? "",
+      email: text(form, "email"),
+    },
     city_id: text(form, "city_id") ?? "",
     address: text(form, "address"),
     locale: isLocale(locale) ? locale : undefined,

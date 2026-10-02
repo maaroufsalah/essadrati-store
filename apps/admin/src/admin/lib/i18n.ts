@@ -269,6 +269,28 @@ const fr = {
   "error.zone.inUse": "Des villes utilisent encore cette zone",
   "error.zone.code.invalid": "Code invalide (minuscules, chiffres, tirets)",
   "error.city.slug.invalid": "Identifiant invalide (minuscules, chiffres, tirets)",
+  "notifications.label": "Notifications",
+  "notifications.title": "Notifications de commande",
+  "notifications.description":
+    "Emails envoyés au client (s'il a donné son email) à chaque étape, et alerte de nouvelle commande à la boutique. Aperçu avec la dernière commande.",
+  "notifications.kind": "Message",
+  "notifications.kind.placed": "Commande reçue",
+  "notifications.kind.confirmed": "Commande confirmée",
+  "notifications.kind.cancelled": "Commande annulée",
+  "notifications.kind.shipped": "Commande expédiée",
+  "notifications.kind.delivered": "Commande livrée",
+  "notifications.kind.merchant": "Alerte nouvelle commande (boutique)",
+  "notifications.locale": "Langue",
+  "notifications.subject": "Objet",
+  "notifications.preview": "Aperçu de l'email",
+  "notifications.testTo": "Envoyer ce message à",
+  "notifications.send": "Envoyer le test",
+  "notifications.sent": "Email envoyé",
+  "notifications.failed": "Échec de l'envoi",
+  "notifications.smtpHint":
+    "L'envoi passe par le serveur SMTP de la page Contact ; sans SMTP, aucun email ne part. L'alerte boutique va à l'email de contact. WhatsApp est simulé pour l'instant (journal du serveur).",
+  "error.notifications.noOrder":
+    "Aucune commande COD pour l'aperçu : passez une commande test sur la boutique.",
 } as const;
 
 export type MessageKey = keyof typeof fr;
@@ -533,6 +555,27 @@ const en: Record<MessageKey, string> = {
   "error.zone.inUse": "Cities still use this zone",
   "error.zone.code.invalid": "Invalid code (lowercase, digits, dashes)",
   "error.city.slug.invalid": "Invalid identifier (lowercase, digits, dashes)",
+  "notifications.label": "Notifications",
+  "notifications.title": "Order notifications",
+  "notifications.description":
+    "Emails sent to the customer (when they gave an email) at each step, and a new order alert to the store. Previewed with the latest order.",
+  "notifications.kind": "Message",
+  "notifications.kind.placed": "Order received",
+  "notifications.kind.confirmed": "Order confirmed",
+  "notifications.kind.cancelled": "Order cancelled",
+  "notifications.kind.shipped": "Order shipped",
+  "notifications.kind.delivered": "Order delivered",
+  "notifications.kind.merchant": "New order alert (store)",
+  "notifications.locale": "Language",
+  "notifications.subject": "Subject",
+  "notifications.preview": "Email preview",
+  "notifications.testTo": "Send this message to",
+  "notifications.send": "Send test",
+  "notifications.sent": "Email sent",
+  "notifications.failed": "Sending failed",
+  "notifications.smtpHint":
+    "Sending uses the SMTP server of the Contact page; without SMTP no email is sent. The store alert goes to the contact email. WhatsApp is simulated for now (server log).",
+  "error.notifications.noOrder": "No COD order to preview: place a test order on the store.",
 };
 
 const DICTIONARIES = { fr, en } as const;

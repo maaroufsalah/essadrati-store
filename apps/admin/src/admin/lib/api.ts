@@ -74,6 +74,24 @@ export async function sendTestEmail(to: string): Promise<void> {
   });
 }
 
+export interface NotificationSample {
+  kind: string;
+  locale: string;
+}
+
+export async function fetchNotificationPreview(
+  sample: NotificationSample,
+): Promise<{ subject: string; html: string }> {
+  const query = new URLSearchParams({ kind: sample.kind, locale: sample.locale });
+  return adminFetch(`/admin/notifications/preview?${query.toString()}`);
+}
+
+export async function sendNotificationTest(
+  sample: NotificationSample & { to: string },
+): Promise<void> {
+  await adminFetch("/admin/notifications/test", { method: "POST", body: JSON.stringify(sample) });
+}
+
 function imageSize(file: File): Promise<{ width?: number; height?: number }> {
   if (!file.type.startsWith("image/") || file.type === "image/svg+xml") return Promise.resolve({});
   return new Promise((resolve) => {
