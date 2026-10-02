@@ -45,8 +45,10 @@ pied de page.
 - **Slider** et **Nos univers** : `HomeItemsManager` générique — liste avec vignette,
   interrupteur d'activation et ordre enregistrés immédiatement (`/reorder`), éditeur plein
   écran avec aperçu live ordinateur/mobile et ar/fr/en, rendu avec les tokens sombres du thème
-  et ses polices (comme la boutique). Lien choisi parmi les catégories et produits du catalogue
-  ou saisi (chemin ou URL http(s)).
+  et ses polices (comme la boutique). Lien : recherche à la saisie dans les catégories ou
+  produits (nom dans toutes les langues ou handle, `/admin/home-links`, clavier ↑ ↓ Entrée
+  Échap) ou URL saisie (chemin ou http(s)). Les téléversements non enregistrés sont supprimés
+  à la fermeture de l'éditeur.
 - **Contenus** : hero de secours (affiché sans slide active), engagements, histoire, avis,
   collection des coffrets.
 

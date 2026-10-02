@@ -14,7 +14,7 @@ import {
   toast,
 } from "@medusajs/ui";
 import { LOCALES, type MediaRef, directionOf } from "@nocido/types";
-import { type ReactNode, useId, useRef, useState } from "react";
+import { createContext, type ReactNode, useContext, useId, useRef, useState } from "react";
 import { Controller, get, useFormContext } from "react-hook-form";
 import { uploadMedia } from "../lib/api";
 import { errorMessage, localeLabel, t } from "../lib/i18n";
@@ -367,6 +367,12 @@ export function LocalizedField({
   );
 }
 
+/**
+ * Optional listener for files uploaded by the MediaFields below it: an
+ * editor uses it to delete the uploads it ends up not saving.
+ */
+export const UploadTrackerContext = createContext<((media: MediaRef) => void) | null>(null);
+
 /** Uploads to the Medusa File Module and stores the MediaRef. */
 export function MediaField({
   name,
@@ -381,6 +387,7 @@ export function MediaField({
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const id = useId();
+  const track = useContext(UploadTrackerContext);
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -396,7 +403,9 @@ export function MediaField({
             if (!file) return;
             setUploading(true);
             try {
-              field.onChange(await uploadMedia(file));
+              const uploaded = await uploadMedia(file);
+              track?.(uploaded);
+              field.onChange(uploaded);
             } catch (error) {
               toast.error(t("common.uploadFailed"), {
                 description: error instanceof Error ? error.message : undefined,

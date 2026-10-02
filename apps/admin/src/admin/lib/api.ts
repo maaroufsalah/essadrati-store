@@ -150,3 +150,13 @@ export async function uploadMedia(file: File): Promise<MediaRef> {
   if (!uploaded) throw new ApiRequestError(500, [], "upload.failed");
   return { id: uploaded.id, url: uploaded.url, mimeType: file.type || undefined, ...size };
 }
+
+/**
+ * Deletes uploads that were never saved (File Module). Best effort: a file
+ * left behind is harmless.
+ */
+export async function discardUploads(ids: readonly string[]): Promise<void> {
+  await Promise.allSettled(
+    ids.map((id) => adminFetch(`/admin/uploads/${encodeURIComponent(id)}`, { method: "DELETE" })),
+  );
+}

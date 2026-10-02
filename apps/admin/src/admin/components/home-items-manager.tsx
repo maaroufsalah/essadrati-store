@@ -15,10 +15,10 @@ import {
   usePrompt,
 } from "@medusajs/ui";
 import { LOCALES, type Locale, type LocalizedString, type MediaRef } from "@nocido/types";
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { type FieldValues, FormProvider, type Resolver, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
-import { ApiRequestError } from "../lib/api";
+import { ApiRequestError, discardUploads } from "../lib/api";
 import {
   deleteHomeItem,
   type HomeItemsApi,
@@ -28,6 +28,7 @@ import {
   saveHomeItem,
 } from "../lib/home";
 import { errorMessage, localeLabel, t } from "../lib/i18n";
+import { UploadTrackerContext } from "./fields";
 import type { PreviewMode } from "./home-preview";
 import { SortableList } from "./sortable-list";
 
@@ -38,6 +39,7 @@ export interface HomeItemBase {
   rank: number;
   title: LocalizedString;
   imageDesktop: MediaRef | null;
+  imageMobile: MediaRef | null;
 }
 
 export interface HomeItemsManagerProps<T extends HomeItemBase> {
@@ -90,6 +92,15 @@ function Editor<T extends HomeItemBase>({
 }) {
   const [mode, setMode] = useState<PreviewMode>("desktop");
   const [locale, setLocale] = useState<Locale>("fr");
+  // Files uploaded in this editor: the ones not saved are deleted on save or close.
+  const uploads = useRef<MediaRef[]>([]);
+  const track = useCallback((media: MediaRef) => uploads.current.push(media), []);
+  const discardUnsaved = (kept: readonly (MediaRef | null)[]) => {
+    const keep = new Set(kept.flatMap((media) => (media ? [media.id] : [])));
+    const unused = uploads.current.filter((media) => !keep.has(media.id)).map(({ id }) => id);
+    uploads.current = [];
+    if (unused.length > 0) void discardUploads(unused);
+  };
   const form = useForm<FieldValues>({
     resolver: ((values, context, options) =>
       zodResolver(config.schema)(clean(values), context, options)) as Resolver<FieldValues>,
@@ -101,6 +112,7 @@ function Editor<T extends HomeItemBase>({
     try {
       const saved = await saveHomeItem<T>(config.api, input, item?.id ?? null);
       toast.success(t("homeItems.saved"));
+      discardUnsaved([saved.imageDesktop, saved.imageMobile]);
       onSaved(saved);
     } catch (error) {
       if (error instanceof ApiRequestError) {
@@ -115,65 +127,74 @@ function Editor<T extends HomeItemBase>({
   };
 
   return (
-    <FocusModal open onOpenChange={(open) => !open && onClose()}>
+    <FocusModal
+      open
+      onOpenChange={(open) => {
+        if (open) return;
+        discardUnsaved([]);
+        onClose();
+      }}
+    >
       <FocusModal.Content>
-        <FormProvider {...form}>
-          <form
-            noValidate
-            className="flex h-full flex-col overflow-hidden"
-            onSubmit={(event) => {
-              void form.handleSubmit(save, () => toast.error(t("common.invalid")))(event);
-            }}
-          >
-            <FocusModal.Header>
-              <div className="flex w-full items-center justify-between gap-3">
-                <FocusModal.Title asChild>
-                  <Heading level="h2">{item ? itemTitle(item) : config.labels.newItem}</Heading>
-                </FocusModal.Title>
-                <Button type="submit" size="small" isLoading={form.formState.isSubmitting}>
-                  {t("common.save")}
-                </Button>
-              </div>
-            </FocusModal.Header>
-            <FocusModal.Body className="flex flex-1 flex-col overflow-hidden lg:flex-row">
-              <div className="flex flex-col gap-y-6 overflow-y-auto p-6 lg:w-[520px] lg:shrink-0">
-                {config.fields}
-              </div>
-              <div className="bg-ui-bg-subtle border-ui-border-base flex flex-1 flex-col gap-4 overflow-y-auto border-t p-6 lg:border-s lg:border-t-0">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Text size="small" weight="plus">
-                    {t("homeItems.preview")}
-                  </Text>
-                  <div className="flex flex-wrap gap-1">
-                    {(["desktop", "mobile"] as const).map((value) => (
-                      <Button
-                        key={value}
-                        type="button"
-                        size="small"
-                        variant={mode === value ? "primary" : "secondary"}
-                        onClick={() => setMode(value)}
-                      >
-                        {t(value === "desktop" ? "homeItems.desktop" : "homeItems.mobile")}
-                      </Button>
-                    ))}
-                    {LOCALES.map((value) => (
-                      <Button
-                        key={value}
-                        type="button"
-                        size="small"
-                        variant={locale === value ? "primary" : "transparent"}
-                        onClick={() => setLocale(value)}
-                      >
-                        {localeLabel(value)}
-                      </Button>
-                    ))}
-                  </div>
+        <UploadTrackerContext.Provider value={track}>
+          <FormProvider {...form}>
+            <form
+              noValidate
+              className="flex h-full flex-col overflow-hidden"
+              onSubmit={(event) => {
+                void form.handleSubmit(save, () => toast.error(t("common.invalid")))(event);
+              }}
+            >
+              <FocusModal.Header>
+                <div className="flex w-full items-center justify-between gap-3">
+                  <FocusModal.Title asChild>
+                    <Heading level="h2">{item ? itemTitle(item) : config.labels.newItem}</Heading>
+                  </FocusModal.Title>
+                  <Button type="submit" size="small" isLoading={form.formState.isSubmitting}>
+                    {t("common.save")}
+                  </Button>
                 </div>
-                {config.preview(clean(values), mode, locale)}
-              </div>
-            </FocusModal.Body>
-          </form>
-        </FormProvider>
+              </FocusModal.Header>
+              <FocusModal.Body className="flex flex-1 flex-col overflow-hidden lg:flex-row">
+                <div className="flex flex-col gap-y-6 overflow-y-auto p-6 lg:w-[520px] lg:shrink-0">
+                  {config.fields}
+                </div>
+                <div className="bg-ui-bg-subtle border-ui-border-base flex flex-1 flex-col gap-4 overflow-y-auto border-t p-6 lg:border-s lg:border-t-0">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <Text size="small" weight="plus">
+                      {t("homeItems.preview")}
+                    </Text>
+                    <div className="flex flex-wrap gap-1">
+                      {(["desktop", "mobile"] as const).map((value) => (
+                        <Button
+                          key={value}
+                          type="button"
+                          size="small"
+                          variant={mode === value ? "primary" : "secondary"}
+                          onClick={() => setMode(value)}
+                        >
+                          {t(value === "desktop" ? "homeItems.desktop" : "homeItems.mobile")}
+                        </Button>
+                      ))}
+                      {LOCALES.map((value) => (
+                        <Button
+                          key={value}
+                          type="button"
+                          size="small"
+                          variant={locale === value ? "primary" : "transparent"}
+                          onClick={() => setLocale(value)}
+                        >
+                          {localeLabel(value)}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  {config.preview(clean(values), mode, locale)}
+                </div>
+              </FocusModal.Body>
+            </form>
+          </FormProvider>
+        </UploadTrackerContext.Provider>
       </FocusModal.Content>
     </FocusModal>
   );

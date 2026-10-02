@@ -1,6 +1,6 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk";
 import { House } from "@medusajs/icons";
-import { Button, Container, Label, Switch, Tabs, Text, toast } from "@medusajs/ui";
+import { Button, Container, Label, Switch, Tabs, Text } from "@medusajs/ui";
 import { KIT_ROUTES } from "@nocido/api-client";
 import { DEFAULT_THEME_CONFIG } from "@nocido/theme/defaults";
 import {
@@ -43,7 +43,6 @@ import { BannerPreview, SlidePreview } from "../../../components/home-preview";
 import { type FormValues, SettingsForm } from "../../../components/settings-form";
 import { SortableList } from "../../../components/sortable-list";
 import { fetchSettings } from "../../../lib/api";
-import { fetchLinkTargets, type LinkTargets } from "../../../lib/home";
 import { t, translate } from "../../../lib/i18n";
 import { usePreviewFonts } from "../../../lib/preview-fonts";
 
@@ -154,23 +153,16 @@ function LayoutTab() {
 
 /* ---------- Hero slides and category banners ---------- */
 
-function useHomeContext(): { theme: ThemeConfig; targets: LinkTargets | null } {
+/** Theme of the store, for the slide and banner previews. */
+function usePreviewTheme(): ThemeConfig {
   const [theme, setTheme] = useState<ThemeConfig>(DEFAULT_THEME_CONFIG);
-  const [targets, setTargets] = useState<LinkTargets | null>(null);
   useEffect(() => {
     fetchSettings()
       .then((settings) => setTheme(settings.theme))
       .catch(() => undefined);
-    fetchLinkTargets()
-      .then(setTargets)
-      .catch((error: unknown) =>
-        toast.error(t("homeItems.targetsFailed"), {
-          description: error instanceof Error ? error.message : undefined,
-        }),
-      );
   }, []);
   usePreviewFonts(theme);
-  return { theme, targets };
+  return theme;
 }
 
 const sizeHint = (size: { width: number; height: number }) =>
@@ -187,7 +179,7 @@ const BANNERS_API = {
 const localized = (value: unknown) => (value ?? {}) as LocalizedString;
 const media = (value: unknown) => (value ?? null) as MediaRef | null;
 
-function SlidesTab({ theme, targets }: { theme: ThemeConfig; targets: LinkTargets | null }) {
+function SlidesTab({ theme }: { theme: ThemeConfig }) {
   return (
     <HomeItemsManager<HeroSlide>
       api={HERO_API}
@@ -222,7 +214,7 @@ function SlidesTab({ theme, targets }: { theme: ThemeConfig; targets: LinkTarget
           <LocalizedField name="title" label={t("homeItems.title")} />
           <LocalizedField name="subtitle" label={t("homeItems.subtitle")} multiline />
           <LocalizedField name="ctaLabel" label={t("homeItems.ctaLabel")} />
-          <LinkField name="link" label={t("homeItems.link")} targets={targets} />
+          <LinkField name="link" label={t("homeItems.link")} />
           <RadioField
             name="textAlign"
             label={t("homeItems.textAlign")}
@@ -274,7 +266,7 @@ function SlidesTab({ theme, targets }: { theme: ThemeConfig; targets: LinkTarget
   );
 }
 
-function BannersTab({ theme, targets }: { theme: ThemeConfig; targets: LinkTargets | null }) {
+function BannersTab({ theme }: { theme: ThemeConfig }) {
   return (
     <HomeItemsManager<CategoryBanner>
       api={BANNERS_API}
@@ -306,7 +298,7 @@ function BannersTab({ theme, targets }: { theme: ThemeConfig; targets: LinkTarge
           <LocalizedField name="title" label={t("homeItems.title")} />
           <LocalizedField name="tagline" label={t("homeItems.tagline")} />
           <LocalizedField name="ctaLabel" label={t("homeItems.ctaLabel")} />
-          <LinkField name="link" label={t("homeItems.link")} targets={targets} />
+          <LinkField name="link" label={t("homeItems.link")} />
         </>
       }
       preview={(values: FieldValues, mode, locale) => (
@@ -554,7 +546,7 @@ function ContentTab() {
 const TABS = ["layout", "slides", "banners", "content"] as const;
 
 const HomepageSettingsPage = () => {
-  const context = useHomeContext();
+  const theme = usePreviewTheme();
   return (
     <Tabs defaultValue="layout" className="flex flex-col gap-y-3">
       <Container className="px-6 py-3">
@@ -571,10 +563,10 @@ const HomepageSettingsPage = () => {
         <LayoutTab />
       </Tabs.Content>
       <Tabs.Content value="slides" forceMount className="data-[state=inactive]:hidden">
-        <SlidesTab {...context} />
+        <SlidesTab theme={theme} />
       </Tabs.Content>
       <Tabs.Content value="banners" forceMount className="data-[state=inactive]:hidden">
-        <BannersTab {...context} />
+        <BannersTab theme={theme} />
       </Tabs.Content>
       <Tabs.Content value="content" forceMount className="data-[state=inactive]:hidden">
         <ContentTab />

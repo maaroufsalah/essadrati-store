@@ -1,4 +1,6 @@
+import { KIT_ROUTES } from "@nocido/api-client";
 import { adminFetch } from "./api";
+import { currentLanguage } from "./i18n";
 
 /** Admin list endpoints of the home content modules (hero slides, category banners). */
 export interface HomeItemsApi {
@@ -46,25 +48,23 @@ export interface LinkTarget {
   label: string;
 }
 
-export interface LinkTargets {
-  categories: LinkTarget[];
-  products: LinkTarget[];
-}
-
-/** Categories and products offered by the link picker (handles, as in /c/... and /p/...). */
-export async function fetchLinkTargets(): Promise<LinkTargets> {
-  const [categories, products] = await Promise.all([
-    adminFetch<{ product_categories: { handle: string; name: string }[] }>(
-      "/admin/product-categories?fields=handle,name&limit=200",
-    ),
-    adminFetch<{ products: { handle: string; title: string }[] }>(
-      "/admin/products?fields=handle,title&limit=200",
-    ),
-  ]);
-  return {
-    categories: categories.product_categories.map((c) => ({ handle: c.handle, label: c.name })),
-    products: products.products.map((p) => ({ handle: p.handle, label: p.title })),
-  };
+/**
+ * Categories or products whose handle or name (any language) contains
+ * `query`, labelled in the dashboard language; at most 10. With `handle`,
+ * the one entry that has it (to label a saved link).
+ */
+export async function searchLinkTargets(
+  type: "category" | "product",
+  options: { query?: string; handle?: string; signal?: AbortSignal },
+): Promise<LinkTarget[]> {
+  const params = new URLSearchParams({ type, locale: currentLanguage() });
+  if (options.query) params.set("q", options.query);
+  if (options.handle) params.set("handle", options.handle);
+  const body = await adminFetch<{ targets: LinkTarget[] }>(
+    `${KIT_ROUTES.adminHomeLinks}?${params.toString()}`,
+    { signal: options.signal },
+  );
+  return body.targets;
 }
 
 /** Moves one entry of a list (drag and drop, up/down buttons). */
