@@ -43,5 +43,13 @@
     "title": "الصفحة غير موجودة",
     "description": "الصفحة المطلوبة غير موجودة أو تم نقلها.",
     "backHome": "العودة إلى الرئيسية"
+  },
+  "product": {
+    "sale": "‎-{percent}٪",
+    "featured": "الأكثر طلباً",
+    "from": "ابتداءً من",
+    "originalPrice": "السعر الأصلي",
+    "ratingLabel": "تقييم {rating} من 5، {count} تقييم",
+    "weight": "الوزن"
   }
 }

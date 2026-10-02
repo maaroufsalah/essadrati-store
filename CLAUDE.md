@@ -94,7 +94,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 8       | Backend COD : villes marocaines, paiement `cod`, livraison `manual-cod`                  | fait    |
 | 9       | Seed catalogue Essadrati                                                                 | fait    |
 | 10      | Module CMS `pages`                                                                       | fait    |
-| 11      | Storefront UI kit                                                                        |         |
+| 11      | Storefront UI kit                                                                        | fait    |
 | 12      | Storefront accueil                                                                       |         |
 | 13      | Storefront catégorie                                                                     |         |
 | 14      | Storefront produit + commande COD                                                        |         |

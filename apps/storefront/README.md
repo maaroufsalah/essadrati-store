@@ -27,6 +27,20 @@ site reste en ligne avec les StoreSettings neutres du kit et l'erreur est loggé
 | Revalidation | `POST /api/revalidate`, en-tête `x-revalidate-secret`, tags du kit uniquement. Appelé par le backend après chaque sauvegarde.                                                                                    |
 | Santé        | `GET /api/health` pour le healthcheck Docker.                                                                                                                                                                    |
 
+## Kit UI
+
+| Dossier               | Contenu                                                                                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/ui`       | shadcn/ui sur les tokens : Button (pilule), Card (radius-card), Input, Textarea, Label, Sheet (côté start), Drawer (vaul), Accordion, Badge, Skeleton |
+| `components/motion`   | Reveal, Stagger, Pressable, CountUp (motion, sous la ligne de flottaison uniquement)                                                                  |
+| `components/commerce` | Price, RatingStars, ProductImage / ImagePlaceholder, ProductCard (+ skeleton)                                                                         |
+| `lib/format.ts`       | Prix et nombres selon `localization.defaultCurrency` et `numberingSystem` (latn/arab)                                                                 |
+| `lib/product-view.ts` | Produit Medusa → données de carte (prix le plus bas, prix barré, note)                                                                                |
+| `lib/catalog.ts`      | Produits, catégories, collections (serveur, tag `catalog`, 1 h)                                                                                       |
+
+`/[locale]/ui-kit` montre le kit avec les vrais produits, en développement seulement (404 en
+production). Points de contrôle : 390, 768-1024 et 1280-1440 px.
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la

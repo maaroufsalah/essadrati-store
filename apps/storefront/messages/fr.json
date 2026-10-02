@@ -43,5 +43,13 @@
     "title": "Page introuvable",
     "description": "La page demandée n'existe pas ou a été déplacée.",
     "backHome": "Retour à l'accueil"
+  },
+  "product": {
+    "sale": "-{percent} %",
+    "featured": "Coup de cœur",
+    "from": "À partir de",
+    "originalPrice": "Prix initial",
+    "ratingLabel": "Noté {rating} sur 5, {count} avis",
+    "weight": "Poids"
   }
 }

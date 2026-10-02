@@ -1,0 +1,137 @@
+import "server-only";
+import { CACHE_TAGS, createStoreClient, type HttpTypes } from "@nocido/api-client";
+import type { Locale } from "@nocido/types";
+import { cache } from "react";
+import { publicEnv } from "./env";
+import { type ProductCardData, toProductCardData } from "./product-view";
+import { medusaServerUrl } from "./server-env";
+import { getStoreSettings } from "./settings";
+
+/** Catalog data is cached for an hour and revalidated by the backend on changes. */
+const CATALOG_REVALIDATE = 3600;
+const CARD_FIELDS =
+  "id,handle,title,subtitle,thumbnail,metadata,*images,*variants.calculated_price";
+
+const nextOptions = (tags: string[] = []) => ({
+  next: { revalidate: CATALOG_REVALIDATE, tags: [CACHE_TAGS.catalog, ...tags] },
+});
+
+/** Store client bound to the visitor locale (translated titles and descriptions). */
+export const storeClient = cache(async (locale: Locale) => {
+  const settings = await getStoreSettings();
+  return createStoreClient({
+    baseUrl: medusaServerUrl(),
+    publishableKey: publicEnv.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
+    locale: { locale, country: settings.contact.country },
+  });
+});
+
+/** Region of the store currency, needed for calculated prices. */
+export const getRegionId = cache(async (): Promise<string | null> => {
+  const settings = await getStoreSettings();
+  const client = createStoreClient({
+    baseUrl: medusaServerUrl(),
+    publishableKey: publicEnv.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
+  });
+  try {
+    const { regions } = await client.sdk.client.fetch<HttpTypes.StoreRegionListResponse>(
+      "/store/regions",
+      {
+        query: { limit: 20, fields: "id,currency_code" },
+        ...nextOptions(),
+      },
+    );
+    const currency = settings.localization.defaultCurrency.toLowerCase();
+    return (regions.find((region) => region.currency_code === currency) ?? regions[0])?.id ?? null;
+  } catch (error) {
+    console.error("[catalog] regions unavailable", error);
+    return null;
+  }
+});
+
+export interface ProductQuery {
+  limit?: number;
+  offset?: number;
+  categoryId?: string[];
+  collectionId?: string[];
+  handle?: string;
+  order?: string;
+  q?: string;
+}
+
+/** Products with calculated prices, never throws (empty list on failure). */
+export async function listProducts(
+  locale: Locale,
+  query: ProductQuery = {},
+): Promise<{ products: HttpTypes.StoreProduct[]; count: number }> {
+  const [client, regionId] = await Promise.all([storeClient(locale), getRegionId()]);
+  try {
+    const body = await client.sdk.client.fetch<HttpTypes.StoreProductListResponse>(
+      "/store/products",
+      {
+        query: {
+          fields: CARD_FIELDS,
+          region_id: regionId ?? undefined,
+          limit: query.limit ?? 24,
+          offset: query.offset ?? 0,
+          category_id: query.categoryId,
+          collection_id: query.collectionId,
+          handle: query.handle,
+          order: query.order,
+          q: query.q,
+        },
+        ...nextOptions(),
+      },
+    );
+    return { products: body.products, count: body.count };
+  } catch (error) {
+    console.error("[catalog] products unavailable", error);
+    return { products: [], count: 0 };
+  }
+}
+
+export async function listProductCards(
+  locale: Locale,
+  query: ProductQuery = {},
+): Promise<ProductCardData[]> {
+  const { products } = await listProducts(locale, query);
+  return products.map(toProductCardData);
+}
+
+export const listCategories = cache(
+  async (locale: Locale): Promise<HttpTypes.StoreProductCategory[]> => {
+    const client = await storeClient(locale);
+    try {
+      const body = await client.sdk.client.fetch<HttpTypes.StoreProductCategoryListResponse>(
+        "/store/product-categories",
+        {
+          query: { limit: 50, fields: "id,handle,name,description,rank,metadata" },
+          ...nextOptions(),
+        },
+      );
+      return [...body.product_categories].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0));
+    } catch (error) {
+      console.error("[catalog] categories unavailable", error);
+      return [];
+    }
+  },
+);
+
+export const listCollections = cache(
+  async (locale: Locale): Promise<HttpTypes.StoreCollection[]> => {
+    const client = await storeClient(locale);
+    try {
+      const body = await client.sdk.client.fetch<HttpTypes.StoreCollectionListResponse>(
+        "/store/collections",
+        {
+          query: { limit: 50, fields: "id,handle,title,metadata" },
+          ...nextOptions(),
+        },
+      );
+      return body.collections;
+    } catch (error) {
+      console.error("[catalog] collections unavailable", error);
+      return [];
+    }
+  },
+);
