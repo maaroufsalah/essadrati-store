@@ -291,6 +291,15 @@ const fr = {
     "L'envoi passe par le serveur SMTP de la page Contact ; sans SMTP, aucun email ne part. L'alerte boutique va à l'email de contact. WhatsApp est simulé pour l'instant (journal du serveur).",
   "error.notifications.noOrder":
     "Aucune commande COD pour l'aperçu : passez une commande test sur la boutique.",
+  "documents.title": "Documents",
+  "documents.invoice": "Facture (PDF)",
+  "documents.deliveryNote": "Bon de livraison (PDF)",
+  "documents.failed": "Impossible de générer le document",
+  "documents.preview": "Aperçu des documents",
+  "documents.previewHint":
+    "Aperçu avec la dernière commande COD et les paramètres enregistrés (enregistrez d'abord vos modifications).",
+  "error.pdf.browserNotFound":
+    "Aucun navigateur Chromium sur le serveur pour générer les PDF (variable PDF_BROWSER_PATH).",
 } as const;
 
 export type MessageKey = keyof typeof fr;
@@ -576,6 +585,15 @@ const en: Record<MessageKey, string> = {
   "notifications.smtpHint":
     "Sending uses the SMTP server of the Contact page; without SMTP no email is sent. The store alert goes to the contact email. WhatsApp is simulated for now (server log).",
   "error.notifications.noOrder": "No COD order to preview: place a test order on the store.",
+  "documents.title": "Documents",
+  "documents.invoice": "Invoice (PDF)",
+  "documents.deliveryNote": "Delivery note (PDF)",
+  "documents.failed": "The document could not be generated",
+  "documents.preview": "Document preview",
+  "documents.previewHint":
+    "Preview with the latest COD order and the saved settings (save your changes first).",
+  "error.pdf.browserNotFound":
+    "No Chromium browser on the server to generate PDFs (PDF_BROWSER_PATH variable).",
 };
 
 const DICTIONARIES = { fr, en } as const;

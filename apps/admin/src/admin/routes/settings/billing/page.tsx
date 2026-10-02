@@ -1,6 +1,8 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk";
 import { Receipt } from "@medusajs/icons";
+import { Button, Text, toast } from "@medusajs/ui";
 import { billingSchema } from "@nocido/types";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import {
   Grid,
@@ -11,9 +13,74 @@ import {
   TextField,
 } from "../../../components/fields";
 import { SettingsForm } from "../../../components/settings-form";
-import { t } from "../../../lib/i18n";
+import { fetchAdminFile } from "../../../lib/api";
+import { errorMessage, t } from "../../../lib/i18n";
 
 const schema = z.object({ billing: billingSchema });
+
+/** Invoice and delivery note of the latest COD order, rendered with the saved settings. */
+function DocumentPreview() {
+  const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState<"invoice" | "delivery-note" | null>(null);
+
+  useEffect(
+    () => () => {
+      if (url) URL.revokeObjectURL(url);
+    },
+    [url],
+  );
+
+  const show = async (type: "invoice" | "delivery-note") => {
+    setLoading(type);
+    try {
+      const result = await fetchAdminFile(`/admin/documents/preview?type=${type}`);
+      setUrl(URL.createObjectURL(result.blob));
+    } catch (error) {
+      toast.error(t("documents.failed"), {
+        description: error instanceof Error ? errorMessage(error.message) : undefined,
+      });
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <Text size="small" className="text-ui-fg-subtle">
+        {t("documents.previewHint")}
+      </Text>
+      <div className="flex flex-wrap gap-2">
+        <Button
+          type="button"
+          size="small"
+          variant="secondary"
+          isLoading={loading === "invoice"}
+          disabled={loading !== null}
+          onClick={() => void show("invoice")}
+        >
+          {t("documents.invoice")}
+        </Button>
+        <Button
+          type="button"
+          size="small"
+          variant="secondary"
+          isLoading={loading === "delivery-note"}
+          disabled={loading !== null}
+          onClick={() => void show("delivery-note")}
+        >
+          {t("documents.deliveryNote")}
+        </Button>
+      </div>
+      {url ? (
+        <iframe
+          title={t("documents.preview")}
+          src={url}
+          className="border-ui-border-base h-[760px] w-full rounded-md border"
+        />
+      ) : null}
+    </div>
+  );
+}
 
 const BillingSettingsPage = () => (
   <SettingsForm
@@ -57,6 +124,9 @@ const BillingSettingsPage = () => (
             <TextField name="billing.bankName" label={t("billing.bankName")} />
             <TextField name="billing.rib" label={t("billing.rib")} dir="ltr" />
           </Grid>
+        </Section>
+        <Section title={t("documents.preview")}>
+          <DocumentPreview />
         </Section>
       </>
     )}

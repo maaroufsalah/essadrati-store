@@ -74,6 +74,32 @@ export async function sendTestEmail(to: string): Promise<void> {
   });
 }
 
+/** Binary admin response (PDF) with its file name. Errors are JSON, like adminFetch. */
+export async function fetchAdminFile(path: string): Promise<{ blob: Blob; filename: string }> {
+  const response = await fetch(backendUrl(path), { credentials: "include" });
+  if (!response.ok) {
+    const body = (await response.json().catch(() => ({}))) as ErrorBody;
+    throw new ApiRequestError(
+      response.status,
+      body.issues ?? [],
+      body.message ?? response.statusText,
+    );
+  }
+  const disposition = response.headers.get("content-disposition") ?? "";
+  const filename = /filename="([^"]+)"/.exec(disposition)?.[1] ?? "document.pdf";
+  return { blob: await response.blob(), filename };
+}
+
+/** Saves a blob through a temporary link. */
+export function saveBlob(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 10_000);
+}
+
 export interface NotificationSample {
   kind: string;
   locale: string;

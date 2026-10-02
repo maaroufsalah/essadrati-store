@@ -138,6 +138,28 @@ Choix : pas de provider du module Notification de Medusa. Un provider ne peut pa
 module `store-settings` et il faudrait faire transiter le mot de passe SMTP dans les données de
 notification stockées en base.
 
+## Factures et bons de livraison (PDF)
+
+`src/lib/documents` produit, pour une commande COD, une **facture** et un **bon de livraison**
+en français à partir des StoreSettings (`billing` : raison sociale, ICE, RC, IF, patente,
+CNSS, TVA, préfixe, pied de facture ; `contact` ; logo et couleurs du thème) :
+
+- facture `PREFIXE-AAAA-000042` (année de la commande, numéro de commande), lignes TTC, frais
+  de livraison, HT/TVA si la boutique est assujettie (sinon « TVA non applicable »), montant en
+  lettres (« Arrêtée la présente facture à la somme de … dirhams »), mode de paiement ;
+- bon de livraison `BL-000042` : destinataire, téléphone en grand, articles, **montant à
+  encaisser**, remarque du client, cadres de signature.
+
+Les noms arabes (client, produits, adresse) sont isolés (`<bdi dir="auto">`) et le rendu passe
+par Chromium : liaison et ordre des lettres corrects. Interface `PdfRenderer`
+(`renderer.ts`) ; implémentation `chromium` via `puppeteer-core` (aucun navigateur
+téléchargé) : `PDF_BROWSER_PATH`, sinon détection de Chromium/Chrome/Edge. En conteneur :
+paquet `chromium` + polices arabes, `PDF_BROWSER_NO_SANDBOX=true` si nécessaire.
+
+Routes : `GET /admin/cod/orders/:id/documents/invoice|delivery-note` (téléchargement,
+`?inline=1` pour afficher) et `GET /admin/documents/preview?type=…` (dernière commande COD).
+Admin : boutons sur la carte COD de la commande, aperçu dans **Paramètres › Facturation**.
+
 ## Seed du catalogue client
 
 ```sh

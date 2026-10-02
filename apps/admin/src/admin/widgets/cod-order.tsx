@@ -3,7 +3,7 @@ import type { AdminOrder, DetailWidgetProps } from "@medusajs/framework/types";
 import { Button, Container, Heading, StatusBadge, Text, toast, usePrompt } from "@medusajs/ui";
 import { toWhatsAppNumber } from "@nocido/types";
 import { useState } from "react";
-import { adminFetch } from "../lib/api";
+import { adminFetch, fetchAdminFile, saveBlob } from "../lib/api";
 import { errorMessage, t } from "../lib/i18n";
 
 type CodStatus = "pending" | "confirmed" | "cancelled";
@@ -31,6 +31,7 @@ const CodOrderWidget = ({ data: order }: DetailWidgetProps<AdminOrder>) => {
   const cod = readMetadata(order);
   const [status, setStatus] = useState<CodStatus | null>(cod.status);
   const [busy, setBusy] = useState<"confirm" | "cancel" | null>(null);
+  const [file, setFile] = useState<"invoice" | "delivery-note" | null>(null);
   const prompt = usePrompt();
 
   if (!cod.isCod) return null;
@@ -64,6 +65,20 @@ const CodOrderWidget = ({ data: order }: DetailWidgetProps<AdminOrder>) => {
       });
     } finally {
       setBusy(null);
+    }
+  };
+
+  const download = async (type: "invoice" | "delivery-note") => {
+    setFile(type);
+    try {
+      const result = await fetchAdminFile(`/admin/cod/orders/${order.id}/documents/${type}`);
+      saveBlob(result.blob, result.filename);
+    } catch (error) {
+      toast.error(t("documents.failed"), {
+        description: error instanceof Error ? errorMessage(error.message) : undefined,
+      });
+    } finally {
+      setFile(null);
     }
   };
 
@@ -120,6 +135,26 @@ const CodOrderWidget = ({ data: order }: DetailWidgetProps<AdminOrder>) => {
           </Button>
         </div>
       ) : null}
+      <div className="flex flex-wrap gap-2">
+        <Button
+          size="small"
+          variant="secondary"
+          isLoading={file === "invoice"}
+          disabled={file !== null}
+          onClick={() => void download("invoice")}
+        >
+          {t("documents.invoice")}
+        </Button>
+        <Button
+          size="small"
+          variant="secondary"
+          isLoading={file === "delivery-note"}
+          disabled={file !== null}
+          onClick={() => void download("delivery-note")}
+        >
+          {t("documents.deliveryNote")}
+        </Button>
+      </div>
       <Text size="xsmall" className="text-ui-fg-subtle">
         {t("cod.captureHint")}
       </Text>
