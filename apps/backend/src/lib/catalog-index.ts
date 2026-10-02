@@ -1,4 +1,4 @@
-import type { Logger, RemoteQueryFunction } from "@medusajs/framework/types";
+import type { Logger } from "@medusajs/framework/types";
 import {
   ContainerRegistrationKeys,
   getVariantAvailability,
@@ -131,7 +131,11 @@ async function build(
   scope: Resolver,
   context: { regionId: string; currencyCode: string; salesChannelId: string | null },
 ): Promise<CatalogEntry[]> {
-  const query = scope.resolve<Omit<RemoteQueryFunction, symbol>>(ContainerRegistrationKeys.QUERY);
+  // Typed from getVariantAvailability: @medusajs/types may be installed twice
+  // (peer variants), and its parameter must accept this very function.
+  const query = scope.resolve<Parameters<typeof getVariantAvailability>[0]>(
+    ContainerRegistrationKeys.QUERY,
+  );
   const { data } = await query.graph({
     entity: "product",
     fields: [
