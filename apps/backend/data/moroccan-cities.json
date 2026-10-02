@@ -1,0 +1,236 @@
+{
+  "zones": [
+    {
+      "code": "casa-rabat",
+      "name": {
+        "ar": "الدار البيضاء والرباط",
+        "fr": "Casablanca et Rabat",
+        "en": "Casablanca and Rabat"
+      },
+      "fee": 30,
+      "delivery_days_min": 1,
+      "delivery_days_max": 2
+    },
+    {
+      "code": "grandes-villes",
+      "name": { "ar": "المدن الكبرى", "fr": "Grandes villes", "en": "Major cities" },
+      "fee": 35,
+      "delivery_days_min": 2,
+      "delivery_days_max": 3
+    },
+    {
+      "code": "autres-villes",
+      "name": { "ar": "مدن أخرى", "fr": "Autres villes", "en": "Other cities" },
+      "fee": 45,
+      "delivery_days_min": 3,
+      "delivery_days_max": 5
+    },
+    {
+      "code": "sud",
+      "name": { "ar": "الأقاليم الجنوبية", "fr": "Provinces du Sud", "en": "Southern provinces" },
+      "fee": 60,
+      "delivery_days_min": 4,
+      "delivery_days_max": 7
+    }
+  ],
+  "cities": [
+    {
+      "slug": "casablanca",
+      "zone": "casa-rabat",
+      "rank": 1,
+      "name": { "ar": "الدار البيضاء", "fr": "Casablanca", "en": "Casablanca" }
+    },
+    {
+      "slug": "rabat",
+      "zone": "casa-rabat",
+      "rank": 2,
+      "name": { "ar": "الرباط", "fr": "Rabat", "en": "Rabat" }
+    },
+    {
+      "slug": "sale",
+      "zone": "casa-rabat",
+      "rank": 3,
+      "name": { "ar": "سلا", "fr": "Salé", "en": "Salé" }
+    },
+    {
+      "slug": "temara",
+      "zone": "casa-rabat",
+      "rank": 4,
+      "name": { "ar": "تمارة", "fr": "Témara", "en": "Témara" }
+    },
+    {
+      "slug": "mohammedia",
+      "zone": "casa-rabat",
+      "rank": 5,
+      "name": { "ar": "المحمدية", "fr": "Mohammedia", "en": "Mohammedia" }
+    },
+    {
+      "slug": "marrakech",
+      "zone": "grandes-villes",
+      "rank": 10,
+      "name": { "ar": "مراكش", "fr": "Marrakech", "en": "Marrakesh" }
+    },
+    {
+      "slug": "fes",
+      "zone": "grandes-villes",
+      "rank": 11,
+      "name": { "ar": "فاس", "fr": "Fès", "en": "Fez" }
+    },
+    {
+      "slug": "tanger",
+      "zone": "grandes-villes",
+      "rank": 12,
+      "name": { "ar": "طنجة", "fr": "Tanger", "en": "Tangier" }
+    },
+    {
+      "slug": "agadir",
+      "zone": "grandes-villes",
+      "rank": 13,
+      "name": { "ar": "أكادير", "fr": "Agadir", "en": "Agadir" }
+    },
+    {
+      "slug": "meknes",
+      "zone": "grandes-villes",
+      "rank": 14,
+      "name": { "ar": "مكناس", "fr": "Meknès", "en": "Meknes" }
+    },
+    {
+      "slug": "kenitra",
+      "zone": "grandes-villes",
+      "rank": 15,
+      "name": { "ar": "القنيطرة", "fr": "Kénitra", "en": "Kenitra" }
+    },
+    {
+      "slug": "oujda",
+      "zone": "grandes-villes",
+      "rank": 16,
+      "name": { "ar": "وجدة", "fr": "Oujda", "en": "Oujda" }
+    },
+    {
+      "slug": "tetouan",
+      "zone": "grandes-villes",
+      "rank": 17,
+      "name": { "ar": "تطوان", "fr": "Tétouan", "en": "Tetouan" }
+    },
+    {
+      "slug": "el-jadida",
+      "zone": "grandes-villes",
+      "rank": 18,
+      "name": { "ar": "الجديدة", "fr": "El Jadida", "en": "El Jadida" }
+    },
+    {
+      "slug": "berrechid",
+      "zone": "grandes-villes",
+      "rank": 19,
+      "name": { "ar": "برشيد", "fr": "Berrechid", "en": "Berrechid" }
+    },
+    {
+      "slug": "settat",
+      "zone": "grandes-villes",
+      "rank": 20,
+      "name": { "ar": "سطات", "fr": "Settat", "en": "Settat" }
+    },
+    {
+      "slug": "safi",
+      "zone": "autres-villes",
+      "rank": 30,
+      "name": { "ar": "آسفي", "fr": "Safi", "en": "Safi" }
+    },
+    {
+      "slug": "beni-mellal",
+      "zone": "autres-villes",
+      "rank": 31,
+      "name": { "ar": "بني ملال", "fr": "Béni Mellal", "en": "Beni Mellal" }
+    },
+    {
+      "slug": "nador",
+      "zone": "autres-villes",
+      "rank": 32,
+      "name": { "ar": "الناظور", "fr": "Nador", "en": "Nador" }
+    },
+    {
+      "slug": "khouribga",
+      "zone": "autres-villes",
+      "rank": 33,
+      "name": { "ar": "خريبكة", "fr": "Khouribga", "en": "Khouribga" }
+    },
+    {
+      "slug": "larache",
+      "zone": "autres-villes",
+      "rank": 34,
+      "name": { "ar": "العرائش", "fr": "Larache", "en": "Larache" }
+    },
+    {
+      "slug": "essaouira",
+      "zone": "autres-villes",
+      "rank": 35,
+      "name": { "ar": "الصويرة", "fr": "Essaouira", "en": "Essaouira" }
+    },
+    {
+      "slug": "khemisset",
+      "zone": "autres-villes",
+      "rank": 36,
+      "name": { "ar": "الخميسات", "fr": "Khémisset", "en": "Khemisset" }
+    },
+    {
+      "slug": "taza",
+      "zone": "autres-villes",
+      "rank": 37,
+      "name": { "ar": "تازة", "fr": "Taza", "en": "Taza" }
+    },
+    {
+      "slug": "ifrane",
+      "zone": "autres-villes",
+      "rank": 38,
+      "name": { "ar": "إفران", "fr": "Ifrane", "en": "Ifrane" }
+    },
+    {
+      "slug": "al-hoceima",
+      "zone": "autres-villes",
+      "rank": 39,
+      "name": { "ar": "الحسيمة", "fr": "Al Hoceïma", "en": "Al Hoceima" }
+    },
+    {
+      "slug": "taroudant",
+      "zone": "autres-villes",
+      "rank": 40,
+      "name": { "ar": "تارودانت", "fr": "Taroudant", "en": "Taroudant" }
+    },
+    {
+      "slug": "ouarzazate",
+      "zone": "autres-villes",
+      "rank": 41,
+      "name": { "ar": "ورزازات", "fr": "Ouarzazate", "en": "Ouarzazate" }
+    },
+    {
+      "slug": "errachidia",
+      "zone": "autres-villes",
+      "rank": 42,
+      "name": { "ar": "الرشيدية", "fr": "Errachidia", "en": "Errachidia" }
+    },
+    {
+      "slug": "tiznit",
+      "zone": "autres-villes",
+      "rank": 43,
+      "name": { "ar": "تيزنيت", "fr": "Tiznit", "en": "Tiznit" }
+    },
+    {
+      "slug": "guelmim",
+      "zone": "sud",
+      "rank": 50,
+      "name": { "ar": "كلميم", "fr": "Guelmim", "en": "Guelmim" }
+    },
+    {
+      "slug": "laayoune",
+      "zone": "sud",
+      "rank": 51,
+      "name": { "ar": "العيون", "fr": "Laâyoune", "en": "Laayoune" }
+    },
+    {
+      "slug": "dakhla",
+      "zone": "sud",
+      "rank": 52,
+      "name": { "ar": "الداخلة", "fr": "Dakhla", "en": "Dakhla" }
+    }
+  ]
+}

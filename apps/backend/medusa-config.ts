@@ -94,6 +94,23 @@ module.exports = defineConfig({
       resolve: "./src/modules/store-settings",
       options: { encryptionKey: productionEnv("SETTINGS_ENCRYPTION_KEY", "dev-only-settings-key") },
     },
+    { resolve: "./src/modules/moroccan-cities" },
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        // pp_system_default stays available; pp_cod_cod is cash on delivery.
+        providers: [{ resolve: "./src/modules/cod-payment", id: "cod" }],
+      },
+    },
+    {
+      resolve: "@medusajs/medusa/fulfillment",
+      options: {
+        providers: [
+          { resolve: "@medusajs/medusa/fulfillment-manual", id: "manual" },
+          { resolve: "./src/modules/manual-cod", id: "manual-cod" },
+        ],
+      },
+    },
     {
       resolve: "@medusajs/medusa/file",
       options: {

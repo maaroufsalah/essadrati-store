@@ -4,14 +4,15 @@ Plugin Medusa 2.21.1, côté UI uniquement : il ajoute les pages de réglages du
 dashboard (`/app/settings/...`, section « Extensions »). Il ne contient ni module ni route
 d'API ; le backend sert `/admin/store-settings`.
 
-| Page        | Route                    | Sections StoreSettings                                      |
-| ----------- | ------------------------ | ----------------------------------------------------------- |
-| Identité    | `/settings/identity`     | `identity` (nom, slogan, logos, favicon, OG), `seo`         |
-| Contact     | `/settings/contact`      | `contact`, `smtp` (+ email de test)                         |
-| Facturation | `/settings/billing`      | `billing`                                                   |
-| Langues     | `/settings/localization` | `localization`                                              |
-| Marketing   | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                        |
-| Thème       | `/settings/theme`        | `theme` (presets, tokens light/dark, polices, radius, mode) |
+| Page          | Route                    | Sections StoreSettings                                             |
+| ------------- | ------------------------ | ------------------------------------------------------------------ |
+| Identité      | `/settings/identity`     | `identity` (nom, slogan, logos, favicon, OG), `seo`                |
+| Contact       | `/settings/contact`      | `contact`, `smtp` (+ email de test)                                |
+| Facturation   | `/settings/billing`      | `billing`                                                          |
+| Langues       | `/settings/localization` | `localization`                                                     |
+| Marketing     | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                               |
+| Livraison COD | `/settings/cod-shipping` | Zones et villes COD (CRUD, import/export CSV) — API `/admin/cod/*` |
+| Thème         | `/settings/theme`        | `theme` (presets, tokens light/dark, polices, radius, mode)        |
 
 La route native `/settings/store` de Medusa (devises, locales) reste intacte : ne jamais
 nommer une page du plugin comme une page native.
@@ -26,6 +27,11 @@ nommer une page du plugin comme une page native.
   l'effacer. L'email de test utilise les réglages enregistrés.
 - **Textes** : `src/admin/lib/i18n.ts` (fr de référence, en complet, vérifié par le typage),
   langue du dashboard lue dans `localStorage.lng`.
+
+## Widget commande COD
+
+Sur la page d'une commande COD (`order.details.side.before`) : statut de confirmation,
+appel et WhatsApp en un clic, boutons Confirmer et Annuler (workflow `confirm-cod`).
 
 ## Thème
 

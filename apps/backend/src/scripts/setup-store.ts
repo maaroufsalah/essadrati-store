@@ -5,8 +5,10 @@
  *
  * - Store currency (SETUP_CURRENCY, default currency only)
  * - Store locales: one per kit locale, derived from SETUP_COUNTRY (ar-MA...)
- * - Region for SETUP_COUNTRY with the system payment provider (COD comes later)
- * - Tax region for SETUP_COUNTRY
+ * - Region for SETUP_COUNTRY with the COD and system payment providers
+ * - Tax region for SETUP_COUNTRY, prices tax inclusive in SETUP_CURRENCY
+ * - COD shipping: stock location, fulfillment set, calculated shipping option
+ * - COD delivery zones and cities (data/moroccan-cities.json)
  * - Publishable API key linked to the default sales channel
  *
  * No client data here: names are computed with Intl.DisplayNames, and the
@@ -23,6 +25,8 @@ import {
   updateStoresWorkflow,
 } from "@medusajs/medusa/core-flows";
 import { LOCALES, toMedusaLocale } from "@nocido/types";
+import { setupCodShipping } from "./lib/cod-shipping";
+import { seedCities } from "./seed-cities";
 
 /** Language used for names only the back office sees (region, locales). */
 const ADMIN_LANGUAGE = "fr";
@@ -119,6 +123,29 @@ export default async function setupStore({ container }: ExecArgs): Promise<void>
     });
     logger.info(`Tax region ${country.toUpperCase()} created`);
   }
+
+  // Moroccan prices are displayed tax included (TTC).
+  const pricingService = container.resolve(Modules.PRICING);
+  const preferences = await pricingService.listPricePreferences({
+    attribute: "currency_code",
+    value: [currency],
+  });
+  if (preferences.length === 0) {
+    await pricingService.createPricePreferences({
+      attribute: "currency_code",
+      value: currency,
+      is_tax_inclusive: true,
+    });
+  }
+
+  await setupCodShipping(container, {
+    country,
+    countryName,
+    storeId: store.id,
+    regionId: region.id,
+    salesChannelId,
+  });
+  await seedCities(container);
 
   // Publishable API key for the storefront and the mobile app.
   let [apiKey] = await apiKeyService.listApiKeys({ type: "publishable" }, { take: 1 });

@@ -5,7 +5,8 @@
   "description": "Medusa v2 backend: store API, admin API and admin dashboard.",
   "license": "UNLICENSED",
   "files": [
-    ".medusa/server"
+    ".medusa/server",
+    "data"
   ],
   "scripts": {
     "build": "medusa build",
@@ -18,8 +19,9 @@
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
     "clean": "node -e \"require('fs').rmSync('.medusa',{recursive:true,force:true})\"",
-    "db:generate": "medusa db:generate storeSettings",
-    "test:integration": "vitest run --config vitest.integration.config.mts"
+    "db:generate": "medusa db:generate storeSettings moroccanCities",
+    "test:integration": "vitest run --config vitest.integration.config.mts",
+    "cities:seed": "medusa exec ./src/scripts/seed-cities.ts"
   },
   "dependencies": {
     "@medusajs/admin-sdk": "2.21.1",

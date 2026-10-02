@@ -1,3 +1,4 @@
+import { MedusaError } from "@medusajs/framework/utils";
 import type { MedusaResponse } from "@medusajs/framework/http";
 import type { ContrastIssue } from "@nocido/theme";
 
@@ -46,4 +47,14 @@ export function contrastIssues(issues: ContrastIssue[]): ValidationIssue[] {
 /** 400 response shaped like Medusa errors, plus the per-field issues. */
 export function sendInvalid(res: MedusaResponse, issues: ValidationIssue[]): void {
   res.status(400).json({ type: "invalid_data", message: "Invalid store settings", issues });
+}
+
+/** A required route parameter (`:id`); a missing one is a 404. */
+export function routeParam(
+  req: { params: Record<string, string | undefined> },
+  name: string,
+): string {
+  const value = req.params[name];
+  if (!value) throw new MedusaError(MedusaError.Types.NOT_FOUND, `${name}.missing`);
+  return value;
 }

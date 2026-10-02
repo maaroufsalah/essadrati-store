@@ -73,3 +73,29 @@ pnpm --filter @nocido/backend test:integration   # base essadrati_test, tunnel o
 
 Les tests d'intégration utilisent `@medusajs/test-utils` sous Vitest. Ils lisent
 `DB_TEST_URL` et ne créent ni ne suppriment de base : le rôle n'a pas `CREATEDB`.
+
+## Paiement à la livraison (COD)
+
+| Élément                                    | Rôle                                                                               |
+| ------------------------------------------ | ---------------------------------------------------------------------------------- |
+| Module `moroccanCities`                    | Zones (frais, délais) et villes (noms ar/fr/en, surcharges, actives)               |
+| Provider paiement `pp_cod_cod`             | Autorise la commande ; l'encaissement est la « capture » à la livraison            |
+| Provider livraison `manual-cod_manual-cod` | Prix calculé, fourni par le workflow, jamais par le client                         |
+| Workflow `place-cod-order`                 | Panier (ou articles), adresse, frais, session COD, commande, `cod_status=pending`  |
+| Workflow `confirm-cod`                     | `pending → confirmed`, `pending/confirmed → cancelled` (annule la commande Medusa) |
+
+Routes :
+
+- `GET /store/cities` : villes actives avec frais et délais.
+- `POST /store/cod/orders` : `{ cart_id }` ou `{ items }`, `customer { name, phone }`,
+  `city_id`, `address?`, `note?`, `locale?`. Les frais sont calculés côté serveur
+  (gratuits au-delà de `commerce.freeShippingThreshold`, minimum `commerce.minOrderAmount`).
+- `POST /admin/cod/orders/:id/confirm|cancel`, CRUD `/admin/cod/zones` et `/admin/cod/cities`,
+  `POST /admin/cod/cities/import` (CSV : `slug,name_ar,name_fr,name_en,zone_code,fee,days_min,days_max,active`).
+- `POST /store/carts/:id/shipping-methods` et `/store/carts/:id/complete` sont fermées (403) :
+  elles laisseraient le client choisir les données de livraison.
+
+Les clients sans email reçoivent une adresse technique `<téléphone>@<technicalEmailDomain>`.
+`store:setup` crée l'infrastructure COD (emplacement de stock, ensemble de livraison, option
+calculée, providers sur la région) et les villes de `data/moroccan-cities.json`
+(`pnpm --filter @nocido/backend cities:seed` pour les seules villes).
