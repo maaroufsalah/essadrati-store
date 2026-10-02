@@ -99,6 +99,7 @@ module.exports = defineConfig({
     },
     { resolve: "./src/modules/moroccan-cities" },
     { resolve: "./src/modules/pages" },
+    { resolve: "./src/modules/hero-slides" },
     {
       resolve: "@medusajs/medusa/payment",
       options: {
