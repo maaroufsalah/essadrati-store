@@ -7,6 +7,10 @@ export const KIT_ROUTES = {
   adminStoreSettings: "/admin/store-settings",
   pages: "/store/pages",
   adminPages: "/admin/pages",
+  heroSlides: "/store/hero-slides",
+  adminHeroSlides: "/admin/hero-slides",
+  categoryBanners: "/store/category-banners",
+  adminCategoryBanners: "/admin/category-banners",
   cities: "/store/cities",
   codOrders: "/store/cod/orders",
   codOrderLookup: "/store/cod/orders/lookup",
@@ -16,6 +20,8 @@ export const KIT_ROUTES = {
 export const CACHE_TAGS = {
   storeSettings: "store-settings",
   pages: "pages",
+  heroSlides: "hero-slides",
+  categoryBanners: "category-banners",
   catalog: "catalog",
   cities: "cities",
 } as const;

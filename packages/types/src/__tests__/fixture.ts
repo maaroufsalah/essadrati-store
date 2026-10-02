@@ -93,6 +93,11 @@ export const validSettings = (): z.input<typeof storeSettingsSchema> => ({
     },
     testimonials: [{ name: "Amina", city: "Rabat", text: { fr: "Top" }, rating: 5 }],
     giftCollectionHandle: null,
+    sections: [
+      { id: "slider", enabled: true },
+      { id: "trust", enabled: false },
+    ],
+    slider: { transition: "fade", autoplay: true },
   },
   updatedAt: "2026-09-28T10:00:00.000Z",
 });

@@ -1,5 +1,9 @@
 import Medusa, { type Config } from "@medusajs/js-sdk";
 import {
+  type CategoryBanner,
+  categoryBannerSchema,
+  type HeroSlide,
+  heroSlideSchema,
   type Locale,
   type Page,
   type PageSummary,
@@ -60,6 +64,15 @@ export interface StoreClient {
   listPages(options?: RequestOptions): Promise<ApiResult<PageSummary[]>>;
   /** One published CMS page, tagged `pages`. An unknown handle is `notFound`. */
   getPage(handle: string, options?: RequestOptions): Promise<ApiResult<Page>>;
+  /**
+   * Active hero slides by rank, tagged `hero-slides`. An invalid slide is
+   * dropped (and counted in `skipped`) instead of failing the whole list.
+   */
+  listHeroSlides(options?: RequestOptions): Promise<ApiResult<HeroSlide[]> & { skipped?: number }>;
+  /** Active category banners by rank, tagged `category-banners`. Same tolerance. */
+  listCategoryBanners(
+    options?: RequestOptions,
+  ): Promise<ApiResult<CategoryBanner[]> & { skipped?: number }>;
 }
 
 function invalid(message: string): { ok: false; error: ApiError } {
@@ -70,6 +83,25 @@ function invalid(message: string): { ok: false; error: ApiError } {
 function withTags(options: RequestOptions | undefined, tags: readonly string[]): RequestOptions {
   const next = options?.next;
   return { ...options, next: { ...next, tags: [...new Set([...(next?.tags ?? []), ...tags])] } };
+}
+
+interface ItemSchema<T> {
+  safeParse(value: unknown): { success: true; data: T } | { success: false };
+}
+
+/** Keeps the valid entries of a list. Not an array at all: invalid response. */
+function validItems<T>(
+  value: unknown,
+  schema: ItemSchema<T>,
+): (ApiResult<T[]> & { skipped?: number }) | { ok: false; error: ApiError } {
+  if (!Array.isArray(value)) return invalid("expected an array");
+  const data: T[] = [];
+  for (const entry of value) {
+    const parsed = schema.safeParse(entry);
+    if (parsed.success) data.push(parsed.data);
+  }
+  const skipped = value.length - data.length;
+  return skipped > 0 ? { ok: true, data, skipped } : { ok: true, data };
 }
 
 /**
@@ -137,6 +169,28 @@ export function createStoreClient(options: StoreClientOptions): StoreClient {
         );
         const parsed = pageSchema.safeParse(body.page);
         return parsed.success ? { ok: true, data: parsed.data } : invalid(parsed.error.message);
+      } catch (error) {
+        return { ok: false, error: toApiError(error) };
+      }
+    },
+    async listHeroSlides(requestOptions) {
+      try {
+        const body = await sdk.client.fetch<{ slides?: unknown }>(KIT_ROUTES.heroSlides, {
+          method: "GET",
+          ...withTags(requestOptions, [CACHE_TAGS.heroSlides]),
+        });
+        return validItems(body.slides, heroSlideSchema);
+      } catch (error) {
+        return { ok: false, error: toApiError(error) };
+      }
+    },
+    async listCategoryBanners(requestOptions) {
+      try {
+        const body = await sdk.client.fetch<{ banners?: unknown }>(KIT_ROUTES.categoryBanners, {
+          method: "GET",
+          ...withTags(requestOptions, [CACHE_TAGS.categoryBanners]),
+        });
+        return validItems(body.banners, categoryBannerSchema);
       } catch (error) {
         return { ok: false, error: toApiError(error) };
       }

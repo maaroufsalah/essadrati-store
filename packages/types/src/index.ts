@@ -1,4 +1,5 @@
 export * from "./cod";
+export * from "./home";
 export * from "./locale";
 export * from "./media";
 export * from "./pages";

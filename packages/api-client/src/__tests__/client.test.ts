@@ -139,3 +139,48 @@ describe("CMS pages", () => {
     expect(result.ok ? null : result.error.code).toBe("notFound");
   });
 });
+
+describe("home content", () => {
+  const slide = {
+    id: "hslide_1",
+    active: true,
+    rank: 0,
+    imageDesktop: null,
+    imageMobile: null,
+    title: { fr: "Miel" },
+    subtitle: {},
+    ctaLabel: {},
+    link: { type: "category", handle: "asal-hor" },
+    textAlign: "center",
+    overlay: 30,
+    durationSeconds: 6,
+    updatedAt: "2026-10-01T10:00:00.000Z",
+  };
+
+  it("lists hero slides under their tag and drops invalid ones", async () => {
+    const spy = stubFetch(json({ slides: [slide, { ...slide, id: "bad", overlay: 99 }] }));
+    const result = await createStoreClient(options).listHeroSlides();
+    expect(result.ok ? result.data.map((entry) => entry.id) : null).toEqual(["hslide_1"]);
+    expect(result.skipped).toBe(1);
+    const [input, init] = spy.mock.calls[0] ?? [];
+    expect(input instanceof Request ? input.url : input?.toString()).toBe(
+      `http://backend.test${KIT_ROUTES.heroSlides}`,
+    );
+    expect((init as NextInit).next?.tags).toEqual([CACHE_TAGS.heroSlides]);
+  });
+
+  it("lists category banners under their tag", async () => {
+    const { subtitle: _s, textAlign: _a, overlay: _o, durationSeconds: _d, ...base } = slide;
+    const spy = stubFetch(json({ banners: [{ ...base, id: "cbanner_1", tagline: {} }] }));
+    const result = await createStoreClient(options).listCategoryBanners();
+    expect(result.ok ? result.data[0]?.id : null).toBe("cbanner_1");
+    const [, init] = spy.mock.calls[0] ?? [];
+    expect((init as NextInit).next?.tags).toEqual([CACHE_TAGS.categoryBanners]);
+  });
+
+  it("rejects a payload that is not a list", async () => {
+    stubFetch(json({ slides: null }));
+    const result = await createStoreClient(options).listHeroSlides();
+    expect(result.ok ? null : result.error.code).toBe("invalidResponse");
+  });
+});

@@ -5,6 +5,7 @@
  * lives in StoreSettings, written by the admin or by the client seed.
  */
 import {
+  DEFAULT_HOME_SECTIONS,
   type PublicStoreSettings,
   type StoreSettings,
   type ThemeConfig,
@@ -92,6 +93,8 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
     story: { title: {}, text: {}, image: null, stats: [], ctaHref: null },
     testimonials: [],
     giftCollectionHandle: null,
+    sections: DEFAULT_HOME_SECTIONS.map((section) => ({ ...section })),
+    slider: { transition: "fade", autoplay: true },
   },
   updatedAt: "1970-01-01T00:00:00.000Z",
 };

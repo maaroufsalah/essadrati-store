@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { homeSectionsSchema, sliderOptionsSchema } from "../home";
 import { localeSchema, localizedStringSchema } from "../locale";
 import { optionalMediaSchema } from "../media";
 import { moroccanPhoneSchema } from "../phone";
@@ -205,5 +206,9 @@ export const homepageSchema = z.object({
   testimonials: z.array(testimonialSchema).max(12),
   /** Collection shown as the gift boxes section, by handle. Null hides it. */
   giftCollectionHandle: z.string().trim().max(80).nullable(),
+  /** Order and visibility of the home blocks (normalized by the storefront). */
+  sections: homeSectionsSchema,
+  /** Hero slider behaviour; slides themselves live in the hero-slides module. */
+  slider: sliderOptionsSchema,
 });
 export type HomepageSettings = z.infer<typeof homepageSchema>;
