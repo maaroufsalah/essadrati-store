@@ -1,0 +1,43 @@
+/*
+ * Nocido kit: the only overrides of the Medusa Admin look.
+ *
+ * Scope is deliberately small: primary buttons, interactive accents (switches,
+ * checkboxes, focus), button radius, light and dark. Values are custom
+ * properties set on <html> by lib/branding.ts from GET /branding
+ * (StoreSettings.theme). Until they are loaded, html has no
+ * data-nocido-branding attribute and Medusa's own look is untouched.
+ */
+
+html[data-nocido-branding]:not(.dark) {
+  --bg-interactive: var(--nocido-primary-light);
+  --border-interactive: var(--nocido-primary-light);
+}
+
+html[data-nocido-branding].dark {
+  --bg-interactive: var(--nocido-primary-dark);
+  --border-interactive: var(--nocido-primary-dark);
+}
+
+/* Primary buttons: theme primary fill with its WCAG-checked foreground. */
+html[data-nocido-branding]:not(.dark) .shadow-buttons-inverted {
+  background-color: var(--nocido-primary-light);
+  color: var(--nocido-primary-fg-light);
+}
+
+html[data-nocido-branding].dark .shadow-buttons-inverted {
+  background-color: var(--nocido-primary-dark);
+  color: var(--nocido-primary-fg-dark);
+}
+
+html[data-nocido-branding] .shadow-buttons-inverted:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+html[data-nocido-branding] .shadow-buttons-inverted:disabled {
+  opacity: 0.5;
+}
+
+/* Button radius from the theme (pill or px). */
+html[data-nocido-branding] [class*="shadow-buttons-"] {
+  border-radius: var(--nocido-button-radius);
+}

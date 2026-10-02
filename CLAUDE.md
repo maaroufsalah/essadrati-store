@@ -90,7 +90,15 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 5       | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer              | fait    |
 |         | **Checkpoint 1**                                                                         | validé  |
 | 6       | Plugin admin : pages Settings                                                            | fait    |
-| 7–13    | À détailler (plan fourni par Salah-Eddine)                                               |         |
+| 7       | Admin : thème (presets, tokens, aperçu, contraste), branding de l'admin                  | fait    |
+| 8       | Backend COD : villes marocaines, paiement `cod`, livraison `manual-cod`                  |         |
+| 9       | Seed catalogue Essadrati                                                                 |         |
+| 10      | Module CMS `pages`                                                                       |         |
+| 11      | Storefront UI kit                                                                        |         |
+| 12      | Storefront accueil                                                                       |         |
+| 13      | Storefront catégorie                                                                     |         |
+| 14      | Storefront produit + commande COD                                                        |         |
+| 15–21   | Panier/checkout, suivi commande, CMS, tracking, SEO, notifications, PDF                  |         |
 | 14      | **Checkpoint 2**                                                                         |         |
 | 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |
 | 16c     | **Checkpoint 3** (avec l'app mobile)                                                     | reporté |

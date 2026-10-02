@@ -306,7 +306,7 @@ const en: Record<MessageKey, string> = {
 const DICTIONARIES = { fr, en } as const;
 type Language = keyof typeof DICTIONARIES;
 
-function currentLanguage(): Language {
+export function currentLanguage(): Language {
   let stored: string | null = null;
   try {
     stored = window.localStorage.getItem("lng");

@@ -13,7 +13,8 @@ import type { z } from "zod";
 import { ApiRequestError, fetchSettings, saveSettings } from "../lib/api";
 import { errorMessage, t } from "../lib/i18n";
 
-export type FormValues = Record<string, unknown>;
+/** Loose form values: each page validates them with its zod schema. */
+export type FormValues = FieldValues;
 
 interface SettingsFormProps {
   title: string;
@@ -25,6 +26,8 @@ interface SettingsFormProps {
   /** Admin payload sent to the backend. Defaults to the parsed values. */
   toUpdate?: (values: FormValues) => StoreSettingsUpdate;
   children: (form: UseFormReturn<FormValues>, settings: StoreSettings) => ReactNode;
+  /** Called after a successful save (e.g. to refresh the admin branding). */
+  afterSave?: (settings: StoreSettings) => void;
   /** Extra content beside the form (e.g. a live preview), receives the watched values. */
   aside?: (values: FormValues, settings: StoreSettings) => ReactNode;
 }
@@ -103,6 +106,7 @@ function LoadedSettingsForm({
   toUpdate,
   children,
   aside,
+  afterSave,
   settings,
   onSaved,
 }: SettingsFormProps & { settings: StoreSettings; onSaved: (next: StoreSettings) => void }) {
@@ -130,6 +134,7 @@ function LoadedSettingsForm({
       try {
         const saved = await saveSettings(toUpdate ? toUpdate(values) : values);
         onSaved(saved);
+        afterSave?.(saved);
         form.reset(pick(saved));
         toast.success(t("common.saved"));
       } catch (error) {
@@ -149,7 +154,7 @@ function LoadedSettingsForm({
         });
       }
     },
-    [form, onSaved, pick, toUpdate],
+    [afterSave, form, onSaved, pick, toUpdate],
   );
 
   const values = form.watch();

@@ -4,13 +4,14 @@ Plugin Medusa 2.21.1, côté UI uniquement : il ajoute les pages de réglages du
 dashboard (`/app/settings/...`, section « Extensions »). Il ne contient ni module ni route
 d'API ; le backend sert `/admin/store-settings`.
 
-| Page        | Route                    | Sections StoreSettings                              |
-| ----------- | ------------------------ | --------------------------------------------------- |
-| Identité    | `/settings/identity`     | `identity` (nom, slogan, logos, favicon, OG), `seo` |
-| Contact     | `/settings/contact`      | `contact`, `smtp` (+ email de test)                 |
-| Facturation | `/settings/billing`      | `billing`                                           |
-| Langues     | `/settings/localization` | `localization`                                      |
-| Marketing   | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                |
+| Page        | Route                    | Sections StoreSettings                                      |
+| ----------- | ------------------------ | ----------------------------------------------------------- |
+| Identité    | `/settings/identity`     | `identity` (nom, slogan, logos, favicon, OG), `seo`         |
+| Contact     | `/settings/contact`      | `contact`, `smtp` (+ email de test)                         |
+| Facturation | `/settings/billing`      | `billing`                                                   |
+| Langues     | `/settings/localization` | `localization`                                              |
+| Marketing   | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                        |
+| Thème       | `/settings/theme`        | `theme` (presets, tokens light/dark, polices, radius, mode) |
 
 La route native `/settings/store` de Medusa (devises, locales) reste intacte : ne jamais
 nommer une page du plugin comme une page native.
@@ -25,6 +26,25 @@ nommer une page du plugin comme une page native.
   l'effacer. L'email de test utilise les réglages enregistrés.
 - **Textes** : `src/admin/lib/i18n.ts` (fr de référence, en complet, vérifié par le typage),
   langue du dashboard lue dans `localStorage.lng`.
+
+## Thème
+
+- Galerie des 7 presets (vignettes light et dark). Choisir un preset reprend ses polices et
+  arrondis et efface les couleurs personnalisées.
+- Chaque token est personnalisable séparément en light et en dark (« Revenir au preset »).
+- Aperçu live (header, carte produit, bouton, accents) dans les deux modes, avec le rapport
+  de contraste WCAG AA. L'enregistrement est refusé sous 4.5:1 (3:1 pour l'anneau de focus),
+  côté admin et côté backend.
+- Les polices de l'aperçu sont chargées depuis Google Fonts, dans l'admin uniquement. Le
+  storefront les auto-héberge avec next/font.
+
+## Branding de l'admin Medusa
+
+Surcharge volontairement limitée, dans un seul fichier : `src/admin/styles/admin-overrides.css`
+(boutons primaires, accents interactifs, radius des boutons, light et dark). Les valeurs
+viennent de `GET /branding` (route publique du backend) et sont posées sur `<html>` par
+`lib/branding.ts`, chargé par le widget de la barre supérieure. Le widget `login.before`
+affiche le logo de la boutique sur la page de connexion.
 
 ## Build
 
