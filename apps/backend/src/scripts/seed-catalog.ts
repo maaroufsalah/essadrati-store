@@ -29,8 +29,12 @@ import {
   uploadFilesWorkflow,
 } from "@medusajs/medusa/core-flows";
 import {
+  categoryBannerInputSchema,
+  HOME_IMAGE_SIZES,
+  heroSlideInputSchema,
   LOCALES,
   type Locale,
+  type MediaRef,
   type LocalizedString,
   localizedStringSchema,
   pageInputSchema,
@@ -38,12 +42,22 @@ import {
   toMedusaLocale,
 } from "@nocido/types";
 import { z } from "zod";
+import { CATEGORY_BANNERS_MODULE } from "../modules/category-banners";
+import type CategoryBannersModuleService from "../modules/category-banners/service";
+import { HERO_SLIDES_MODULE } from "../modules/hero-slides";
+import type HeroSlidesModuleService from "../modules/hero-slides/service";
 import { PAGES_MODULE } from "../modules/pages";
 import type PagesModuleService from "../modules/pages/service";
 import { STORE_SETTINGS_MODULE } from "../modules/store-settings";
 import type StoreSettingsModuleService from "../modules/store-settings/service";
 import { updateStoreSettingsWorkflow } from "../workflows/update-store-settings";
-import { placeholderSvg, placeholderShapeSchema } from "./lib/placeholder";
+import {
+  type PlaceholderScene,
+  placeholderSceneSchema,
+  placeholderSceneSvg,
+  placeholderShapeSchema,
+  placeholderSvg,
+} from "./lib/placeholder";
 
 const localized = localizedStringSchema;
 
@@ -348,6 +362,110 @@ async function seedPages(ctx: SeedContext): Promise<void> {
   ctx.logger.info(`Pages: ${created} created`);
 }
 
+const homeSeedSchema = z.object({
+  slides: z.array(
+    heroSlideInputSchema
+      .pick({
+        title: true,
+        subtitle: true,
+        ctaLabel: true,
+        link: true,
+        textAlign: true,
+        overlay: true,
+        durationSeconds: true,
+      })
+      .extend({ key: z.string(), scene: placeholderSceneSchema }),
+  ),
+  banners: z.array(
+    categoryBannerInputSchema
+      .pick({ title: true, tagline: true, link: true })
+      .extend({ key: z.string(), scene: placeholderSceneSchema }),
+  ),
+});
+
+async function uploadScene(
+  ctx: SeedContext,
+  filename: string,
+  scene: PlaceholderScene,
+  size: { width: number; height: number },
+): Promise<MediaRef> {
+  const svg = placeholderSceneSvg(scene, size);
+  const { result } = await uploadFilesWorkflow(ctx.container).run({
+    input: {
+      files: [
+        {
+          filename,
+          mimeType: "image/svg+xml",
+          content: Buffer.from(svg, "utf8").toString("base64"),
+          access: "public",
+        },
+      ],
+    },
+  });
+  const file = result[0];
+  if (!file) throw new Error(`Placeholder upload failed for ${filename}`);
+  return { id: file.id, url: file.url, mimeType: "image/svg+xml", ...size };
+}
+
+/** Hero slides and category banners, created only while each list is empty. */
+async function seedHome(ctx: SeedContext): Promise<void> {
+  const { slides, banners } = homeSeedSchema.parse(readJson("home.json"));
+
+  const slideService = ctx.container.resolve<HeroSlidesModuleService>(HERO_SLIDES_MODULE);
+  if ((await slideService.listSlides()).length === 0) {
+    for (const [rank, { key, scene, ...slide }] of slides.entries()) {
+      await slideService.saveSlide({
+        ...slide,
+        active: true,
+        rank,
+        imageDesktop: await uploadScene(
+          ctx,
+          `hero-${key}-desktop.svg`,
+          scene,
+          HOME_IMAGE_SIZES.slideDesktop,
+        ),
+        imageMobile: await uploadScene(
+          ctx,
+          `hero-${key}-mobile.svg`,
+          scene,
+          HOME_IMAGE_SIZES.slideMobile,
+        ),
+      });
+    }
+    ctx.logger.info(`Home: ${slides.length} hero slides created`);
+  } else {
+    ctx.logger.info("Home: hero slides already exist, kept");
+  }
+
+  const bannerService =
+    ctx.container.resolve<CategoryBannersModuleService>(CATEGORY_BANNERS_MODULE);
+  if ((await bannerService.listBanners()).length === 0) {
+    for (const [rank, { key, scene, ...banner }] of banners.entries()) {
+      await bannerService.saveBanner({
+        ...banner,
+        active: true,
+        rank,
+        ctaLabel: {},
+        imageDesktop: await uploadScene(
+          ctx,
+          `banner-${key}-desktop.svg`,
+          scene,
+          HOME_IMAGE_SIZES.bannerDesktop,
+        ),
+        imageMobile: await uploadScene(
+          ctx,
+          `banner-${key}-mobile.svg`,
+          scene,
+          HOME_IMAGE_SIZES.bannerMobile,
+        ),
+      });
+    }
+    ctx.logger.info(`Home: ${banners.length} category banners created`);
+  } else {
+    ctx.logger.info("Home: category banners already exist, kept");
+  }
+}
+
 async function seedSettings(ctx: SeedContext): Promise<void> {
   const service = ctx.container.resolve<StoreSettingsModuleService>(STORE_SETTINGS_MODULE);
   const force = process.env.SEED_SETTINGS === "force";
@@ -384,5 +502,6 @@ export default async function seedCatalog({ container }: ExecArgs): Promise<void
   const collections = await seedCollections(ctx, catalog);
   await seedProducts(ctx, catalog, categories, collections);
   await seedPages(ctx);
+  await seedHome(ctx);
   logger.info("Catalog seed done");
 }

@@ -1,0 +1,133 @@
+{
+  "$comment": "Home hero slides and category banners (« Nos univers »). Images are generated SVG placeholders, replaced by real photos in the admin (Settings > Accueil).",
+  "slides": [
+    {
+      "key": "miel",
+      "textAlign": "start",
+      "overlay": 35,
+      "durationSeconds": 6,
+      "link": { "type": "category", "handle": "asal-hor" },
+      "scene": {
+        "shape": "jar",
+        "fill": "#C9861A",
+        "accent": "#7A4A0E",
+        "from": "#3B2208",
+        "to": "#C9861A"
+      },
+      "title": {
+        "ar": "عسل حر من قلب الأطلس",
+        "fr": "Le miel pur des ruchers de l'Atlas",
+        "en": "Pure honey from the Atlas apiaries"
+      },
+      "subtitle": {
+        "ar": "فرنان، دغموس وكاليتوس: عسل غير مبستر، مباشرة من النحالين.",
+        "fr": "Ferrane, Daghmous, Calitos : des miels non pasteurisés, directement des apiculteurs.",
+        "en": "Ferrane, Daghmous, Calitos: unpasteurized honey, straight from the beekeepers."
+      },
+      "ctaLabel": { "ar": "اكتشف العسل", "fr": "Découvrir nos miels", "en": "Discover our honey" }
+    },
+    {
+      "key": "argan",
+      "textAlign": "center",
+      "overlay": 40,
+      "durationSeconds": 6,
+      "link": { "type": "category", "handle": "zit-argan" },
+      "scene": {
+        "shape": "bottle",
+        "fill": "#C08A2E",
+        "accent": "#5E4012",
+        "from": "#22170A",
+        "to": "#8A6524"
+      },
+      "title": {
+        "ar": "زيت الأركان، ذهب الجنوب",
+        "fr": "L'huile d'argan, l'or du Sud",
+        "en": "Argan oil, the gold of the South"
+      },
+      "subtitle": {
+        "ar": "معصور على البارد من تعاونيات نسائية بسوس.",
+        "fr": "Pressée à froid par des coopératives féminines du Souss.",
+        "en": "Cold-pressed by women's cooperatives in the Souss."
+      },
+      "ctaLabel": { "ar": "اكتشف الأركان", "fr": "Découvrir l'argan", "en": "Discover argan oil" }
+    },
+    {
+      "key": "coffrets",
+      "textAlign": "end",
+      "overlay": 30,
+      "durationSeconds": 7,
+      "link": { "type": "product", "handle": "baqat-dahabiya" },
+      "scene": {
+        "shape": "box",
+        "fill": "#2B1B0E",
+        "accent": "#E9B44C",
+        "from": "#120B05",
+        "to": "#6B4A1C"
+      },
+      "title": {
+        "ar": "باقات هدايا جاهزة للإهداء",
+        "fr": "Des coffrets prêts à offrir",
+        "en": "Gift boxes, ready to give"
+      },
+      "subtitle": {
+        "ar": "عسل وأملو وأركان في علبة أنيقة لكل المناسبات.",
+        "fr": "Miel, amlou et argan dans un écrin élégant, pour toutes les occasions.",
+        "en": "Honey, amlou and argan in an elegant box, for every occasion."
+      },
+      "ctaLabel": { "ar": "اكتشف الباقة", "fr": "Voir le coffret", "en": "See the gift box" }
+    }
+  ],
+  "banners": [
+    {
+      "key": "miel",
+      "link": { "type": "category", "handle": "asal-hor" },
+      "scene": {
+        "shape": "jar",
+        "fill": "#E3B04B",
+        "accent": "#8A5A12",
+        "from": "#4A2C0A",
+        "to": "#C9861A"
+      },
+      "title": { "ar": "العسل الحر", "fr": "Miel naturel", "en": "Natural honey" },
+      "tagline": {
+        "ar": "من مناحل الأطلس والجنوب",
+        "fr": "Des ruchers de l'Atlas et du Sud",
+        "en": "From Atlas and southern apiaries"
+      }
+    },
+    {
+      "key": "argan",
+      "link": { "type": "category", "handle": "zit-argan" },
+      "scene": {
+        "shape": "bottle",
+        "fill": "#C08A2E",
+        "accent": "#5E4012",
+        "from": "#2A1D0B",
+        "to": "#9C7430"
+      },
+      "title": { "ar": "زيت الأركان", "fr": "Huile d'argan", "en": "Argan oil" },
+      "tagline": {
+        "ar": "غذائي وتجميلي، معصور على البارد",
+        "fr": "Alimentaire et cosmétique, pressée à froid",
+        "en": "Culinary and cosmetic, cold-pressed"
+      }
+    },
+    {
+      "key": "amlou",
+      "link": { "type": "category", "handle": "amlou" },
+      "scene": {
+        "shape": "jar",
+        "fill": "#8C5A2B",
+        "accent": "#4A2C12",
+        "from": "#24150A",
+        "to": "#8C5A2B"
+      },
+      "title": { "ar": "أملو", "fr": "Amlou", "en": "Amlou" },
+      "tagline": {
+        "ar": "لوز محمص وأركان وعسل حر",
+        "fr": "Amandes grillées, argan et miel",
+        "en": "Roasted almonds, argan and honey"
+      }
+    }
+  ]
+}

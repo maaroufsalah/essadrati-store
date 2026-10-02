@@ -224,6 +224,40 @@
         }
       }
     ],
-    "giftCollectionHandle": "baqat"
+    "giftCollectionHandle": "baqat",
+    "sections": [
+      {
+        "id": "slider",
+        "enabled": true
+      },
+      {
+        "id": "trust",
+        "enabled": true
+      },
+      {
+        "id": "categories",
+        "enabled": true
+      },
+      {
+        "id": "bestsellers",
+        "enabled": true
+      },
+      {
+        "id": "story",
+        "enabled": true
+      },
+      {
+        "id": "gifts",
+        "enabled": true
+      },
+      {
+        "id": "testimonials",
+        "enabled": true
+      }
+    ],
+    "slider": {
+      "transition": "fade",
+      "autoplay": true
+    }
   }
 }
