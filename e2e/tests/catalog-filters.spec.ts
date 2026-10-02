@@ -26,7 +26,8 @@ test.describe("catalog filters", () => {
   test("a weight filter narrows the results and shows a removable chip", async ({ page }) => {
     await page.goto("/fr/products");
     const panel = await filters(page);
-    await panel.getByRole("checkbox", { name: /^1kg/ }).check({ force: true });
+    // The visible label, as a visitor taps it (the checkbox itself is visually hidden).
+    await panel.locator('label:has(input[value="1kg"])').click();
     await expect(page).toHaveURL(/[?&]poids=1kg(&|$)/);
     await closeFilters(page);
 
