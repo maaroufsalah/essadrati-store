@@ -67,6 +67,20 @@ résolue avant le streaming (pas de `loading.tsx`) : un handle inconnu renvoie u
 les résultats sont streamés derrière un squelette. Métadonnées et hreflang par langue
 (`lib/seo.ts`).
 
+## Produit et commande COD
+
+`/[locale]/p/[handle]` : galerie (scroll-snap et points sur mobile, vignettes dès 1024 px),
+prix promo, choix du poids, formulaire COD en une étape (nom, téléphone marocain validé,
+ville issue de `moroccan-cities`, quantité) avec frais et délai estimés selon la ville,
+lien WhatsApp prérempli, accordéons (description, livraison, retours), produits liés,
+JSON-LD Product/Offer, métadonnées et hreflang.
+
+La commande passe par la server action `lib/cod-action.ts` → `POST /store/cod/orders`
+(workflow `place-cod-order`). Le schéma d'entrée est partagé (`codOrderInputSchema`). Chaque
+formulaire envoie un en-tête `Idempotency-Key` : un renvoi après un délai dépassé retourne la
+commande déjà créée au lieu d'un doublon (cache + verrou côté backend, 24 h). La saisie est
+conservée si la commande est refusée. Champ piège anti-robots.
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la

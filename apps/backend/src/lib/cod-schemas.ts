@@ -1,34 +1,9 @@
-import { localeSchema, localizedStringSchema, moroccanPhoneSchema } from "@nocido/types";
+import { type CodOrder, codOrderInputSchema, localizedStringSchema } from "@nocido/types";
 import { z } from "zod";
 
-/** POST /store/cod/orders: the one-step product form and the checkout share it. */
-export const placeCodOrderBodySchema = z
-  .object({
-    cart_id: z.string().min(1).optional(),
-    items: z
-      .array(
-        z.object({
-          variant_id: z.string().min(1),
-          quantity: z.number().int().min(1).max(99),
-        }),
-      )
-      .min(1)
-      .max(50)
-      .optional(),
-    customer: z.object({
-      name: z.string().trim().min(2, "cod.name.invalid").max(120, "cod.name.invalid"),
-      phone: moroccanPhoneSchema,
-    }),
-    city_id: z.string().min(1, "cod.city.required"),
-    address: z.string().trim().max(300).optional(),
-    note: z.string().trim().max(500).optional(),
-    locale: localeSchema.optional(),
-  })
-  .refine((body) => Boolean(body.cart_id) !== Boolean(body.items), {
-    message: "cod.cartOrItems",
-    path: ["items"],
-  });
-export type PlaceCodOrderBody = z.output<typeof placeCodOrderBodySchema>;
+/** POST /store/cod/orders: shared with the storefront (@nocido/types). */
+export const placeCodOrderBodySchema = codOrderInputSchema;
+export type PlaceCodOrderBody = CodOrder;
 
 const fee = z.number().min(0).max(100_000);
 const days = z.number().int().min(0).max(60);

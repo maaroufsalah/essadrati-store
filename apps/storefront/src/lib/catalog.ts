@@ -1,6 +1,6 @@
 import "server-only";
-import { CACHE_TAGS, createStoreClient, type HttpTypes } from "@nocido/api-client";
-import type { Locale } from "@nocido/types";
+import { CACHE_TAGS, createStoreClient, type HttpTypes, KIT_ROUTES } from "@nocido/api-client";
+import type { CodCity, Locale } from "@nocido/types";
 import { cache } from "react";
 import { publicEnv } from "./env";
 import { type ProductCardData, toProductCardData } from "./product-view";
@@ -175,3 +175,44 @@ export async function listCategoryProducts(
     return [];
   }
 }
+
+const PRODUCT_FIELDS =
+  "id,handle,title,subtitle,description,thumbnail,metadata,created_at,*images,*options,*options.values,*variants.calculated_price,*variants.options,*categories,*collection";
+
+/** One product with everything the product page needs, or null. */
+export async function getProductByHandle(
+  locale: Locale,
+  handle: string,
+): Promise<HttpTypes.StoreProduct | null> {
+  const [client, regionId] = await Promise.all([storeClient(locale), getRegionId()]);
+  try {
+    const body = await client.sdk.client.fetch<HttpTypes.StoreProductListResponse>(
+      "/store/products",
+      {
+        query: { fields: PRODUCT_FIELDS, region_id: regionId ?? undefined, handle, limit: 1 },
+        ...nextOptions(),
+      },
+    );
+    return body.products[0] ?? null;
+  } catch (error) {
+    console.error("[catalog] product unavailable", error);
+    return null;
+  }
+}
+
+/** Active COD cities with fee and delay (backend moroccan-cities module). */
+export const listCities = cache(async (): Promise<CodCity[]> => {
+  const client = createStoreClient({
+    baseUrl: medusaServerUrl(),
+    publishableKey: publicEnv.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
+  });
+  try {
+    const body = await client.sdk.client.fetch<{ cities: CodCity[] }>(KIT_ROUTES.cities, {
+      next: { revalidate: 600, tags: [CACHE_TAGS.cities] },
+    });
+    return body.cities;
+  } catch (error) {
+    console.error("[catalog] cities unavailable", error);
+    return [];
+  }
+});

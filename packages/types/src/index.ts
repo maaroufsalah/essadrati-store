@@ -1,3 +1,4 @@
+export * from "./cod";
 export * from "./locale";
 export * from "./media";
 export * from "./pages";

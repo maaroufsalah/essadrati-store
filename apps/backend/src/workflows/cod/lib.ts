@@ -1,6 +1,7 @@
+import type { CodStatus } from "@nocido/types";
+
 /** Phone confirmation state of a COD order, stored in order.metadata.cod_status. */
-export const COD_STATUSES = ["pending", "confirmed", "cancelled"] as const;
-export type CodStatus = (typeof COD_STATUSES)[number];
+export type { CodStatus };
 
 export type CodAction = "confirm" | "cancel";
 

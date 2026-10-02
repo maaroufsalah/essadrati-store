@@ -97,7 +97,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 11      | Storefront UI kit                                                                        | fait    |
 | 12      | Storefront accueil                                                                       | fait    |
 | 13      | Storefront catégorie                                                                     | fait    |
-| 14      | Storefront produit + commande COD                                                        |         |
+| 14      | Storefront produit + commande COD                                                        | fait    |
 | 15–21   | Panier/checkout, suivi commande, CMS, tracking, SEO, notifications, PDF                  |         |
 | 14      | **Checkpoint 2**                                                                         |         |
 | 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |

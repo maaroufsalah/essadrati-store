@@ -54,3 +54,6 @@ Thumbs.db
 
 # local Claude Code launch config (machine-specific paths)
 .claude/launch.json
+
+# session report (not versioned)
+RAPPORT.md
