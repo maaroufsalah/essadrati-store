@@ -5,7 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Markdown } from "@/components/content/markdown";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import { getPage } from "@/lib/pages";
-import { alternatesFor } from "@/lib/seo";
+import { alternatesFor, ogImage } from "@/lib/seo";
 import { getStoreSettings } from "@/lib/settings";
 
 interface PageProps {
@@ -41,7 +41,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: metaTitle || title,
     description: metaDescription || undefined,
     alternates: await alternatesFor(locale, `/${handle}`),
-    openGraph: { type: "article", title: metaTitle || title },
+    openGraph: {
+      type: "article",
+      locale,
+      title: metaTitle || title,
+      description: metaDescription || undefined,
+      images: [ogImage(locale, "page", handle)],
+    },
   };
 }
 

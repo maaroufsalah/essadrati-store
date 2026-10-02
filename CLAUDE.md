@@ -102,7 +102,8 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 16      | Storefront page merci, suivi de commande, recherche numéro + téléphone                   | fait    |
 | 17      | Storefront pages CMS `/[locale]/[handle]`, liens du pied de page                         | fait    |
 | 18      | Tracking GTM/GA4/Meta/TikTok depuis les settings, consentement cookies                   | fait    |
-| 19–21   | SEO, notifications, PDF                                                                  |         |
+| 19      | SEO : métadonnées, OG dynamiques, sitemaps par langue, robots, flux Google/Meta          | fait    |
+| 20–21   | Notifications, PDF                                                                       |         |
 | 14      | **Checkpoint 2**                                                                         |         |
 | 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |
 | 16c     | **Checkpoint 3** (avec l'app mobile)                                                     | reporté |

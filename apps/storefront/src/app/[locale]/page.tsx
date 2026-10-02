@@ -1,4 +1,5 @@
 import { isLocale, type Locale, resolveLocalized, toWhatsAppNumber } from "@nocido/types";
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CategoryGrid } from "@/components/home/category-grid";
 import { Hero } from "@/components/home/hero";
@@ -10,10 +11,39 @@ import { Testimonials } from "@/components/home/testimonials";
 import { TrustBar } from "@/components/home/trust-bar";
 import { listCategories, listCollections, listProductCards } from "@/lib/catalog";
 import { formatNumber, storeFormat } from "@/lib/format";
+import { alternatesFor, ogImage } from "@/lib/seo";
 import { getStoreSettings } from "@/lib/settings";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const settings = await getStoreSettings();
+  const fallbacks = [settings.localization.defaultLocale];
+  const storeName = resolveLocalized(settings.identity.storeName, locale, fallbacks);
+  const title = resolveLocalized(settings.seo.metaTitle, locale, fallbacks) || storeName;
+  const description =
+    resolveLocalized(settings.seo.metaDescription, locale, fallbacks) ||
+    resolveLocalized(settings.identity.tagline, locale, fallbacks);
+  const { ogImage: uploaded } = settings.identity;
+  return {
+    alternates: await alternatesFor(locale, "/"),
+    openGraph: {
+      type: "website",
+      siteName: storeName,
+      locale,
+      title,
+      description: description || undefined,
+      images: [
+        uploaded
+          ? { url: uploaded.url, width: uploaded.width, height: uploaded.height }
+          : ogImage(locale, "home"),
+      ],
+    },
+  };
 }
 
 /** Home sections are rebuilt at most hourly, or on demand through the revalidation tags. */

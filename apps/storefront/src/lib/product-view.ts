@@ -23,13 +23,14 @@ function numeric(value: unknown): number | null {
   return typeof number === "number" && Number.isFinite(number) ? number : null;
 }
 
-interface VariantPrice {
+export interface VariantPrice {
   id: string;
   amount: number;
   original: number | null;
 }
 
-function variantPrice(variant: HttpTypes.StoreProductVariant): VariantPrice | null {
+/** Calculated price of a variant in the store region, null when unpriced. */
+export function variantPrice(variant: HttpTypes.StoreProductVariant): VariantPrice | null {
   const calculated = variant.calculated_price;
   const amount = numeric(calculated?.calculated_amount);
   if (amount === null) return null;

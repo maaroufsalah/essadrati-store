@@ -200,6 +200,34 @@ export async function getProductByHandle(
   }
 }
 
+const FEED_FIELDS =
+  "id,handle,title,subtitle,description,thumbnail,updated_at,*images,*variants,*variants.calculated_price,*categories";
+
+/**
+ * Every published product with variants and prices, for the sitemap and the
+ * product feeds. Pages of 100, at most 2000 products; empty on failure.
+ */
+export async function listAllProducts(locale: Locale): Promise<HttpTypes.StoreProduct[]> {
+  const [client, regionId] = await Promise.all([storeClient(locale), getRegionId()]);
+  const products: HttpTypes.StoreProduct[] = [];
+  try {
+    for (let offset = 0; offset < 2000; offset += 100) {
+      const body = await client.sdk.client.fetch<HttpTypes.StoreProductListResponse>(
+        "/store/products",
+        {
+          query: { fields: FEED_FIELDS, region_id: regionId ?? undefined, limit: 100, offset },
+          ...nextOptions(),
+        },
+      );
+      products.push(...body.products);
+      if (products.length >= body.count || body.products.length === 0) break;
+    }
+  } catch (error) {
+    console.error("[catalog] product list unavailable", error);
+  }
+  return products;
+}
+
 /** Active COD cities with fee and delay (backend moroccan-cities module). */
 export const listCities = cache(async (): Promise<CodCity[]> => {
   const client = createStoreClient({

@@ -138,6 +138,23 @@ pages `showInFooter` apparaissent dans la colonne « Aide » du pied de page, tr
 `footerRank`, à côté de « Suivre ma commande ». Les segments fixes (`c`, `p`, `checkout`,
 `order`) restent prioritaires : ne pas créer de page CMS avec ces handles.
 
+## SEO
+
+- Métadonnées par page et par langue (titre, description, canonical, hreflang avec
+  `x-default` via `lib/seo.ts`), Open Graph et carte Twitter `summary_large_image`.
+- Images OG générées : `/api/og/<locale>/<home|p|c|page>/<handle>` (1200×630, couleurs du
+  thème, nom de la boutique, titre, photo et prix du produit). Le moteur de rendu (Satori) ne
+  met pas en forme l'arabe : les cartes des pages arabes utilisent la première langue latine
+  activée. L'accueil prend `identity.ogImage` s'il est défini.
+- `/sitemap.xml` (index) → `/sitemaps/<locale>.xml` : accueil, catégories, produits, pages
+  CMS, avec `xhtml:link` hreflang et `lastmod`.
+- `/robots.txt` : tout est ouvert sauf `/api/` (hors `/api/og/`), checkout, commandes, UI kit.
+- Flux produits `/feeds/<locale>/google.xml` et `/feeds/<locale>/meta.xml` (RSS Google
+  Merchant, accepté par Meta Commerce) : un article par variante avec prix, prix promo,
+  disponibilité, images, marque, type. Les `g:id` sont les ids de variantes, comme les
+  `content_ids` des pixels. Google refuse les images SVG : utiliser des JPEG/PNG en production.
+- Toutes ces routes sont mises en cache une heure (ISR) et se basent sur `NEXT_PUBLIC_SITE_URL`.
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la

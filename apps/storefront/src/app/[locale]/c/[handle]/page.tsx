@@ -9,7 +9,7 @@ import { Breadcrumb } from "@/components/layout/breadcrumb";
 import { getCategoryByHandle } from "@/lib/catalog";
 import { parseFilters, toSearchParams } from "@/lib/category";
 import { storeFormat } from "@/lib/format";
-import { alternatesFor } from "@/lib/seo";
+import { alternatesFor, ogImage } from "@/lib/seo";
 import { getStoreSettings } from "@/lib/settings";
 
 interface PageProps {
@@ -29,6 +29,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: t("metaTitle", { category: category.name }),
     description: category.description || t("metaDescription", { category: category.name }),
     alternates: await alternatesFor(locale, `/c/${handle}`),
+    openGraph: {
+      type: "website",
+      locale,
+      title: t("metaTitle", { category: category.name }),
+      images: [ogImage(locale, "c", handle)],
+    },
   };
 }
 

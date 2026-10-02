@@ -17,7 +17,7 @@ import { getProductByHandle, listCities, listProductCards } from "@/lib/catalog"
 import { publicEnv } from "@/lib/env";
 import { formatNumber, formatPrice, storeFormat } from "@/lib/format";
 import { productJsonLd, toProductDetail } from "@/lib/product-detail";
-import { alternatesFor } from "@/lib/seo";
+import { alternatesFor, ogImage } from "@/lib/seo";
 import { getStoreSettings } from "@/lib/settings";
 
 interface PageProps {
@@ -52,7 +52,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "website",
       title: detail.title,
       description,
-      images: detail.images[0] ? [{ url: detail.images[0] }] : undefined,
+      locale,
+      images: [ogImage(locale, "p", handle)],
     },
   };
 }

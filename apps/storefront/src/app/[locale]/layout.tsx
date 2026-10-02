@@ -39,7 +39,6 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
   const description =
     resolveLocalized(settings.seo.metaDescription, locale, fallbacks) ||
     resolveLocalized(settings.identity.tagline, locale, fallbacks);
-  const { locales } = routingFromSettings(settings);
   const { favicon, ogImage } = settings.identity;
 
   return {
@@ -47,11 +46,8 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
     title: { default: title, template: `%s | ${storeName}` },
     description: description || undefined,
     applicationName: storeName,
-    alternates: {
-      canonical: `/${locale}`,
-      languages: Object.fromEntries(locales.map((code) => [code, `/${code}`])),
-    },
     icons: favicon ? { icon: favicon.url } : undefined,
+    twitter: { card: "summary_large_image" },
     openGraph: {
       type: "website",
       siteName: storeName,
