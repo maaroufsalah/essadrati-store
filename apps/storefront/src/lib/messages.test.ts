@@ -13,9 +13,14 @@ function keys(value: unknown, prefix = ""): string[] {
   );
 }
 
-/** Distinct placeholders: plural forms differ per language (Arabic has six). */
+/**
+ * Distinct ICU arguments ({name} or {count, plural, ...}). Plural branches
+ * such as `one {item}` are text, not arguments; their number varies per
+ * language (Arabic has six forms).
+ */
 function placeholders(text: string): string[] {
-  return [...new Set([...text.matchAll(/\{(\w+)\}/g)].map((match) => match[1] ?? ""))].sort();
+  const argument = /(?<!(?:=\d+|zero|one|two|few|many|other)\s)\{(\w+)[,}]/g;
+  return [...new Set([...text.matchAll(argument)].map((match) => match[1] ?? ""))].sort();
 }
 
 describe("messages", () => {

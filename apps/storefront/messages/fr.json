@@ -104,7 +104,8 @@
     "whatsapp": "Commander sur WhatsApp",
     "whatsappMessage": "Bonjour, je souhaite commander : {product} ({variant}) x {quantity}.",
     "variant": "Choisir le poids",
-    "metaDescription": "{product} : {subtitle}. Livraison partout au Maroc, paiement à la livraison."
+    "metaDescription": "{product} : {subtitle}. Livraison partout au Maroc, paiement à la livraison.",
+    "stickyCta": "Commander"
   },
   "cod": {
     "title": "Commander maintenant, payer à la livraison",
@@ -140,5 +141,28 @@
       "cityNotFound": "Cette ville n'est plus desservie, choisissez-en une autre.",
       "generic": "La commande n'a pas pu être enregistrée. Réessayez ou contactez-nous sur WhatsApp."
     }
+  },
+  "cart": {
+    "title": "Panier",
+    "open": "Ouvrir le panier, {count, plural, =0 {vide} one {# article} other {# articles}}",
+    "empty": "Votre panier est vide.",
+    "continue": "Continuer mes achats",
+    "checkout": "Commander",
+    "remove": "Retirer {product}",
+    "add": "Ajouter au panier",
+    "adding": "Ajout…",
+    "added": "Ajouté au panier",
+    "error": "Le panier n'a pas pu être mis à jour.",
+    "freeShippingRemaining": "Plus que {amount} pour la livraison offerte",
+    "freeShippingReached": "Livraison offerte !"
+  },
+  "checkout": {
+    "title": "Finaliser la commande",
+    "summary": "Récapitulatif",
+    "items": "{count, plural, one {{countText} article} other {{countText} articles}}",
+    "edit": "Modifier le panier",
+    "empty": "Votre panier est vide.",
+    "backToShop": "Voir les produits",
+    "metaTitle": "Commande"
   }
 }

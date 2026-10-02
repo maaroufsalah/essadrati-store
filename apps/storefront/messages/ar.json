@@ -104,7 +104,8 @@
     "whatsapp": "اطلب عبر واتساب",
     "whatsappMessage": "السلام عليكم، أريد طلب: {product} ({variant}) × {quantity}.",
     "variant": "اختر الوزن",
-    "metaDescription": "{product}: {subtitle}. التوصيل لجميع المدن المغربية والدفع عند الاستلام."
+    "metaDescription": "{product}: {subtitle}. التوصيل لجميع المدن المغربية والدفع عند الاستلام.",
+    "stickyCta": "اطلب الآن"
   },
   "cod": {
     "title": "اطلب الآن وادفع عند الاستلام",
@@ -140,5 +141,28 @@
       "cityNotFound": "هذه المدينة لم تعد مخدومة، اختر مدينة أخرى.",
       "generic": "تعذر تسجيل الطلب. حاول مرة أخرى أو تواصل معنا عبر واتساب."
     }
+  },
+  "cart": {
+    "title": "السلة",
+    "open": "فتح السلة، {count, plural, =0 {فارغة} one {منتج واحد} two {منتجان} few {# منتجات} many {# منتجاً} other {# منتج}}",
+    "empty": "سلتك فارغة.",
+    "continue": "متابعة التسوق",
+    "checkout": "إتمام الطلب",
+    "remove": "حذف {product}",
+    "add": "أضف إلى السلة",
+    "adding": "جارٍ الإضافة…",
+    "added": "تمت الإضافة إلى السلة",
+    "error": "تعذر تحديث السلة.",
+    "freeShippingRemaining": "تبقى {amount} للحصول على توصيل مجاني",
+    "freeShippingReached": "التوصيل مجاني!"
+  },
+  "checkout": {
+    "title": "إتمام الطلب",
+    "summary": "ملخص الطلب",
+    "items": "{count, plural, one {منتج واحد} two {منتجان} few {{countText} منتجات} many {{countText} منتجاً} other {{countText} منتج}}",
+    "edit": "تعديل السلة",
+    "empty": "سلتك فارغة.",
+    "backToShop": "تصفح المنتجات",
+    "metaTitle": "إتمام الطلب"
   }
 }

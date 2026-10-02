@@ -2,6 +2,8 @@
 
 import { KIT_ROUTES, PUBLISHABLE_KEY_HEADER } from "@nocido/api-client";
 import { codOrderInputSchema, isLocale } from "@nocido/types";
+import { cookies } from "next/headers";
+import { CART_COOKIE } from "./cart-cookie";
 import { publicEnv } from "./env";
 import { type CodErrorKey, type CodFormState, codErrorKey } from "./cod-form";
 import { medusaServerUrl } from "./server-env";
@@ -99,4 +101,21 @@ export async function placeCodOrder(
     console.error("[cod] order failed", error);
     return { status: "error", fieldErrors: {}, formError: "generic" };
   }
+}
+
+/**
+ * Checkout of the current cart. The cart id comes from the httpOnly cookie,
+ * never from the form; the cookie is cleared once the order exists.
+ */
+export async function placeCheckoutOrder(
+  previous: CodFormState,
+  form: FormData,
+): Promise<CodFormState> {
+  const cartId = (await cookies()).get(CART_COOKIE)?.value;
+  if (!cartId) return { status: "error", fieldErrors: {}, formError: "generic" };
+  form.set("cart_id", cartId);
+  form.delete("variant_id");
+  const result = await placeCodOrder(previous, form);
+  if (result.status === "success") (await cookies()).delete(CART_COOKIE);
+  return result;
 }

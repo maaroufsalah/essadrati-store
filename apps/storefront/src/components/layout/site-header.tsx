@@ -6,6 +6,7 @@ import { LanguageSwitcher } from "./language-switcher";
 import { MobileNav } from "./mobile-nav";
 import { NAV_ITEMS } from "./nav-items";
 import { StoreLogo } from "./store-logo";
+import { CartButton } from "@/components/cart/cart-button";
 import { ThemeToggle } from "./theme-toggle";
 
 interface SiteHeaderProps {
@@ -66,6 +67,7 @@ export async function SiteHeader({ settings, locale, locales }: SiteHeaderProps)
           <div className="ms-auto flex items-center gap-1">
             <LanguageSwitcher locales={locales} className="hidden md:flex" />
             <ThemeToggle />
+            <CartButton />
           </div>
         </div>
       </header>

@@ -81,6 +81,25 @@ formulaire envoie un en-tête `Idempotency-Key` : un renvoi après un délai dé
 commande déjà créée au lieu d'un doublon (cache + verrou côté backend, 24 h). La saisie est
 conservée si la commande est refusée. Champ piège anti-robots.
 
+## Panier et checkout
+
+Le panier est un panier Medusa (`lib/cart-actions.ts`, server actions) dont l'id vit dans le
+cookie httpOnly `nocido_cart` (30 jours). Il est créé avec le locale Medusa de la langue
+(`fr-MA`…) et resynchronisé au changement de langue : Medusa retraduit les lignes.
+`CartProvider` charge le panier côté client (les pages restent statiques), le drawer
+(`components/cart`) affiche la progression vers la livraison offerte et un stepper par ligne.
+
+`/[locale]/checkout` (noindex) : récapitulatif multi-produits, mêmes champs COD que la page
+produit (`components/cod`), frais estimés selon la ville, bouton sticky sur mobile. La
+commande part du panier (`placeCheckoutOrder`), le cookie est supprimé après succès.
+
+Sur la page produit, une barre sticky mobile apparaît quand le formulaire sort de l'écran.
+Bouton WhatsApp flottant si `whatsappOrderEnabled` et un numéro sont renseignés.
+
+Événements (`lib/analytics.ts`) : `ViewContent`, `AddToCart`, `InitiateCheckout` sont
+poussés dans `window.dataLayer` (`nocido_<Event>`) et émis en `nocido:track`, avec un
+`eventId` pour la déduplication pixel/serveur. Les pixels sont branchés à l'étape 18.
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la
