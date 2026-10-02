@@ -111,6 +111,17 @@ configuré. `/[locale]/order` retrouve une commande avec son numéro **et** le t
 Toutes ces pages sont `noindex` et jamais mises en cache. Lien « Suivre ma commande » dans le
 pied de page.
 
+## Pages CMS
+
+`/[locale]/[handle]` rend les pages publiées du module `pages` (notre histoire, FAQ, livraison
+et retours, contact…) : Markdown par langue avec repli sur la langue par défaut, sans HTML brut
+(`components/content/markdown.tsx`, liens internes restant dans la langue courante), fil
+d'Ariane, `metaTitle`/`metaDescription` de la page, canonical et hreflang. Rendu au premier
+accès puis mis en cache (ISR, tag `pages` revalidé par le backend à chaque sauvegarde). Les
+pages `showInFooter` apparaissent dans la colonne « Aide » du pied de page, triées par
+`footerRank`, à côté de « Suivre ma commande ». Les segments fixes (`c`, `p`, `checkout`,
+`order`) restent prioritaires : ne pas créer de page CMS avec ces handles.
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la

@@ -8,6 +8,7 @@ import {
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { listPages } from "@/lib/pages";
 import type { ReactNode } from "react";
 
 interface SiteFooterProps {
@@ -34,7 +35,8 @@ function PhoneNumber({ e164 }: { e164: string }) {
 }
 
 export async function SiteFooter({ settings, locale }: SiteFooterProps) {
-  const t = await getTranslations();
+  const [t, pages] = await Promise.all([getTranslations(), listPages()]);
+  const footerPages = pages.filter((page) => page.showInFooter);
   const fallbacks = [settings.localization.defaultLocale];
   const text = (value: Parameters<typeof resolveLocalized>[0]) =>
     resolveLocalized(value, locale, fallbacks);
@@ -110,6 +112,13 @@ export async function SiteFooter({ settings, locale }: SiteFooterProps) {
             {t("footer.help")}
           </h2>
           <ul className="space-y-3 text-sm">
+            {footerPages.map((page) => (
+              <li key={page.id}>
+                <Link href={`/${page.handle}`} className={linkClass}>
+                  {text(page.title)}
+                </Link>
+              </li>
+            ))}
             <li>
               <Link href="/order" className={linkClass}>
                 {t("footer.trackOrder")}

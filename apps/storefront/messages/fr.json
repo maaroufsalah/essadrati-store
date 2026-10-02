@@ -2,7 +2,8 @@
   "common": {
     "skipToContent": "Aller au contenu",
     "home": "Accueil",
-    "close": "Fermer"
+    "close": "Fermer",
+    "breadcrumb": "Fil d'Ariane"
   },
   "header": {
     "mainNavigation": "Navigation principale",

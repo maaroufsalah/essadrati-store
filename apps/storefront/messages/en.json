@@ -2,7 +2,8 @@
   "common": {
     "skipToContent": "Skip to content",
     "home": "Home",
-    "close": "Close"
+    "close": "Close",
+    "breadcrumb": "Breadcrumb"
   },
   "header": {
     "mainNavigation": "Main navigation",

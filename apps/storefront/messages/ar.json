@@ -2,7 +2,8 @@
   "common": {
     "skipToContent": "انتقل إلى المحتوى",
     "home": "الرئيسية",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "breadcrumb": "مسار التصفح"
   },
   "header": {
     "mainNavigation": "التنقل الرئيسي",

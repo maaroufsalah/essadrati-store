@@ -100,7 +100,8 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 14      | Storefront produit + commande COD                                                        | fait    |
 | 15      | Storefront panier, checkout COD multi-produits, WhatsApp flottant                        | fait    |
 | 16      | Storefront page merci, suivi de commande, recherche numéro + téléphone                   | fait    |
-| 17–21   | CMS, tracking, SEO, notifications, PDF                                                   |         |
+| 17      | Storefront pages CMS `/[locale]/[handle]`, liens du pied de page                         | fait    |
+| 18–21   | Tracking, SEO, notifications, PDF                                                        |         |
 | 14      | **Checkpoint 2**                                                                         |         |
 | 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |
 | 16c     | **Checkpoint 3** (avec l'app mobile)                                                     | reporté |

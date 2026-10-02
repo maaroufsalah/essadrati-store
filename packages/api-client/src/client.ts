@@ -1,12 +1,16 @@
 import Medusa, { type Config } from "@medusajs/js-sdk";
 import {
   type Locale,
+  type Page,
+  type PageSummary,
+  pageSchema,
+  pageSummarySchema,
   type PublicStoreSettings,
   parsePublicStoreSettings,
   parsePublicStoreSettingsWithFallback,
   toMedusaLocale,
 } from "@nocido/types";
-import { type ApiResult, toApiError } from "./errors";
+import { type ApiError, type ApiResult, toApiError } from "./errors";
 import { CACHE_TAGS, KIT_ROUTES, LOCALE_HEADER } from "./routes";
 
 export interface StoreClientOptions {
@@ -52,6 +56,14 @@ export interface StoreClient {
   getStoreSettings(
     options?: RequestOptions,
   ): Promise<ApiResult<PublicStoreSettings> & { warnings?: string[] }>;
+  /** Published CMS pages without content (footer, sitemap), tagged `pages`. */
+  listPages(options?: RequestOptions): Promise<ApiResult<PageSummary[]>>;
+  /** One published CMS page, tagged `pages`. An unknown handle is `notFound`. */
+  getPage(handle: string, options?: RequestOptions): Promise<ApiResult<Page>>;
+}
+
+function invalid(message: string): { ok: false; error: ApiError } {
+  return { ok: false, error: { code: "invalidResponse", status: 200, message } };
 }
 
 /** Adds kit cache tags to the Next.js fetch options, keeping the caller's tags. */
@@ -101,6 +113,30 @@ export function createStoreClient(options: StoreClientOptions): StoreClient {
           };
         }
         return { ok: true, data: parsed.data };
+      } catch (error) {
+        return { ok: false, error: toApiError(error) };
+      }
+    },
+    async listPages(requestOptions) {
+      try {
+        const body = await sdk.client.fetch<{ pages?: unknown }>(KIT_ROUTES.pages, {
+          method: "GET",
+          ...withTags(requestOptions, [CACHE_TAGS.pages]),
+        });
+        const parsed = pageSummarySchema.array().safeParse(body.pages);
+        return parsed.success ? { ok: true, data: parsed.data } : invalid(parsed.error.message);
+      } catch (error) {
+        return { ok: false, error: toApiError(error) };
+      }
+    },
+    async getPage(handle, requestOptions) {
+      try {
+        const body = await sdk.client.fetch<{ page?: unknown }>(
+          `${KIT_ROUTES.pages}/${encodeURIComponent(handle)}`,
+          { method: "GET", ...withTags(requestOptions, [CACHE_TAGS.pages]) },
+        );
+        const parsed = pageSchema.safeParse(body.page);
+        return parsed.success ? { ok: true, data: parsed.data } : invalid(parsed.error.message);
       } catch (error) {
         return { ok: false, error: toApiError(error) };
       }

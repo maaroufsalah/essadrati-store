@@ -100,3 +100,42 @@ describe("createStoreClient", () => {
     expect(result.ok ? null : result.error.code).toBe("network");
   });
 });
+
+describe("CMS pages", () => {
+  const page = {
+    id: "page_1",
+    handle: "faq",
+    title: { fr: "FAQ" },
+    content: { fr: "## Question" },
+    seo: { metaTitle: {}, metaDescription: {} },
+    status: "published",
+    showInFooter: true,
+    footerRank: 1,
+    publishedAt: "2026-10-01T10:00:00.000Z",
+    updatedAt: "2026-10-01T10:00:00.000Z",
+  };
+
+  it("lists published pages under the pages tag", async () => {
+    const { content: _content, seo: _seo, status: _status, publishedAt: _at, ...summary } = page;
+    const spy = stubFetch(json({ pages: [summary] }));
+    const result = await createStoreClient(options).listPages();
+    expect(result.ok ? result.data.map((entry) => entry.handle) : null).toEqual(["faq"]);
+    const [input, init] = spy.mock.calls[0] ?? [];
+    expect(input instanceof Request ? input.url : input?.toString()).toBe(
+      `http://backend.test${KIT_ROUTES.pages}`,
+    );
+    expect((init as NextInit).next?.tags).toEqual([CACHE_TAGS.pages]);
+  });
+
+  it("returns one validated page", async () => {
+    stubFetch(json({ page }));
+    const result = await createStoreClient(options).getPage("faq");
+    expect(result.ok ? result.data.content.fr : null).toBe("## Question");
+  });
+
+  it("reports an unknown page as notFound", async () => {
+    stubFetch(json({ message: "page.notFound" }, 404));
+    const result = await createStoreClient(options).getPage("nope");
+    expect(result.ok ? null : result.error.code).toBe("notFound");
+  });
+});
