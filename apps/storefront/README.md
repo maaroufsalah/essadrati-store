@@ -73,18 +73,32 @@ Les réglages sont lus de façon tolérante (`settingsFallback`) : une section a
 invalide reprend les défauts du kit sans faire tomber le reste (décalage de versions pendant
 un déploiement).
 
-## Catégorie
+## Catalogue (catégorie et tous les produits)
 
-`/[locale]/c/[handle]` : grille 2/3/4 colonnes, filtres prix et poids (feuille en bas sur
-mobile et tablette, barre latérale dès 1024 px), tri (recommandés, prix, nouveautés),
-pagination de 12. L'état vit dans l'URL (`?w=500g,1kg&min=100&max=400&sort=price_asc&page=2`) :
-formulaires GET qui marchent sans JavaScript, appliqués côté client avec JavaScript.
+`/[locale]/c/[handle]` et `/[locale]/products` partagent `components/catalog/catalog-view.tsx` :
 
-L'API store de Medusa ne filtre ni ne trie par prix : les produits de la catégorie (jusqu'à
-100, en cache `catalog`) sont filtrés en mémoire (`lib/category.ts`, testé). La catégorie est
-résolue avant le streaming (pas de `loading.tsx`) : un handle inconnu renvoie un vrai 404 ;
-les résultats sont streamés derrière un squelette. Métadonnées et hreflang par langue
-(`lib/seo.ts`).
+- **Filtres administrables** (admin › Catalogue, `StoreSettings.catalog.facets`) : prix (double
+  curseur + saisie min/max, bornes calculées sur le catalogue filtré, en devise de la boutique),
+  type de produit (catégorie, absent d'une page catégorie), collection, disponibilité,
+  promotion, et filtres par option de produit (poids/contenance…). Ordre et titres choisis dans
+  l'admin. Compteur par valeur (chaque facette est comptée avec les autres filtres seuls).
+- **Barre latérale sticky** dès 1024 px ; en dessous, feuille plein écran ouverte par
+  « Filtrer (n) » avec « Tout effacer » et « Voir les n produits » (total en direct).
+- **Tri** : pertinence (mis en avant puis ordre du catalogue), prix croissant/décroissant,
+  nouveautés, meilleures ventes (unités vendues hors commandes annulées).
+- **URL** : `?poids=500g,1kg&category=amlou&min=100&max=400&sort=price_asc&page=2`
+  (paramètres = ids des facettes ; `@nocido/types` lit et écrit cet état). Chaque changement
+  remplace l'URL dans une transition (`router.replace`, `scroll: false`), avec un état
+  optimiste (cases, puces, prix réagissent tout de suite) et des squelettes pendant le
+  chargement. Sans JavaScript, le panneau est un formulaire GET.
+- **SEO** : canonical sans filtres ni tri (le numéro de page est gardé) ; toute combinaison
+  filtrée ou triée est `noindex, follow`.
+- **Données** : le backend filtre, compte, trie et pagine (`GET /store/catalog/search`) et
+  renvoie une page d'ids ; seuls ces 12 produits sont chargés (traduits, avec prix) depuis
+  `/store/products`. Aucun filtrage du catalogue complet dans le navigateur.
+
+Une catégorie inconnue renvoie un vrai 404. Les handles `c`, `p`, `products`, `checkout`,
+`order` et `ui-kit` sont refusés pour les pages CMS (`RESERVED_PAGE_HANDLES`).
 
 ## Produit et commande COD
 

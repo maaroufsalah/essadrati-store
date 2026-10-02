@@ -259,5 +259,50 @@
       "transition": "fade",
       "autoplay": true
     }
+  },
+  "catalog": {
+    "facets": [
+      {
+        "id": "price",
+        "kind": "price",
+        "enabled": true,
+        "label": {}
+      },
+      {
+        "id": "poids",
+        "kind": "option",
+        "option": "الوزن",
+        "enabled": true,
+        "label": {
+          "ar": "الوزن / الحجم",
+          "fr": "Poids / contenance",
+          "en": "Weight / size"
+        }
+      },
+      {
+        "id": "category",
+        "kind": "category",
+        "enabled": true,
+        "label": {}
+      },
+      {
+        "id": "collection",
+        "kind": "collection",
+        "enabled": true,
+        "label": {}
+      },
+      {
+        "id": "availability",
+        "kind": "availability",
+        "enabled": true,
+        "label": {}
+      },
+      {
+        "id": "promo",
+        "kind": "promo",
+        "enabled": true,
+        "label": {}
+      }
+    ]
   }
 }

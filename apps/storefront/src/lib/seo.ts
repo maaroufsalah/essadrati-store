@@ -48,3 +48,21 @@ export function ogImage(locale: Locale, kind: OgKind, handle?: string) {
     : `/api/og/${locale}/${kind}`;
   return { url: path, width: 1200, height: 630 };
 }
+
+/**
+ * Catalog pages (category, all products): the canonical keeps only the
+ * page number, filters and sorts are dropped; any filtered or re-sorted
+ * combination is noindex (still followed), so only real listings rank.
+ */
+export async function catalogAlternates(
+  locale: Locale,
+  path: string,
+  state: { page: number; filtered: boolean; sorted: boolean },
+): Promise<Pick<Metadata, "alternates" | "robots">> {
+  const alternates = await alternatesFor(locale, path);
+  const page = state.page > 1 ? `?page=${state.page}` : "";
+  return {
+    alternates: { ...alternates, canonical: `/${locale}${path}${page}` },
+    robots: state.filtered || state.sorted ? { index: false, follow: true } : undefined,
+  };
+}

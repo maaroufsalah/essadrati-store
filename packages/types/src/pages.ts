@@ -1,13 +1,20 @@
 import { z } from "zod";
 import { localizedStringSchema } from "./locale";
 
+/** First path segments taken by storefront routes: a CMS page cannot use them. */
+export const RESERVED_PAGE_HANDLES = ["c", "p", "products", "checkout", "order", "ui-kit"] as const;
+
 /** URL segment of a CMS page: /ar/our-story. */
 export const pageHandleSchema = z
   .string()
   .trim()
   .toLowerCase()
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "page.handle.invalid")
-  .max(80, "page.handle.invalid");
+  .max(80, "page.handle.invalid")
+  .refine(
+    (handle) => !(RESERVED_PAGE_HANDLES as readonly string[]).includes(handle),
+    "page.handle.reserved",
+  );
 
 export const PAGE_STATUSES = ["draft", "published"] as const;
 export type PageStatus = (typeof PAGE_STATUSES)[number];

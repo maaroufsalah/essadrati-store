@@ -2,6 +2,7 @@ import { type ContrastIssue, generateTokens } from "@nocido/theme";
 import { DEFAULT_STORE_SETTINGS } from "@nocido/theme/defaults";
 import {
   billingSchema,
+  catalogSettingsSchema,
   commerceSchema,
   contactSchema,
   homepageSchema,
@@ -35,6 +36,7 @@ const SECTION_SCHEMAS: Record<StoreSettingsSection, SectionSchema> = {
   marketing: marketingSchema,
   seo: seoSchema,
   homepage: homepageSchema,
+  catalog: catalogSettingsSchema,
 };
 
 type Section<K extends StoreSettingsSection> = StoreSettings[K];

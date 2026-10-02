@@ -1,3 +1,4 @@
+export * from "./catalog";
 export * from "./cod";
 export * from "./home";
 export * from "./locale";

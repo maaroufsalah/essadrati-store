@@ -198,6 +198,24 @@ et SEO par langue, statut brouillon/publié, lien de pied de page et ordre. Sch�
 Chaque écriture revalide le tag `pages` du storefront. `catalog:seed` crée les 4 pages de
 `data/seed/pages.json`. Le contenu est rendu sans HTML brut (react-markdown).
 
+## Recherche du catalogue
+
+`GET /store/catalog/search?region_id=…[&scope_category=handle][&<facette>=v1,v2][&min=&max=]
+[&sort=relevance|price_asc|price_desc|newest|bestsellers][&page=]` : recherche à facettes sur
+les produits publiés du canal de vente de la clé publiable. Réponse : une page d'ids (12), le
+total, la plage de prix (sans le filtre prix) et le compte de chaque valeur de facette.
+
+- Les facettes viennent de `StoreSettings.catalog.facets` (admin › Catalogue) ; les facettes
+  « option » lisent les options de produit par titre (langue par défaut de la boutique).
+- `src/lib/catalog-index.ts` construit un index en mémoire (Query : prix calculés de la région,
+  stock via `getVariantAvailability`, ventes par produit en SQL sur la version courante des
+  commandes non annulées), gardé 5 minutes et vidé par le subscriber `catalog-changed`.
+  L'API store de Medusa ne filtre ni ne trie par prix calculé, d'où cet index ; il convient à
+  quelques milliers de produits.
+- `src/lib/catalog-search.ts` (pur, testé) : OU dans une facette, ET entre facettes ; un filtre
+  prix combiné à une option vérifie la même variante (1 kg sous 300 MAD).
+- `GET /admin/catalog/options` liste les titres d'options proposés comme facettes.
+
 ## Modules `hero-slides` et `category-banners`
 
 Contenu de l'accueil hors StoreSettings, une ligne par élément :

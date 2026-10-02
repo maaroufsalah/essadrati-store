@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { catalogSettingsSchema } from "../catalog";
 import { themeConfigSchema } from "../theme";
 import {
   billingSchema,
@@ -26,6 +27,7 @@ export const STORE_SETTINGS_SECTIONS = [
   "marketing",
   "seo",
   "homepage",
+  "catalog",
 ] as const;
 export type StoreSettingsSection = (typeof STORE_SETTINGS_SECTIONS)[number];
 
@@ -63,6 +65,7 @@ const storeSettingsShape = {
   marketing: marketingSchema,
   seo: seoSchema,
   homepage: homepageSchema,
+  catalog: catalogSettingsSchema,
   /** ISO timestamp of the last write. Also used as the cache version. */
   updatedAt: z.iso.datetime({ offset: true }),
 };
@@ -102,6 +105,7 @@ export const storeSettingsUpdateSchema = z.strictObject({
   marketing: marketingSchema.partial().optional(),
   seo: seoSchema.partial().optional(),
   homepage: homepageSchema.partial().optional(),
+  catalog: catalogSettingsSchema.partial().optional(),
 });
 export type StoreSettingsUpdate = z.infer<typeof storeSettingsUpdateSchema>;
 

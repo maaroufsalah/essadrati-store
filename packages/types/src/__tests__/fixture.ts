@@ -99,5 +99,6 @@ export const validSettings = (): z.input<typeof storeSettingsSchema> => ({
     ],
     slider: { transition: "fade", autoplay: true },
   },
+  catalog: { facets: [{ id: "price", kind: "price", enabled: true, label: {} }] },
   updatedAt: "2026-09-28T10:00:00.000Z",
 });

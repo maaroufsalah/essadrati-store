@@ -5,6 +5,7 @@
  * lives in StoreSettings, written by the admin or by the client seed.
  */
 import {
+  DEFAULT_CATALOG_SETTINGS,
   DEFAULT_HOME_SECTIONS,
   type PublicStoreSettings,
   type StoreSettings,
@@ -95,6 +96,9 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
     giftCollectionHandle: null,
     sections: DEFAULT_HOME_SECTIONS.map((section) => ({ ...section })),
     slider: { transition: "fade", autoplay: true },
+  },
+  catalog: {
+    facets: DEFAULT_CATALOG_SETTINGS.facets.map((facet) => ({ ...facet, label: {} })),
   },
   updatedAt: "1970-01-01T00:00:00.000Z",
 };

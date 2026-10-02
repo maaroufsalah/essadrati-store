@@ -12,6 +12,8 @@ export const KIT_ROUTES = {
   categoryBanners: "/store/category-banners",
   adminCategoryBanners: "/admin/category-banners",
   adminHomeLinks: "/admin/home-links",
+  catalogSearch: "/store/catalog/search",
+  adminCatalogOptions: "/admin/catalog/options",
   cities: "/store/cities",
   codOrders: "/store/cod/orders",
   codOrderLookup: "/store/cod/orders/lookup",

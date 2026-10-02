@@ -50,6 +50,7 @@ export const getRegionId = cache(async (): Promise<string | null> => {
 });
 
 export interface ProductQuery {
+  id?: string[];
   limit?: number;
   offset?: number;
   categoryId?: string[];
@@ -74,6 +75,7 @@ export async function listProducts(
           region_id: regionId ?? undefined,
           limit: query.limit ?? 24,
           offset: query.offset ?? 0,
+          id: query.id,
           category_id: query.categoryId,
           collection_id: query.collectionId,
           handle: query.handle,
@@ -136,44 +138,12 @@ export const listCollections = cache(
   },
 );
 
-const FILTER_FIELDS = `${CARD_FIELDS},created_at,*variants.options`;
-
 export async function getCategoryByHandle(
   locale: Locale,
   handle: string,
 ): Promise<HttpTypes.StoreProductCategory | null> {
   const categories = await listCategories(locale);
   return categories.find((category) => category.handle === handle) ?? null;
-}
-
-/**
- * Every product of a category (up to 100) with option values and creation
- * date, for in-memory filtering and sorting: the store API cannot filter or
- * sort by price.
- */
-export async function listCategoryProducts(
-  locale: Locale,
-  categoryId: string,
-): Promise<HttpTypes.StoreProduct[]> {
-  const [client, regionId] = await Promise.all([storeClient(locale), getRegionId()]);
-  try {
-    const body = await client.sdk.client.fetch<HttpTypes.StoreProductListResponse>(
-      "/store/products",
-      {
-        query: {
-          fields: FILTER_FIELDS,
-          region_id: regionId ?? undefined,
-          category_id: [categoryId],
-          limit: 100,
-        },
-        ...nextOptions(),
-      },
-    );
-    return body.products;
-  } catch (error) {
-    console.error("[catalog] category products unavailable", error);
-    return [];
-  }
 }
 
 const PRODUCT_FIELDS =

@@ -13,6 +13,7 @@ d'API ; le backend sert `/admin/store-settings`.
 | Marketing     | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                                                   |
 | Livraison COD | `/settings/cod-shipping` | Zones et villes COD (CRUD, import/export CSV) — API `/admin/cod/*`                     |
 | Thème         | `/settings/theme`        | `theme` (presets, tokens light/dark, polices, radius, mode)                            |
+| Catalogue     | `/settings/catalog`      | `catalog` : filtres des pages catalogue (ordre, activation, titres, options)           |
 | Accueil       | `/settings/homepage`     | `homepage` + slides et bannières — API `/admin/hero-slides`, `/admin/category-banners` |
 
 La route native `/settings/store` de Medusa (devises, locales) reste intacte : ne jamais
