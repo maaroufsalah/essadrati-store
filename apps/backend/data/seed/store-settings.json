@@ -1,0 +1,56 @@
+{
+  "$comment": "Essadrati default StoreSettings, applied by catalog:seed only while the settings were never saved. Contact details are left empty on purpose: fill them in the admin.",
+  "identity": {
+    "storeName": { "ar": "Essadrati", "fr": "Essadrati", "en": "Essadrati" },
+    "tagline": {
+      "ar": "عسل حر وزيت أركان وأملو من قلب المغرب",
+      "fr": "Miel naturel, huile d'argan et amlou du cœur du Maroc",
+      "en": "Natural honey, argan oil and amlou from the heart of Morocco"
+    }
+  },
+  "contact": { "country": "MA", "city": "" },
+  "localization": {
+    "defaultLocale": "ar",
+    "enabledLocales": ["ar", "fr", "en"],
+    "defaultCurrency": "MAD",
+    "timezone": "Africa/Casablanca",
+    "numberingSystem": "latn"
+  },
+  "theme": {
+    "presetId": "heritage-dore",
+    "overrides": { "light": {}, "dark": {} },
+    "radius": { "base": 12, "card": 24, "button": "pill" },
+    "fonts": { "display": "amiri", "body": "ibm-plex-sans-arabic" },
+    "defaultMode": "system"
+  },
+  "commerce": {
+    "codEnabled": true,
+    "freeShippingThreshold": 500,
+    "returnDays": 7,
+    "whatsappOrderEnabled": true,
+    "minOrderAmount": 0
+  },
+  "marketing": {
+    "announcementBar": {
+      "enabled": true,
+      "text": {
+        "ar": "التوصيل مجاني ابتداءً من 500 درهم · الدفع عند الاستلام",
+        "fr": "Livraison offerte dès 500 MAD · Paiement à la livraison",
+        "en": "Free delivery from 500 MAD · Cash on delivery"
+      },
+      "href": null
+    }
+  },
+  "seo": {
+    "metaTitle": {
+      "ar": "Essadrati · عسل حر وزيت أركان",
+      "fr": "Essadrati · Miel naturel et huile d'argan",
+      "en": "Essadrati · Natural honey and argan oil"
+    },
+    "metaDescription": {
+      "ar": "عسل الفرنان والدغموس وزيت الأركان والأملو، مباشرة من المنتجين المغاربة. الدفع عند الاستلام في جميع المدن.",
+      "fr": "Miel Ferrane et Daghmous, huile d'argan et amlou, directement des producteurs marocains. Paiement à la livraison partout au Maroc.",
+      "en": "Ferrane and Daghmous honey, argan oil and amlou, straight from Moroccan producers. Cash on delivery across Morocco."
+    }
+  }
+}

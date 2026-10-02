@@ -99,3 +99,25 @@ Les clients sans email reçoivent une adresse technique `<téléphone>@<technica
 `store:setup` crée l'infrastructure COD (emplacement de stock, ensemble de livraison, option
 calculée, providers sur la région) et les villes de `data/moroccan-cities.json`
 (`pnpm --filter @nocido/backend cities:seed` pour les seules villes).
+
+## Seed du catalogue client
+
+```sh
+pnpm --filter @nocido/backend catalog:seed                       # idempotent
+SEED_SETTINGS=force pnpm --filter @nocido/backend catalog:seed   # ré-applique les réglages
+```
+
+Les données du client sont dans `data/seed/` (le code reste générique) :
+
+- `catalog.json` : catégories, collections, produits, variantes (poids), prix TTC. `compareAt`
+  devient le prix normal de la variante et `price` le prix d'une liste de prix « sale »
+  (`calculated_price.original_amount` / `calculated_amount` côté store).
+- `store-settings.json` : réglages par défaut, appliqués seulement si aucun réglage n'a encore
+  été enregistré.
+
+Les champs de base sont écrits dans la langue par défaut du store ; les autres langues
+deviennent des traductions (module Translation : produits, options, catégories, collections).
+Note : l'API store de Medusa 2.21 traduit produits, catégories et collections, mais pas les
+options imbriquées ; le storefront nomme l'option « poids » avec ses propres messages.
+Les images sont des placeholders SVG générés (bocal, bouteille, coffret), à remplacer dans
+l'admin.

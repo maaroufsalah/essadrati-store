@@ -1,0 +1,183 @@
+{
+  "$comment": "Essadrati catalog seed. Base language: ar (store default). Prices in MAD, tax included. compareAt = regular price, price = sale price (Medusa sale price list).",
+  "categories": [
+    {
+      "handle": "asal-hor",
+      "rank": 0,
+      "name": { "ar": "العسل الحر", "fr": "Miel naturel", "en": "Natural honey" },
+      "description": {
+        "ar": "عسل حر من مناحل الأطلس والجنوب المغربي، غير مبستر وغير مخلوط.",
+        "fr": "Miel pur des ruchers de l'Atlas et du Sud marocain, non pasteurisé et sans mélange.",
+        "en": "Pure honey from Atlas and southern Moroccan apiaries, unpasteurized and unblended."
+      }
+    },
+    {
+      "handle": "zit-argan",
+      "rank": 1,
+      "name": { "ar": "زيت الأركان", "fr": "Huile d'argan", "en": "Argan oil" },
+      "description": {
+        "ar": "زيت أركان غذائي وتجميلي معصور على البارد من تعاونيات نسائية.",
+        "fr": "Huile d'argan alimentaire et cosmétique pressée à froid par des coopératives féminines.",
+        "en": "Cold-pressed culinary and cosmetic argan oil from women's cooperatives."
+      }
+    },
+    {
+      "handle": "amlou",
+      "rank": 2,
+      "name": { "ar": "أملو", "fr": "Amlou", "en": "Amlou" },
+      "description": {
+        "ar": "أملو تقليدي باللوز المحمص وزيت الأركان والعسل الحر.",
+        "fr": "Amlou traditionnel aux amandes grillées, huile d'argan et miel naturel.",
+        "en": "Traditional amlou with roasted almonds, argan oil and natural honey."
+      }
+    }
+  ],
+  "collections": [
+    {
+      "handle": "baqat",
+      "title": { "ar": "الباقات", "fr": "Coffrets", "en": "Gift boxes" }
+    }
+  ],
+  "optionTitle": { "ar": "الوزن", "fr": "Poids", "en": "Weight" },
+  "products": [
+    {
+      "handle": "asal-ferrane",
+      "category": "asal-hor",
+      "collection": null,
+      "featured": true,
+      "rating": 4.9,
+      "reviewsCount": 128,
+      "placeholder": { "shape": "jar", "fill": "#C9861A", "accent": "#7A4A0E" },
+      "title": {
+        "ar": "عسل الفرنان",
+        "fr": "Miel d'euphorbe (Ferrane)",
+        "en": "Euphorbia honey (Ferrane)"
+      },
+      "subtitle": {
+        "ar": "عسل جبلي نادر",
+        "fr": "Miel de montagne rare",
+        "en": "Rare mountain honey"
+      },
+      "description": {
+        "ar": "عسل الفرنان من نبتة الفربيون الصحراوية، بطعم قوي ولاذع قليلاً. يُجنى مرة واحدة في السنة من مناحل تادلة والأطلس.",
+        "fr": "Miel issu de l'euphorbe résinifère, au goût puissant et légèrement piquant. Récolté une fois par an dans les ruchers du Tadla et de l'Atlas.",
+        "en": "Honey from resin spurge, with a strong, slightly peppery taste. Harvested once a year in Tadla and Atlas apiaries."
+      },
+      "variants": [
+        { "value": "500g", "sku": "ESS-FERR-500", "weight": 500, "price": 300, "compareAt": 450 },
+        { "value": "1kg", "sku": "ESS-FERR-1000", "weight": 1000, "price": 560, "compareAt": 850 }
+      ]
+    },
+    {
+      "handle": "asal-daghmous",
+      "category": "asal-hor",
+      "collection": null,
+      "featured": true,
+      "rating": 4.8,
+      "reviewsCount": 94,
+      "placeholder": { "shape": "jar", "fill": "#A86A12", "accent": "#5C3A0A" },
+      "title": { "ar": "عسل الدغموس", "fr": "Miel de Daghmous", "en": "Daghmous honey" },
+      "subtitle": {
+        "ar": "من الجنوب المغربي",
+        "fr": "Du Sud marocain",
+        "en": "From southern Morocco"
+      },
+      "description": {
+        "ar": "عسل الدغموس داكن اللون ومعروف بمذاقه المميز وقوامه الكثيف. يُجنى من نبتة الدغموس في سوس والصحراء.",
+        "fr": "Miel sombre au goût caractéristique et à la texture dense, récolté sur l'euphorbe Daghmous du Souss et du Sahara.",
+        "en": "Dark honey with a distinctive taste and dense texture, harvested from Daghmous spurge in Souss and the Sahara."
+      },
+      "variants": [
+        { "value": "500g", "sku": "ESS-DAGH-500", "weight": 500, "price": 250, "compareAt": null },
+        { "value": "1kg", "sku": "ESS-DAGH-1000", "weight": 1000, "price": 480, "compareAt": null }
+      ]
+    },
+    {
+      "handle": "asal-calitos",
+      "category": "asal-hor",
+      "collection": null,
+      "featured": true,
+      "rating": 4.7,
+      "reviewsCount": 61,
+      "placeholder": { "shape": "jar", "fill": "#E3B04B", "accent": "#8A5A12" },
+      "title": { "ar": "عسل الكاليتوس", "fr": "Miel d'eucalyptus", "en": "Eucalyptus honey" },
+      "subtitle": { "ar": "عسل يومي", "fr": "Le miel de tous les jours", "en": "Everyday honey" },
+      "description": {
+        "ar": "عسل الكاليتوس بنكهة منعشة وخفيفة، مثالي للفطور والمشروبات الدافئة.",
+        "fr": "Miel d'eucalyptus aux notes fraîches et légères, idéal au petit-déjeuner et dans les boissons chaudes.",
+        "en": "Eucalyptus honey with fresh, light notes, ideal for breakfast and warm drinks."
+      },
+      "variants": [
+        { "value": "500g", "sku": "ESS-EUCA-500", "weight": 500, "price": 120, "compareAt": null },
+        { "value": "1kg", "sku": "ESS-EUCA-1000", "weight": 1000, "price": 220, "compareAt": null }
+      ]
+    },
+    {
+      "handle": "zit-argan-ghidai",
+      "category": "zit-argan",
+      "collection": null,
+      "featured": true,
+      "rating": 4.9,
+      "reviewsCount": 77,
+      "placeholder": { "shape": "bottle", "fill": "#C08A2E", "accent": "#5E4012" },
+      "title": {
+        "ar": "زيت الأركان الغذائي",
+        "fr": "Huile d'argan alimentaire",
+        "en": "Culinary argan oil"
+      },
+      "subtitle": { "ar": "معصور على البارد", "fr": "Pressée à froid", "en": "Cold-pressed" },
+      "description": {
+        "ar": "زيت أركان محمص بعناية، بنكهة البندق، لتتبيل السلطات والأطباق والأملو.",
+        "fr": "Huile d'argan torréfiée avec soin, aux notes de noisette, pour assaisonner salades, plats et amlou.",
+        "en": "Carefully roasted argan oil with hazelnut notes, for salads, dishes and amlou."
+      },
+      "variants": [
+        { "value": "250ml", "sku": "ESS-ARGA-250", "weight": 250, "price": 180, "compareAt": null },
+        { "value": "500ml", "sku": "ESS-ARGA-500", "weight": 500, "price": 330, "compareAt": null }
+      ]
+    },
+    {
+      "handle": "amlou-louz",
+      "category": "amlou",
+      "collection": null,
+      "featured": false,
+      "rating": 4.8,
+      "reviewsCount": 52,
+      "placeholder": { "shape": "jar", "fill": "#8C5A2B", "accent": "#4A2C12" },
+      "title": { "ar": "أملو باللوز", "fr": "Amlou aux amandes", "en": "Almond amlou" },
+      "subtitle": { "ar": "وصفة سوسية", "fr": "Recette du Souss", "en": "Souss recipe" },
+      "description": {
+        "ar": "أملو محضر يدوياً من اللوز المحمص وزيت الأركان والعسل الحر، بدون إضافات.",
+        "fr": "Amlou préparé à la main avec amandes grillées, huile d'argan et miel naturel, sans additifs.",
+        "en": "Hand-made amlou with roasted almonds, argan oil and natural honey, no additives."
+      },
+      "variants": [
+        { "value": "250g", "sku": "ESS-AMLO-250", "weight": 250, "price": 90, "compareAt": null },
+        { "value": "500g", "sku": "ESS-AMLO-500", "weight": 500, "price": 170, "compareAt": null }
+      ]
+    },
+    {
+      "handle": "baqat-dahabiya",
+      "category": "asal-hor",
+      "collection": "baqat",
+      "featured": true,
+      "rating": 5,
+      "reviewsCount": 23,
+      "placeholder": { "shape": "box", "fill": "#2B1B0E", "accent": "#E9B44C" },
+      "title": { "ar": "الباقة الذهبية", "fr": "Coffret doré", "en": "Golden gift box" },
+      "subtitle": {
+        "ar": "عسل الفرنان وأملو وزيت الأركان",
+        "fr": "Miel Ferrane, amlou et huile d'argan",
+        "en": "Ferrane honey, amlou and argan oil"
+      },
+      "description": {
+        "ar": "هدية فاخرة تجمع عسل الفرنان 500غ وأملو 250غ وزيت الأركان 250مل في علبة أنيقة.",
+        "fr": "Un coffret cadeau réunissant miel Ferrane 500 g, amlou 250 g et huile d'argan 250 ml dans un écrin élégant.",
+        "en": "A gift box with Ferrane honey 500 g, amlou 250 g and argan oil 250 ml in an elegant case."
+      },
+      "variants": [
+        { "value": "1", "sku": "ESS-BOX-GOLD", "weight": 1100, "price": 520, "compareAt": 570 }
+      ]
+    }
+  ]
+}
