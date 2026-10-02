@@ -59,5 +59,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<voi
     ],
     filters: { id: orderId },
   });
-  res.status(201).json({ order: data[0] });
+  const rows: unknown[] = data;
+  const order = rows[0];
+  res.status(201).json({ order });
 }

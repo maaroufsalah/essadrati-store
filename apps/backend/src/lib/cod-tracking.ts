@@ -125,5 +125,7 @@ export async function findTrackedOrders(
 ): Promise<TrackedOrderRow[]> {
   const query = container.resolve(ContainerRegistrationKeys.QUERY);
   const { data } = await query.graph({ entity: "order", fields: TRACKING_FIELDS, filters });
-  return data as unknown as TrackedOrderRow[];
+  // Typed by .medusa/types once generated, `any` before: go through unknown.
+  const rows: unknown[] = data;
+  return rows as TrackedOrderRow[];
 }
