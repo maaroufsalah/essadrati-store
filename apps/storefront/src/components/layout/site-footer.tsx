@@ -7,6 +7,7 @@ import {
 } from "@nocido/types";
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { ConsentSettingsButton } from "@/components/tracking/tracking-provider";
 import { Link } from "@/i18n/navigation";
 import { listPages } from "@/lib/pages";
 import type { ReactNode } from "react";
@@ -156,7 +157,10 @@ export async function SiteFooter({ settings, locale }: SiteFooterProps) {
               storeName: legalName || storeName,
             })}
           </p>
-          {ice ? <p>{t("footer.ice", { ice })}</p> : null}
+          <div className="flex flex-wrap gap-x-4 gap-y-1">
+            {ice ? <p>{t("footer.ice", { ice })}</p> : null}
+            <ConsentSettingsButton className="hover:text-fg underline-offset-4 hover:underline" />
+          </div>
         </div>
       </div>
     </footer>

@@ -218,5 +218,12 @@
       "helpMessage": "Bonjour, j'ai une question sur ma commande n° {number}.",
       "another": "Rechercher une autre commande"
     }
+  },
+  "consent": {
+    "title": "Cookies",
+    "text": "Avec votre accord, nous utilisons des cookies de mesure d'audience et publicitaires (Google, Meta, TikTok) pour améliorer le site et nos annonces. Vous pouvez changer d'avis à tout moment depuis le pied de page.",
+    "accept": "Accepter",
+    "refuse": "Refuser",
+    "manage": "Gérer les cookies"
   }
 }

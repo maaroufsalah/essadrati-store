@@ -12,6 +12,7 @@ import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Providers } from "@/components/providers";
+import { TrackingProvider } from "@/components/tracking/tracking-provider";
 import { publicEnv } from "@/lib/env";
 import { fontVariables } from "@/lib/fonts";
 import { storeFormat } from "@/lib/format";
@@ -93,6 +94,9 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
       ? `https://wa.me/${toWhatsAppNumber(settings.contact.whatsapp)}`
       : null;
 
+  const { gtmId, metaPixelId, tiktokPixelId, ga4Id } = settings.marketing;
+  const trackerIds = { gtmId, metaPixelId, tiktokPixelId, ga4Id };
+
   // Validated hex colors, integers and known font stacks only (see @nocido/theme).
   const tokens = generateTokensOrFallback(settings.theme, DEFAULT_THEME_CONFIG);
   const fonts = fontVariables([settings.theme.fonts.display, settings.theme.fonts.body]);
@@ -105,20 +109,22 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
       <body className="flex min-h-dvh flex-col antialiased">
         <NextIntlClientProvider>
           <Providers defaultMode={settings.theme.defaultMode}>
-            <CartProvider
-              format={storeFormat(settings, locale)}
-              freeShippingThreshold={settings.commerce.freeShippingThreshold}
-            >
-              <SiteHeader settings={settings} locale={locale} locales={locales} />
-              <main id="main" className="flex-1">
-                {children}
-              </main>
-              <SiteFooter settings={settings} locale={locale} />
-              <CartDrawer />
-              {whatsappHref ? (
-                <FloatingWhatsApp href={whatsappHref} label={tHome("whatsappCta")} />
-              ) : null}
-            </CartProvider>
+            <TrackingProvider ids={trackerIds}>
+              <CartProvider
+                format={storeFormat(settings, locale)}
+                freeShippingThreshold={settings.commerce.freeShippingThreshold}
+              >
+                <SiteHeader settings={settings} locale={locale} locales={locales} />
+                <main id="main" className="flex-1">
+                  {children}
+                </main>
+                <SiteFooter settings={settings} locale={locale} />
+                <CartDrawer />
+                {whatsappHref ? (
+                  <FloatingWhatsApp href={whatsappHref} label={tHome("whatsappCta")} />
+                ) : null}
+              </CartProvider>
+            </TrackingProvider>
           </Providers>
         </NextIntlClientProvider>
       </body>

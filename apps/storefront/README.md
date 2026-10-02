@@ -98,7 +98,23 @@ Bouton WhatsApp flottant si `whatsappOrderEnabled` et un numéro sont renseigné
 
 Événements (`lib/analytics.ts`) : `ViewContent`, `AddToCart`, `InitiateCheckout` sont
 poussés dans `window.dataLayer` (`nocido_<Event>`) et émis en `nocido:track`, avec un
-`eventId` pour la déduplication pixel/serveur. Les pixels sont branchés à l'étape 18.
+`eventId` pour la déduplication pixel/serveur.
+
+## Tracking et consentement
+
+`TrackingProvider` (`components/tracking`) charge GTM, GA4, Meta Pixel et TikTok Pixel
+uniquement si leur id est renseigné dans StoreSettings (`marketing`) **et** si le visiteur a
+accepté les cookies. Sans aucun id, ni bandeau ni script. Le choix est gardé 180 jours dans le
+cookie `nocido_consent` (`granted`/`denied`) ; « Gérer les cookies » dans le pied de page
+rouvre le bandeau (un refus après acceptation recharge la page pour décharger les scripts).
+
+Chaque événement `nocido:track` est envoyé à Meta (`eventID`), TikTok (`event_id`, Purchase →
+`CompletePayment`) et GA4 (schéma ecommerce, `transaction_id`) par `lib/trackers.ts` ; GTM lit
+`window.dataLayer` (`nocido_<Event>`). Les événements survenus avant le consentement sont
+rejoués à l'acceptation. Déduplication : même événement ignoré pendant 2 s, `Purchase` une
+seule fois par commande (`eventId` = id de commande, réutilisable par une future API
+Conversions côté serveur). Si GA4 est aussi configuré dans le conteneur GTM, ne renseigner
+que l'un des deux pour éviter les doublons.
 
 ## Commande : merci et suivi
 

@@ -218,5 +218,12 @@
       "helpMessage": "Hello, I have a question about my order #{number}.",
       "another": "Find another order"
     }
+  },
+  "consent": {
+    "title": "Cookies",
+    "text": "With your consent, we use analytics and advertising cookies (Google, Meta, TikTok) to improve the site and our ads. You can change your mind at any time from the footer.",
+    "accept": "Accept",
+    "refuse": "Decline",
+    "manage": "Manage cookies"
   }
 }

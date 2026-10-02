@@ -33,6 +33,12 @@ declare global {
 }
 
 const recent = new Map<string, number>();
+/** Events of this page view, replayed to the pixels when consent arrives later. */
+const history: TrackedEvent[] = [];
+
+export function trackedEvents(): readonly TrackedEvent[] {
+  return history;
+}
 
 /** Same event with the same content within 2 s is ignored (double clicks, re-renders). */
 function isDuplicate(event: CommerceEvent, payload: TrackPayload): boolean {
@@ -46,6 +52,8 @@ function isDuplicate(event: CommerceEvent, payload: TrackPayload): boolean {
 export function track(event: CommerceEvent, payload: TrackPayload, eventId?: string): void {
   if (typeof window === "undefined" || isDuplicate(event, payload)) return;
   const detail: TrackedEvent = { event, eventId: eventId ?? crypto.randomUUID(), ...payload };
+  history.push(detail);
+  if (history.length > 20) history.shift();
   window.dataLayer ??= [];
   window.dataLayer.push({ ...detail, event: `nocido_${event}`, commerceEvent: event });
   window.dispatchEvent(new CustomEvent<TrackedEvent>("nocido:track", { detail }));
