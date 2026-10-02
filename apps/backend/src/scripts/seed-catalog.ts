@@ -33,10 +33,13 @@ import {
   type Locale,
   type LocalizedString,
   localizedStringSchema,
+  pageInputSchema,
   storeSettingsUpdateSchema,
   toMedusaLocale,
 } from "@nocido/types";
 import { z } from "zod";
+import { PAGES_MODULE } from "../modules/pages";
+import type PagesModuleService from "../modules/pages/service";
 import { STORE_SETTINGS_MODULE } from "../modules/store-settings";
 import type StoreSettingsModuleService from "../modules/store-settings/service";
 import { updateStoreSettingsWorkflow } from "../workflows/update-store-settings";
@@ -325,6 +328,26 @@ async function seedProducts(
   }
 }
 
+const pagesSeedSchema = z.object({
+  pages: z.array(
+    pageInputSchema.pick({ handle: true, title: true, content: true, seo: true, footerRank: true }),
+  ),
+});
+
+/** CMS pages, created once by handle and published in the footer. */
+async function seedPages(ctx: SeedContext): Promise<void> {
+  const service = ctx.container.resolve<PagesModuleService>(PAGES_MODULE);
+  const { pages } = pagesSeedSchema.parse(readJson("pages.json"));
+  const existing = new Set((await service.listPages()).map((page) => page.handle));
+  let created = 0;
+  for (const page of pages) {
+    if (existing.has(page.handle)) continue;
+    await service.savePage({ ...page, status: "published", showInFooter: true });
+    created++;
+  }
+  ctx.logger.info(`Pages: ${created} created`);
+}
+
 async function seedSettings(ctx: SeedContext): Promise<void> {
   const service = ctx.container.resolve<StoreSettingsModuleService>(STORE_SETTINGS_MODULE);
   const force = process.env.SEED_SETTINGS === "force";
@@ -360,5 +383,6 @@ export default async function seedCatalog({ container }: ExecArgs): Promise<void
   const categories = await seedCategories(ctx, catalog);
   const collections = await seedCollections(ctx, catalog);
   await seedProducts(ctx, catalog, categories, collections);
+  await seedPages(ctx);
   logger.info("Catalog seed done");
 }

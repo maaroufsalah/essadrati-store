@@ -121,3 +121,19 @@ Note : l'API store de Medusa 2.21 traduit produits, catégories et collections, 
 options imbriquées ; le storefront nomme l'option « poids » avec ses propres messages.
 Les images sont des placeholders SVG générés (bocal, bouteille, coffret), à remplacer dans
 l'admin.
+
+## Module CMS `pages`
+
+Pages de contenu (notre histoire, FAQ, livraison, contact) : `handle`, titre, contenu Markdown
+et SEO par langue, statut brouillon/publié, lien de pied de page et ordre. Schémas partagés :
+`pageInputSchema`, `pageSchema` (`@nocido/types`).
+
+| Route                              | Accès         | Rôle                                          |
+| ---------------------------------- | ------------- | --------------------------------------------- |
+| `GET /store/pages`                 | clé publiable | Pages publiées sans contenu (footer, sitemap) |
+| `GET /store/pages/:handle`         | clé publiable | Page publiée avec contenu, 404 sinon          |
+| `GET/POST /admin/pages`            | admin         | Liste (brouillons compris), création          |
+| `GET/POST/DELETE /admin/pages/:id` | admin         | Lecture, mise à jour, suppression             |
+
+Chaque écriture revalide le tag `pages` du storefront. `catalog:seed` crée les 4 pages de
+`data/seed/pages.json`. Le contenu est rendu sans HTML brut (react-markdown).

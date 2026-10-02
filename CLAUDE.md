@@ -93,7 +93,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 7       | Admin : thème (presets, tokens, aperçu, contraste), branding de l'admin                  | fait    |
 | 8       | Backend COD : villes marocaines, paiement `cod`, livraison `manual-cod`                  | fait    |
 | 9       | Seed catalogue Essadrati                                                                 | fait    |
-| 10      | Module CMS `pages`                                                                       |         |
+| 10      | Module CMS `pages`                                                                       | fait    |
 | 11      | Storefront UI kit                                                                        |         |
 | 12      | Storefront accueil                                                                       |         |
 | 13      | Storefront catégorie                                                                     |         |

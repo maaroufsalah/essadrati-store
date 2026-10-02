@@ -5,11 +5,18 @@
 export const KIT_ROUTES = {
   storeSettings: "/store/store-settings",
   adminStoreSettings: "/admin/store-settings",
+  pages: "/store/pages",
+  adminPages: "/admin/pages",
+  cities: "/store/cities",
+  codOrders: "/store/cod/orders",
 } as const;
 
 /** Next.js cache tags. The backend revalidates them after each write. */
 export const CACHE_TAGS = {
   storeSettings: "store-settings",
+  pages: "pages",
+  catalog: "catalog",
+  cities: "cities",
 } as const;
 export type CacheTag = (typeof CACHE_TAGS)[keyof typeof CACHE_TAGS];
 

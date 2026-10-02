@@ -1,5 +1,6 @@
 export * from "./locale";
 export * from "./media";
+export * from "./pages";
 export * from "./phone";
 export * from "./theme";
 export * from "./settings/fields";

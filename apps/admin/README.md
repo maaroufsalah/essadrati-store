@@ -28,6 +28,12 @@ nommer une page du plugin comme une page native.
 - **Textes** : `src/admin/lib/i18n.ts` (fr de référence, en complet, vérifié par le typage),
   langue du dashboard lue dans `localStorage.lng`.
 
+## Pages CMS
+
+Menu principal « Pages » (`/pages`) : liste, création et éditeur (`/pages/:id`) avec titre,
+contenu Markdown et SEO par langue, aperçu en direct (RTL pour l'arabe), statut et lien de
+pied de page.
+
 ## Widget commande COD
 
 Sur la page d'une commande COD (`order.details.side.before`) : statut de confirmation,

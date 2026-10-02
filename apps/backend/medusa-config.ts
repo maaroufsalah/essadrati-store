@@ -95,6 +95,7 @@ module.exports = defineConfig({
       options: { encryptionKey: productionEnv("SETTINGS_ENCRYPTION_KEY", "dev-only-settings-key") },
     },
     { resolve: "./src/modules/moroccan-cities" },
+    { resolve: "./src/modules/pages" },
     {
       resolve: "@medusajs/medusa/payment",
       options: {

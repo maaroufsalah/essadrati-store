@@ -1,0 +1,89 @@
+{
+  "$comment": "CMS pages seeded by catalog:seed (created once, by handle). Content is Markdown per locale. Contact details are not written here: the storefront shows them from StoreSettings.",
+  "pages": [
+    {
+      "handle": "our-story",
+      "footerRank": 1,
+      "title": { "ar": "قصتنا", "fr": "Notre histoire", "en": "Our story" },
+      "seo": {
+        "metaTitle": { "ar": "قصتنا", "fr": "Notre histoire", "en": "Our story" },
+        "metaDescription": {
+          "ar": "من مناحل الأطلس إلى بيتك: قصة عسل حر ومنتجات مغربية أصيلة.",
+          "fr": "Des ruchers de l'Atlas jusqu'à chez vous : l'histoire d'un miel pur et de produits marocains authentiques.",
+          "en": "From Atlas apiaries to your home: the story of pure honey and authentic Moroccan products."
+        }
+      },
+      "content": {
+        "ar": "## من المنحل إلى مائدتك\n\nبدأت حكايتنا في مناحل العائلة بين جبال الأطلس وسهول تادلة. نعمل مع نحالين مغاربة يحترمون النحل ودورة الطبيعة، ونجني العسل في موسمه دون تسخين أو خلط.\n\n## ما نؤمن به\n\n- **عسل حر 100%**: غير مبستر وغير مخلوط.\n- **منتجون محليون**: تعاونيات نسائية لزيت الأركان والأملو.\n- **شفافية**: نذكر مصدر كل منتج ونوع زهوره.\n\nنريد أن يصل إليك طعم المغرب الحقيقي، كما نعرفه في بيوتنا.",
+        "fr": "## De la ruche à votre table\n\nNotre histoire commence dans les ruchers familiaux, entre les montagnes de l'Atlas et les plaines du Tadla. Nous travaillons avec des apiculteurs marocains qui respectent les abeilles et le rythme de la nature, et récoltent le miel en saison, sans chauffage ni mélange.\n\n## Ce en quoi nous croyons\n\n- **Miel 100 % naturel** : non pasteurisé, sans mélange.\n- **Producteurs locaux** : coopératives féminines pour l'huile d'argan et l'amlou.\n- **Transparence** : l'origine et la flore de chaque produit sont indiquées.\n\nNous voulons vous faire goûter le vrai Maroc, tel qu'on le connaît chez nous.",
+        "en": "## From the hive to your table\n\nOur story begins in family apiaries between the Atlas mountains and the Tadla plains. We work with Moroccan beekeepers who respect bees and the rhythm of nature, harvesting honey in season, never heated or blended.\n\n## What we believe in\n\n- **100% natural honey**: unpasteurized and unblended.\n- **Local producers**: women's cooperatives for argan oil and amlou.\n- **Transparency**: the origin and flora of every product are stated.\n\nWe want you to taste the real Morocco, the way we know it at home."
+      }
+    },
+    {
+      "handle": "faq",
+      "footerRank": 2,
+      "title": { "ar": "الأسئلة الشائعة", "fr": "Questions fréquentes", "en": "FAQ" },
+      "seo": {
+        "metaTitle": {
+          "ar": "الأسئلة الشائعة",
+          "fr": "Questions fréquentes",
+          "en": "Frequently asked questions"
+        },
+        "metaDescription": {
+          "ar": "الدفع عند الاستلام، مدة التوصيل، حفظ العسل: إجابات على أسئلتكم.",
+          "fr": "Paiement à la livraison, délais, conservation du miel : les réponses à vos questions.",
+          "en": "Cash on delivery, delivery times, storing honey: answers to your questions."
+        }
+      },
+      "content": {
+        "ar": "### كيف أدفع؟\n\nالدفع عند الاستلام نقداً لعامل التوصيل. لا حاجة لبطاقة بنكية.\n\n### كم تستغرق مدة التوصيل؟\n\nمن يوم إلى ثلاثة أيام في المدن الكبرى، وحتى سبعة أيام في الأقاليم الجنوبية. تظهر المدة وثمن التوصيل عند اختيار مدينتك.\n\n### كيف أعرف أن العسل حر؟\n\nعسلنا غير مبستر وقد يتبلور مع الوقت، وهذه علامة على أنه طبيعي.\n\n### كيف أحفظ العسل؟\n\nفي مكان جاف بعيداً عن الشمس، بدون ثلاجة.",
+        "fr": "### Comment payer ?\n\nEn espèces au livreur, à la réception. Aucune carte bancaire n'est nécessaire.\n\n### Quels sont les délais de livraison ?\n\nUn à trois jours dans les grandes villes, jusqu'à sept jours dans les provinces du Sud. Le délai et les frais s'affichent dès que vous choisissez votre ville.\n\n### Comment savoir si le miel est naturel ?\n\nNotre miel n'est pas pasteurisé et peut cristalliser avec le temps : c'est un signe de miel naturel.\n\n### Comment conserver le miel ?\n\nAu sec, à l'abri du soleil, sans réfrigérateur.",
+        "en": "### How do I pay?\n\nIn cash to the courier, on delivery. No bank card needed.\n\n### How long does delivery take?\n\nOne to three days in major cities, up to seven days in the southern provinces. Delay and fee are shown as soon as you pick your city.\n\n### How do I know the honey is natural?\n\nOur honey is not pasteurized and may crystallize over time: a sign of natural honey.\n\n### How should I store honey?\n\nIn a dry place, away from sunlight, not in the fridge."
+      }
+    },
+    {
+      "handle": "shipping-returns",
+      "footerRank": 3,
+      "title": {
+        "ar": "التوصيل والإرجاع",
+        "fr": "Livraison et retours",
+        "en": "Shipping and returns"
+      },
+      "seo": {
+        "metaTitle": {
+          "ar": "التوصيل والإرجاع",
+          "fr": "Livraison et retours",
+          "en": "Shipping and returns"
+        },
+        "metaDescription": {
+          "ar": "التوصيل إلى جميع المدن المغربية مع الدفع عند الاستلام، وإمكانية الإرجاع.",
+          "fr": "Livraison dans toutes les villes du Maroc avec paiement à la livraison, et retours possibles.",
+          "en": "Delivery to every Moroccan city with cash on delivery, and easy returns."
+        }
+      },
+      "content": {
+        "ar": "## التوصيل\n\n- نوصل إلى جميع المدن المغربية.\n- يُحسب ثمن التوصيل حسب المدينة، ويصبح مجانياً ابتداءً من المبلغ المعلن في الموقع.\n- نتصل بك هاتفياً لتأكيد الطلب قبل الشحن.\n\n## الإرجاع\n\nإذا وصلك منتج متضرر أو غير مطابق، تواصل معنا خلال مدة الإرجاع المحددة في الموقع وسنستبدله أو نسترجع ثمنه.",
+        "fr": "## Livraison\n\n- Nous livrons dans toutes les villes du Maroc.\n- Les frais dépendent de la ville et deviennent gratuits à partir du montant indiqué sur le site.\n- Nous vous appelons pour confirmer la commande avant l'expédition.\n\n## Retours\n\nSi un produit arrive abîmé ou non conforme, contactez-nous dans le délai de retour indiqué sur le site : nous l'échangeons ou vous remboursons.",
+        "en": "## Delivery\n\n- We deliver to every city in Morocco.\n- Fees depend on the city and become free from the amount shown on the site.\n- We call you to confirm the order before shipping.\n\n## Returns\n\nIf a product arrives damaged or not as described, contact us within the return period shown on the site: we will exchange or refund it."
+      }
+    },
+    {
+      "handle": "contact",
+      "footerRank": 4,
+      "title": { "ar": "اتصل بنا", "fr": "Contact", "en": "Contact" },
+      "seo": {
+        "metaTitle": { "ar": "اتصل بنا", "fr": "Nous contacter", "en": "Contact us" },
+        "metaDescription": {
+          "ar": "تواصل معنا عبر الهاتف أو واتساب أو البريد الإلكتروني.",
+          "fr": "Contactez-nous par téléphone, WhatsApp ou e-mail.",
+          "en": "Reach us by phone, WhatsApp or email."
+        }
+      },
+      "content": {
+        "ar": "نحن هنا للإجابة على أسئلتكم ومساعدتكم في اختيار المنتج المناسب. تجدون وسائل التواصل أسفل هذه الصفحة.",
+        "fr": "Nous sommes là pour répondre à vos questions et vous aider à choisir le bon produit. Nos coordonnées sont indiquées en bas de cette page.",
+        "en": "We are here to answer your questions and help you choose the right product. Our contact details are shown below."
+      }
+    }
+  ]
+}
