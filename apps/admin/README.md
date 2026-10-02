@@ -4,15 +4,16 @@ Plugin Medusa 2.21.1, côté UI uniquement : il ajoute les pages de réglages du
 dashboard (`/app/settings/...`, section « Extensions »). Il ne contient ni module ni route
 d'API ; le backend sert `/admin/store-settings`.
 
-| Page          | Route                    | Sections StoreSettings                                             |
-| ------------- | ------------------------ | ------------------------------------------------------------------ |
-| Identité      | `/settings/identity`     | `identity` (nom, slogan, logos, favicon, OG), `seo`                |
-| Contact       | `/settings/contact`      | `contact`, `smtp` (+ email de test)                                |
-| Facturation   | `/settings/billing`      | `billing`                                                          |
-| Langues       | `/settings/localization` | `localization`                                                     |
-| Marketing     | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                               |
-| Livraison COD | `/settings/cod-shipping` | Zones et villes COD (CRUD, import/export CSV) — API `/admin/cod/*` |
-| Thème         | `/settings/theme`        | `theme` (presets, tokens light/dark, polices, radius, mode)        |
+| Page          | Route                    | Sections StoreSettings                                                                 |
+| ------------- | ------------------------ | -------------------------------------------------------------------------------------- |
+| Identité      | `/settings/identity`     | `identity` (nom, slogan, logos, favicon, OG), `seo`                                    |
+| Contact       | `/settings/contact`      | `contact`, `smtp` (+ email de test)                                                    |
+| Facturation   | `/settings/billing`      | `billing`                                                                              |
+| Langues       | `/settings/localization` | `localization`                                                                         |
+| Marketing     | `/settings/marketing`    | `marketing` (suivi, barre d'annonce)                                                   |
+| Livraison COD | `/settings/cod-shipping` | Zones et villes COD (CRUD, import/export CSV) — API `/admin/cod/*`                     |
+| Thème         | `/settings/theme`        | `theme` (presets, tokens light/dark, polices, radius, mode)                            |
+| Accueil       | `/settings/homepage`     | `homepage` + slides et bannières — API `/admin/hero-slides`, `/admin/category-banners` |
 
 La route native `/settings/store` de Medusa (devises, locales) reste intacte : ne jamais
 nommer une page du plugin comme une page native.
@@ -33,6 +34,21 @@ nommer une page du plugin comme une page native.
 Menu principal « Pages » (`/pages`) : liste, création et éditeur (`/pages/:id`) avec titre,
 contenu Markdown et SEO par langue, aperçu en direct (RTL pour l'arabe), statut et lien de
 pied de page.
+
+## Accueil
+
+`/settings/homepage`, quatre onglets (montés une fois : changer d'onglet garde les saisies) :
+
+- **Blocs** : ordre des blocs de l'accueil par glisser-déposer (HTML5 natif, flèches
+  haut/bas pour clavier et tactile) et interrupteur par bloc, options du slider (fondu ou
+  glissement, autoplay). Enregistré dans `homepage.sections` / `homepage.slider`.
+- **Slider** et **Nos univers** : `HomeItemsManager` générique — liste avec vignette,
+  interrupteur d'activation et ordre enregistrés immédiatement (`/reorder`), éditeur plein
+  écran avec aperçu live ordinateur/mobile et ar/fr/en, rendu avec les tokens sombres du thème
+  et ses polices (comme la boutique). Lien choisi parmi les catégories et produits du catalogue
+  ou saisi (chemin ou URL http(s)).
+- **Contenus** : hero de secours (affiché sans slide active), engagements, histoire, avis,
+  collection des coffrets.
 
 ## Widget commande COD
 

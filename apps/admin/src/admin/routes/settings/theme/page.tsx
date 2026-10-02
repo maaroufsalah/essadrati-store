@@ -1,14 +1,7 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk";
 import { Swatch } from "@medusajs/icons";
 import { Badge, Button, Input, Label, Tabs, Text, clx } from "@medusajs/ui";
-import {
-  FONTS,
-  fontsForRole,
-  getPreset,
-  googleFontsUrl,
-  THEME_PRESET_LIST,
-  type ThemePreset,
-} from "@nocido/theme";
+import { FONTS, fontsForRole, getPreset, THEME_PRESET_LIST, type ThemePreset } from "@nocido/theme";
 import {
   COLOR_MODES,
   COLOR_TOKENS,
@@ -17,13 +10,13 @@ import {
   type ThemeConfig,
   themeConfigSchema,
 } from "@nocido/types";
-import { useEffect } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { Grid, NumberField, RadioField, Section, SelectField } from "../../../components/fields";
 import { type FormValues, SettingsForm } from "../../../components/settings-form";
 import { contrastIssues, ThemePreview } from "../../../components/theme-preview";
 import { refreshBranding } from "../../../lib/branding";
+import { usePreviewFonts } from "../../../lib/preview-fonts";
 import { currentLanguage, t } from "../../../lib/i18n";
 
 /** The form edits `theme`; a pill toggle stands in for radius.button = "pill". */
@@ -32,19 +25,6 @@ const schema = z.object({ theme: themeConfigSchema }).superRefine((value, ctx) =
     ctx.addIssue({ code: "custom", path: ["theme", "overrides"], message: "theme.contrast" });
   }
 });
-
-/** Loads the Google Fonts CSS of the selected fonts, for the admin preview only. */
-function usePreviewFonts(config: ThemeConfig | null) {
-  const href = config ? googleFontsUrl([config.fonts.display, config.fonts.body]) : null;
-  useEffect(() => {
-    if (!href) return;
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = href;
-    document.head.appendChild(link);
-    return () => link.remove();
-  }, [href]);
-}
 
 function presetName(preset: ThemePreset): string {
   return preset.name[currentLanguage()] ?? preset.name.fr ?? preset.id;
