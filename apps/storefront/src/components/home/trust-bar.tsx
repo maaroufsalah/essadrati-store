@@ -11,7 +11,8 @@ import {
   Truck,
 } from "lucide-react";
 
-const ICONS: Record<TrustIcon, LucideIcon> = {
+/** Lucide icon of each trust item icon (home band, product benefits). */
+export const TRUST_ICON_COMPONENTS: Record<TrustIcon, LucideIcon> = {
   truck: Truck,
   cash: Banknote,
   leaf: Leaf,
@@ -35,7 +36,7 @@ export function TrustBar({ items, label }: { items: TrustItem[]; label: string }
     <section aria-label={label} className="border-border bg-card border-y">
       <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-6 px-4 py-8 sm:px-6 lg:grid-cols-4">
         {items.map((item) => {
-          const Icon = ICONS[item.icon];
+          const Icon = TRUST_ICON_COMPONENTS[item.icon];
           return (
             <li key={`${item.icon}-${item.title}`} className="flex items-start gap-3">
               <span className="bg-muted text-accent rounded-base flex size-11 shrink-0 items-center justify-center">

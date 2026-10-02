@@ -6,6 +6,7 @@ import type { ProductCardData } from "@/lib/product-view";
 import { cn } from "@/lib/utils";
 import { Price } from "./price";
 import { ProductImage } from "./product-image";
+import { AddToCartButton, QuickViewButton } from "./card-actions";
 import { RatingStars } from "./rating-stars";
 
 interface ProductCardProps {
@@ -18,8 +19,10 @@ interface ProductCardProps {
 }
 
 /**
- * Product tile used by grids and carousels: image, badges, title, rating,
- * price. The whole card is one link (no nested interactive elements).
+ * Product tile used by grids and carousels: image with badges and quick
+ * view, title, rating, price and add to cart. The title link stretches
+ * over the whole card (one tab stop, whole card clickable) while the two
+ * buttons sit above it, so no interactive element is nested in a link.
  */
 export function ProductCard({
   product,
@@ -32,12 +35,19 @@ export function ProductCard({
   const percent = product.price
     ? discountPercent(product.price.amount, product.price.original)
     : null;
+  const actionProduct = {
+    handle: product.handle,
+    title: product.title,
+    directVariantId: product.variantCount === 1 ? product.defaultVariantId : null,
+    price: product.price?.amount ?? null,
+  };
 
   return (
-    <Link
-      href={`/p/${product.handle}`}
+    <article
       className={cn(
-        "group rounded-card border-border bg-card text-card-fg shadow-soft hover:shadow-card flex h-full flex-col overflow-hidden border transition-shadow",
+        "group rounded-card border-border/70 bg-card text-card-fg shadow-soft relative flex h-full flex-col overflow-hidden border transition-[box-shadow,translate] duration-300",
+        "hover:shadow-card hover:-translate-y-1 motion-reduce:hover:translate-y-0",
+        "has-[a:focus-visible]:ring-ring/40 has-[a:focus-visible]:ring-4",
         className,
       )}
     >
@@ -48,16 +58,28 @@ export function ProductCard({
           sizes={sizes}
           priority={priority}
         />
-        <div className="absolute start-3 top-3 flex flex-col items-start gap-1.5">
+        <div className="pointer-events-none absolute start-3 top-3 flex flex-col items-start gap-1.5">
           {percent ? (
-            <Badge variant="danger">{t("sale", { percent: formatNumber(percent, format) })}</Badge>
+            <Badge variant="danger" className="rounded-full px-3 py-1">
+              {t("sale", { percent: formatNumber(percent, format) })}
+            </Badge>
           ) : null}
-          {product.featured ? <Badge variant="primary">{t("featured")}</Badge> : null}
+          {product.featured ? (
+            <Badge variant="primary" className="rounded-full px-3 py-1">
+              {t("featured")}
+            </Badge>
+          ) : null}
         </div>
+        <QuickViewButton product={actionProduct} />
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-3 sm:p-4">
+      <div className="flex flex-1 flex-col gap-2 p-4 sm:p-5">
         <h3 className="font-display line-clamp-2 text-base leading-snug font-bold sm:text-lg">
-          {product.title}
+          <Link
+            href={`/p/${product.handle}`}
+            className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+          >
+            {product.title}
+          </Link>
         </h3>
         {product.subtitle ? (
           <p className="text-muted-fg line-clamp-1 text-xs sm:text-sm">{product.subtitle}</p>
@@ -72,18 +94,22 @@ export function ProductCard({
             countText={`(${formatNumber(product.reviewsCount, format)})`}
           />
         ) : null}
-        {product.price ? (
-          <Price
-            className="mt-auto pt-1"
-            amount={product.price.amount}
-            original={product.price.original}
-            format={format}
-            prefix={product.priceVaries ? t("from") : undefined}
-            originalLabel={t("originalPrice")}
-          />
-        ) : null}
+        <div className="mt-auto flex items-end justify-between gap-2 pt-2">
+          {product.price ? (
+            <Price
+              amount={product.price.amount}
+              original={product.price.original}
+              format={format}
+              prefix={product.priceVaries ? t("from") : undefined}
+              originalLabel={t("originalPrice")}
+            />
+          ) : (
+            <span />
+          )}
+          <AddToCartButton product={actionProduct} />
+        </div>
       </div>
-    </Link>
+    </article>
   );
 }
 

@@ -79,7 +79,11 @@
     "from": "ابتداءً من",
     "originalPrice": "السعر الأصلي",
     "ratingLabel": "تقييم {rating} من 5، {count} تقييم",
-    "weight": "الوزن"
+    "weight": "الوزن",
+    "quickView": "نظرة سريعة: {product}",
+    "addNamed": "أضف {product} إلى السلة",
+    "fullDetails": "عرض صفحة المنتج كاملة",
+    "quickViewError": "هذا المنتج لم يعد متوفراً."
   },
   "category": {
     "breadcrumb": "مسار التصفح",
@@ -120,7 +124,8 @@
     "sortBestsellers": "الأكثر مبيعاً",
     "loading": "جارٍ تحديث المنتجات…",
     "allTitle": "جميع المنتجات",
-    "allDescription": "كل منتجاتنا، توصيل لجميع مدن المغرب مع الدفع عند الاستلام."
+    "allDescription": "كل منتجاتنا، توصيل لجميع مدن المغرب مع الدفع عند الاستلام.",
+    "listTitle": "قائمة المنتجات"
   },
   "productPage": {
     "breadcrumb": "مسار التصفح",
@@ -138,7 +143,13 @@
     "whatsappMessage": "السلام عليكم، أريد طلب: {product} ({variant}) × {quantity}.",
     "variant": "اختر الوزن",
     "metaDescription": "{product}: {subtitle}. التوصيل لجميع المدن المغربية والدفع عند الاستلام.",
-    "stickyCta": "اطلب الآن"
+    "stickyCta": "اطلب الآن",
+    "benefits": "التزاماتنا",
+    "reviewsTitle": "آراء زبائننا",
+    "reviewsAverage": "{rating} من 5",
+    "reviewsCount": "{count, plural, =0 {لا توجد آراء} one {بناءً على رأي واحد} two {بناءً على رأيين} few {بناءً على # آراء} many {بناءً على # رأياً} other {بناءً على # رأي}}",
+    "zoomIn": "تكبير الصورة",
+    "zoomOut": "تصغير الصورة"
   },
   "cod": {
     "title": "اطلب الآن وادفع عند الاستلام",

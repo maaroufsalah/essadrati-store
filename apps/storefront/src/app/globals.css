@@ -23,3 +23,20 @@
     transform: scaleX(1);
   }
 }
+
+/* Add to cart from a product card: short shake when it fails. */
+@keyframes card-shake {
+  0%,
+  100% {
+    translate: 0;
+  }
+  25% {
+    translate: -4px;
+  }
+  50% {
+    translate: 4px;
+  }
+  75% {
+    translate: -2px;
+  }
+}

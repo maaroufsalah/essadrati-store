@@ -29,7 +29,7 @@ export function SortSelect() {
   const { query, navigate } = useCatalogNav();
   return (
     <div className="flex items-center gap-2">
-      <label htmlFor={id} className="text-muted-fg hidden text-sm sm:inline">
+      <label htmlFor={id} className="text-muted-fg sr-only text-sm sm:not-sr-only">
         {t("sort")}
       </label>
       <select

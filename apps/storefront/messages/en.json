@@ -79,7 +79,11 @@
     "from": "From",
     "originalPrice": "Regular price",
     "ratingLabel": "Rated {rating} out of 5, {count} reviews",
-    "weight": "Weight"
+    "weight": "Weight",
+    "quickView": "Quick view: {product}",
+    "addNamed": "Add {product} to cart",
+    "fullDetails": "See full details",
+    "quickViewError": "This product is no longer available."
   },
   "category": {
     "breadcrumb": "Breadcrumb",
@@ -120,7 +124,8 @@
     "sortBestsellers": "Best sellers",
     "loading": "Updating products…",
     "allTitle": "All products",
-    "allDescription": "Our whole catalog, delivered across Morocco with cash on delivery."
+    "allDescription": "Our whole catalog, delivered across Morocco with cash on delivery.",
+    "listTitle": "Product list"
   },
   "productPage": {
     "breadcrumb": "Breadcrumb",
@@ -138,7 +143,13 @@
     "whatsappMessage": "Hello, I would like to order: {product} ({variant}) x {quantity}.",
     "variant": "Choose the weight",
     "metaDescription": "{product}: {subtitle}. Delivery across Morocco, cash on delivery.",
-    "stickyCta": "Order"
+    "stickyCta": "Order",
+    "benefits": "Our commitments",
+    "reviewsTitle": "Customer reviews",
+    "reviewsAverage": "{rating} out of 5",
+    "reviewsCount": "{count, plural, =0 {No reviews} one {Based on # review} other {Based on # reviews}}",
+    "zoomIn": "Zoom in on the photo",
+    "zoomOut": "Zoom out of the photo"
   },
   "cod": {
     "title": "Order now, pay on delivery",

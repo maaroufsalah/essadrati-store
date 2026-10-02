@@ -236,6 +236,8 @@ export async function CatalogView({
           </div>
           <ActiveFilters labels={labels} format={format} />
 
+          {/* Product cards are h3: the list gets its own h2 under the page h1. */}
+          <h2 className="sr-only">{t("listTitle")}</h2>
           <PendingResults count={products.length}>
             {products.length === 0 ? (
               <p className="rounded-card border-border text-muted-fg border border-dashed p-10 text-center">

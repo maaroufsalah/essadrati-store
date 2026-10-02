@@ -102,7 +102,18 @@ Une catégorie inconnue renvoie un vrai 404. Les handles `c`, `p`, `products`, `
 
 ## Produit et commande COD
 
-`/[locale]/p/[handle]` : galerie (scroll-snap et points sur mobile, vignettes dès 1024 px),
+**Carte produit** (`components/commerce/product-card.tsx`) : le lien du titre s'étend à toute
+la carte (un seul arrêt de tabulation) et deux boutons passent au-dessus : aperçu rapide
+(icône œil, visible au survol, toujours sur écran tactile) et ajout au panier. Un produit à une
+seule variante est ajouté directement, avec confirmation animée (Framer Motion, coche, secousse
+en cas d'erreur) ; sinon l'aperçu rapide s'ouvre pour choisir le poids. L'aperçu
+(`quick-view-dialog.tsx`, Radix Dialog : focus piégé, Échap, focus rendu au bouton) est chargé
+à la demande (`next/dynamic`) et lit le produit par une action serveur.
+
+`/[locale]/p/[handle]` : galerie (scroll-snap et points sur mobile, vignettes dès 1024 px, zoom
+×2,2 au clic ou par le bouton loupe, qui suit le pointeur ou le doigt, Échap pour sortir), bloc
+« Nos engagements » (les trois premiers engagements d'admin › Accueil), section avis (note
+moyenne du produit et avis clients des réglages),
 prix promo, choix du poids, formulaire COD en une étape (nom, téléphone marocain validé,
 ville issue de `moroccan-cities`, quantité) avec frais et délai estimés selon la ville,
 lien WhatsApp prérempli, accordéons (description, livraison, retours), produits liés,

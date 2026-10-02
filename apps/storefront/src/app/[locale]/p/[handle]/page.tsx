@@ -5,6 +5,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ProductCard } from "@/components/commerce/product-card";
 import { RatingStars } from "@/components/commerce/rating-stars";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
+import { TRUST_ICON_COMPONENTS } from "@/components/home/trust-bar";
+import { TestimonialList } from "@/components/home/testimonial-list";
 import { Gallery } from "@/components/product/gallery";
 import { PurchaseForm } from "@/components/product/purchase-form";
 import {
@@ -66,7 +68,7 @@ export default async function ProductPage({ params }: PageProps) {
   const detail = await loadProduct(locale, handle);
   if (!detail) notFound();
 
-  const [settings, cities, related, t, tCommon, tProduct] = await Promise.all([
+  const [settings, cities, related, t, tCommon, tProduct, tHome] = await Promise.all([
     getStoreSettings(),
     listCities(),
     detail.categoryIds.length
@@ -75,6 +77,7 @@ export default async function ProductPage({ params }: PageProps) {
     getTranslations("productPage"),
     getTranslations("common"),
     getTranslations("product"),
+    getTranslations("home"),
   ]);
   const format = storeFormat(settings, locale);
   const fallbacks = [settings.localization.defaultLocale];
@@ -90,6 +93,18 @@ export default async function ProductPage({ params }: PageProps) {
     brand: storeName,
   });
   const relatedProducts = related.filter((product) => product.id !== detail.id).slice(0, 4);
+  // Store commitments (admin › Accueil): cash on delivery, delivery, 100 % natural...
+  const benefits = settings.homepage.trust
+    .slice(0, 3)
+    .map((item) => ({ icon: item.icon, title: resolveLocalized(item.title, locale, fallbacks) }))
+    .filter((item) => item.title);
+  const testimonials = settings.homepage.testimonials.map((item, index) => ({
+    key: `${item.name}-${index}`,
+    author: item.city ? tHome("testimonialFrom", { name: item.name, city: item.city }) : item.name,
+    text: resolveLocalized(item.text, locale, fallbacks),
+    rating: item.rating,
+    ratingLabel: tProduct("ratingLabel", { rating: formatNumber(item.rating, format), count: 1 }),
+  }));
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-6 sm:px-6 lg:py-10">
@@ -134,6 +149,29 @@ export default async function ProductPage({ params }: PageProps) {
             whatsappNumber={whatsappNumber}
           />
 
+          {benefits.length > 0 ? (
+            <section aria-label={t("benefits")}>
+              <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                {benefits.map((item) => {
+                  const Icon = TRUST_ICON_COMPONENTS[item.icon];
+                  return (
+                    <li
+                      key={`${item.icon}-${item.title}`}
+                      className="rounded-card border-border bg-card flex items-center gap-3 border p-3 sm:flex-col sm:items-start sm:p-4"
+                    >
+                      <span className="bg-muted text-accent flex size-10 shrink-0 items-center justify-center rounded-full">
+                        <Icon className="size-5" aria-hidden />
+                      </span>
+                      <span className="text-card-fg text-sm leading-snug font-semibold">
+                        {item.title}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ) : null}
+
           <Accordion type="multiple" defaultValue={["description"]}>
             {detail.description ? (
               <AccordionItem value="description">
@@ -165,6 +203,36 @@ export default async function ProductPage({ params }: PageProps) {
           </Accordion>
         </div>
       </div>
+
+      {detail.rating !== null || testimonials.length > 0 ? (
+        <section aria-labelledby="reviews-title" className="flex flex-col gap-6">
+          <h2 id="reviews-title" className="text-fg text-2xl font-bold sm:text-3xl">
+            {t("reviewsTitle")}
+          </h2>
+          <div className="grid gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
+            {detail.rating !== null ? (
+              <div className="rounded-card border-border bg-card flex flex-col items-start gap-2 self-start border p-6">
+                <p className="font-display text-fg text-5xl font-bold">
+                  {formatNumber(detail.rating, format, { maximumFractionDigits: 1 })}
+                </p>
+                <RatingStars
+                  rating={detail.rating}
+                  size="md"
+                  label={t("reviewsAverage", {
+                    rating: formatNumber(detail.rating, format, { maximumFractionDigits: 1 }),
+                  })}
+                />
+                <p className="text-muted-fg text-sm">
+                  {t("reviewsCount", { count: detail.reviewsCount })}
+                </p>
+              </div>
+            ) : null}
+            {testimonials.length > 0 ? (
+              <TestimonialList items={testimonials} label={t("reviewsTitle")} />
+            ) : null}
+          </div>
+        </section>
+      ) : null}
 
       {relatedProducts.length > 0 ? (
         <section className="flex flex-col gap-5">
