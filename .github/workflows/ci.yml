@@ -1,5 +1,7 @@
 # Lint, typecheck, unit tests and builds. Runs on pull requests and on
 # branches other than main; on main it runs through deploy.yml (workflow_call).
+# Failing commands publish their error lines as annotations, readable on
+# the run page without downloading the logs.
 name: ci
 
 on:
@@ -30,8 +32,23 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm format:check
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm test
-      - run: pnpm turbo run build --filter=@nocido/backend... --filter=@nocido/storefront...
+      - name: Format
+        run: pnpm format:check 2>&1 | tee ci-format.log; exit "${PIPESTATUS[0]}"
+      - name: Lint
+        run: pnpm lint 2>&1 | tee ci-lint.log; exit "${PIPESTATUS[0]}"
+      - name: Typecheck
+        run: pnpm typecheck 2>&1 | tee ci-typecheck.log; exit "${PIPESTATUS[0]}"
+      - name: Unit tests
+        run: pnpm test 2>&1 | tee ci-test.log; exit "${PIPESTATUS[0]}"
+      - name: Build
+        run: |
+          pnpm turbo run build --filter=@nocido/backend... --filter=@nocido/storefront... 2>&1 \
+            | tee ci-build.log; exit "${PIPESTATUS[0]}"
+      - name: Report errors
+        if: failure()
+        run: |
+          for log in ci-*.log; do
+            [ -f "$log" ] || continue
+            grep -E "error|Error|ERR!|FAIL|✖" "$log" | grep -v "^\s*$" | head -25 \
+              | sed -E "s/\x1b\[[0-9;]*m//g; s/^/::error title=${log}::/"
+          done
