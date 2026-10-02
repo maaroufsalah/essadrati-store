@@ -3,6 +3,7 @@
 import { KIT_ROUTES, PUBLISHABLE_KEY_HEADER } from "@nocido/api-client";
 import { codOrderInputSchema, isLocale } from "@nocido/types";
 import { cookies } from "next/headers";
+import { redirect } from "@/i18n/navigation";
 import { CART_COOKIE } from "./cart-cookie";
 import { publicEnv } from "./env";
 import { type CodErrorKey, type CodFormState, codErrorKey } from "./cod-form";
@@ -10,27 +11,25 @@ import { medusaServerUrl } from "./server-env";
 
 interface PlacedOrder {
   id: string;
-  display_id: number;
-  total: number;
 }
+
+type SubmitResult = { ok: true; orderId: string } | { ok: false; state: CodFormState };
 
 function text(form: FormData, name: string): string | undefined {
   const value = form.get(name);
   return typeof value === "string" && value.trim() !== "" ? value.trim() : undefined;
 }
 
+const failed = (state: CodFormState): SubmitResult => ({ ok: false, state });
+const GENERIC: CodFormState = { status: "error", fieldErrors: {}, formError: "generic" };
+
 /**
  * Places a cash on delivery order through the backend workflow. Fees are
  * computed there from the city: nothing price-related comes from the form.
- * Used by the one-step product form (`variant_id` + `quantity`) and by the
- * checkout (`cart_id`).
  */
-export async function placeCodOrder(
-  _previous: CodFormState,
-  form: FormData,
-): Promise<CodFormState> {
+async function submitCodOrder(form: FormData): Promise<SubmitResult> {
   // Bots fill every field; people never see this one.
-  if (text(form, "website")) return { status: "error", fieldErrors: {}, formError: "generic" };
+  if (text(form, "website")) return failed(GENERIC);
 
   const locale = text(form, "locale");
   const cartId = text(form, "cart_id");
@@ -56,7 +55,7 @@ export async function placeCodOrder(
       const field = String(issue.path.at(-1) ?? "form");
       fieldErrors[field === "variant_id" ? "items" : field] ??= codErrorKey(issue.message);
     }
-    return { status: "error", fieldErrors };
+    return failed({ status: "error", fieldErrors });
   }
 
   // One key per form session: a retry after a timeout returns the same order.
@@ -81,26 +80,34 @@ export async function placeCodOrder(
       message?: string;
       issues?: { path: string; code: string }[];
     };
-    if (response.ok && body.order) {
-      return {
-        status: "success",
-        order: {
-          id: body.order.id,
-          displayId: body.order.display_id,
-          total: Number(body.order.total),
-          phone: parsed.data.customer.phone,
-        },
-      };
-    }
+    if (response.ok && body.order) return { ok: true, orderId: body.order.id };
     const fieldErrors: Partial<Record<string, CodErrorKey>> = {};
     for (const issue of body.issues ?? []) {
       fieldErrors[issue.path.split(".").at(-1) ?? "form"] = codErrorKey(issue.code);
     }
-    return { status: "error", fieldErrors, formError: codErrorKey(body.message) };
+    return failed({ status: "error", fieldErrors, formError: codErrorKey(body.message) });
   } catch (error) {
     console.error("[cod] order failed", error);
-    return { status: "error", fieldErrors: {}, formError: "generic" };
+    return failed(GENERIC);
   }
+}
+
+/** Thank you page of the order, in the form language. Works without JavaScript too. */
+function toThanks(form: FormData, orderId: string): never {
+  const locale = text(form, "locale");
+  return redirect({
+    href: `/order/${orderId}/thanks`,
+    locale: isLocale(locale) ? locale : "ar",
+  });
+}
+
+/** One-step product form (`variant_id` + `quantity`). */
+export async function placeCodOrder(
+  _previous: CodFormState,
+  form: FormData,
+): Promise<CodFormState> {
+  const result = await submitCodOrder(form);
+  return result.ok ? toThanks(form, result.orderId) : result.state;
 }
 
 /**
@@ -108,14 +115,15 @@ export async function placeCodOrder(
  * never from the form; the cookie is cleared once the order exists.
  */
 export async function placeCheckoutOrder(
-  previous: CodFormState,
+  _previous: CodFormState,
   form: FormData,
 ): Promise<CodFormState> {
   const cartId = (await cookies()).get(CART_COOKIE)?.value;
-  if (!cartId) return { status: "error", fieldErrors: {}, formError: "generic" };
+  if (!cartId) return GENERIC;
   form.set("cart_id", cartId);
   form.delete("variant_id");
-  const result = await placeCodOrder(previous, form);
-  if (result.status === "success") (await cookies()).delete(CART_COOKIE);
-  return result;
+  const result = await submitCodOrder(form);
+  if (!result.ok) return result.state;
+  (await cookies()).delete(CART_COOKIE);
+  return toThanks(form, result.orderId);
 }

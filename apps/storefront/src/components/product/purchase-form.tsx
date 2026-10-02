@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { useActionState, useEffect, useId, useRef, useState, useTransition } from "react";
 import { useCart } from "@/components/cart/cart-provider";
 import { type CodFieldValues, CodFields } from "@/components/cod/cod-fields";
-import { CodSuccess } from "@/components/cod/cod-success";
 import { CodSummary } from "@/components/cod/cod-summary";
 import { Price } from "@/components/commerce/price";
 import { Button } from "@/components/ui/button";
@@ -110,8 +109,6 @@ export function PurchaseForm({
     });
     setAdding(false);
   };
-
-  if (state.status === "success") return <CodSuccess order={state.order} format={format} />;
 
   const quantityStepper = (
     <div className="flex flex-col gap-1.5">

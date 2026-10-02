@@ -48,3 +48,103 @@ export interface CodCity {
 
 export const COD_STATUSES = ["pending", "confirmed", "cancelled"] as const;
 export type CodStatus = (typeof COD_STATUSES)[number];
+
+/** Steps shown on the public order tracking page, in order. */
+export const COD_TRACKING_STEPS = ["placed", "confirmed", "shipped", "delivered"] as const;
+export type CodTrackingStep = (typeof COD_TRACKING_STEPS)[number];
+export type CodTrackingState = CodTrackingStep | "cancelled";
+
+export interface CodTrackingSource {
+  createdAt: string;
+  codStatus: CodStatus | null;
+  codStatusAt: string | null;
+  canceledAt: string | null;
+  shippedAt: string | null;
+  deliveredAt: string | null;
+}
+
+export interface CodTimelineEntry {
+  step: CodTrackingStep | "cancelled";
+  at: string | null;
+  done: boolean;
+}
+
+/**
+ * Current state and timeline of a COD order. Delivery facts (shipped,
+ * delivered) imply the earlier steps even when the phone confirmation was
+ * skipped in the admin. A cancellation replaces the steps not reached.
+ */
+export function codTracking(source: CodTrackingSource): {
+  state: CodTrackingState;
+  timeline: CodTimelineEntry[];
+} {
+  const reached: Record<CodTrackingStep, string | null> = {
+    placed: source.createdAt,
+    confirmed: source.codStatus === "confirmed" ? source.codStatusAt : null,
+    shipped: source.shippedAt,
+    delivered: source.deliveredAt,
+  };
+  const lastIndex = COD_TRACKING_STEPS.reduce(
+    (last, step, index) => (reached[step] ? index : last),
+    0,
+  );
+  const cancelledAt =
+    source.canceledAt ?? (source.codStatus === "cancelled" ? source.codStatusAt : null);
+  const cancelled = Boolean(cancelledAt) || source.codStatus === "cancelled";
+
+  const timeline: CodTimelineEntry[] = COD_TRACKING_STEPS.filter(
+    (_, index) => !cancelled || index <= lastIndex,
+  ).map((step, index) => ({ step, at: reached[step], done: index <= lastIndex }));
+  if (cancelled) timeline.push({ step: "cancelled", at: cancelledAt, done: true });
+
+  return {
+    state: cancelled ? "cancelled" : (COD_TRACKING_STEPS[lastIndex] ?? "placed"),
+    timeline,
+  };
+}
+
+/** Public order tracking (GET /store/cod/orders/:id). No full name, phone or address. */
+export interface CodOrderTracking {
+  id: string;
+  display_id: number;
+  created_at: string;
+  currency_code: string;
+  item_total: number;
+  shipping_total: number;
+  total: number;
+  state: CodTrackingState;
+  timeline: CodTimelineEntry[];
+  first_name: string;
+  city_id: string | null;
+  /** "+212 6•• ••• •78" style mask, enough for the customer to recognize it. */
+  phone_masked: string;
+  items: {
+    id: string;
+    variant_id: string | null;
+    product_handle: string | null;
+    title: string;
+    variant_title: string | null;
+    thumbnail: string | null;
+    quantity: number;
+    unit_price: number;
+    total: number;
+  }[];
+}
+
+/** POST /store/cod/orders/lookup: both the phone and the order number are required. */
+export const codOrderLookupSchema = z.object({
+  phone: moroccanPhoneSchema,
+  display_id: z.coerce
+    .number({ message: "order.number.invalid" })
+    .int("order.number.invalid")
+    .min(1, "order.number.invalid")
+    .max(1_000_000_000, "order.number.invalid"),
+});
+export type CodOrderLookupInput = z.input<typeof codOrderLookupSchema>;
+
+/** +212612345678 -> "+212 6•• ••• •78". */
+export function maskPhone(e164: string): string {
+  const national = e164.replace(/^\+212/, "");
+  if (national.length !== 9) return "•".repeat(Math.max(0, e164.length - 2)) + e164.slice(-2);
+  return `+212 ${national[0]}•• ••• •${national.slice(-2)}`;
+}

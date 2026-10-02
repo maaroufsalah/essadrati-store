@@ -42,7 +42,8 @@ interface CartContextValue {
   update: (lineId: string, quantity: number) => void;
   remove: (lineId: string) => void;
   /** Called after a COD checkout succeeds: the cart became an order. */
-  reset: () => void;
+  /** Reloads the cart from the server (after an order, the cookie is gone). */
+  refresh: () => void;
   format: StoreFormat;
   freeShippingThreshold: number | null;
 }
@@ -75,6 +76,7 @@ export function CartProvider({
   const [error, setError] = useState(false);
   const [pending, startTransition] = useTransition();
 
+  const [version, setVersion] = useState(0);
   useEffect(() => {
     let active = true;
     void getCart(locale).then((current) => {
@@ -85,7 +87,8 @@ export function CartProvider({
     return () => {
       active = false;
     };
-  }, [locale]);
+  }, [locale, version]);
+  const refresh = useCallback(() => setVersion((value) => value + 1), []);
 
   const apply = useCallback((result: CartResult) => {
     setCart(result.cart);
@@ -144,11 +147,23 @@ export function CartProvider({
       add,
       update,
       remove,
-      reset: () => setCart(EMPTY_CART),
+      refresh,
       format,
       freeShippingThreshold,
     }),
-    [add, cart, error, format, freeShippingThreshold, loaded, open, pending, remove, update],
+    [
+      add,
+      cart,
+      error,
+      format,
+      freeShippingThreshold,
+      loaded,
+      open,
+      pending,
+      refresh,
+      remove,
+      update,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

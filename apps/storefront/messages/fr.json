@@ -27,7 +27,9 @@
     "whatsapp": "WhatsApp",
     "email": "E-mail",
     "ice": "ICE {ice}",
-    "rights": "© {year} {storeName}. Tous droits réservés."
+    "rights": "© {year} {storeName}. Tous droits réservés.",
+    "help": "Aide",
+    "trackOrder": "Suivre ma commande"
   },
   "social": {
     "instagram": "Instagram",
@@ -127,9 +129,6 @@
     "total": "Total à payer à la livraison",
     "submit": "Confirmer la commande",
     "submitting": "Envoi de la commande…",
-    "successTitle": "Merci, votre commande est enregistrée !",
-    "successText": "Commande n° {number}. Nous vous appelons très vite au {phone} pour la confirmer.",
-    "successContinue": "Continuer mes achats",
     "secure": "Aucun paiement en ligne · Paiement en espèces à la réception",
     "errors": {
       "phone": "Numéro marocain invalide (ex. 06 12 34 56 78)",
@@ -164,5 +163,59 @@
     "empty": "Votre panier est vide.",
     "backToShop": "Voir les produits",
     "metaTitle": "Commande"
+  },
+  "order": {
+    "lookup": {
+      "metaTitle": "Suivre ma commande",
+      "title": "Suivre ma commande",
+      "intro": "Saisissez le numéro reçu après votre commande et le téléphone utilisé.",
+      "number": "Numéro de commande",
+      "numberPlaceholder": "Ex. 128",
+      "phone": "Téléphone",
+      "submit": "Rechercher",
+      "submitting": "Recherche…",
+      "errors": {
+        "phone": "Numéro marocain invalide (ex. 06 12 34 56 78)",
+        "number": "Numéro de commande invalide",
+        "notFound": "Aucune commande ne correspond à ce numéro et ce téléphone.",
+        "generic": "La recherche a échoué. Réessayez dans un instant."
+      }
+    },
+    "thanks": {
+      "metaTitle": "Merci pour votre commande",
+      "title": "Merci {name}, votre commande est enregistrée !",
+      "text": "Commande n° {number}. Nous vous appelons très vite au {phone} pour la confirmer.",
+      "track": "Suivre ma commande",
+      "continue": "Continuer mes achats"
+    },
+    "tracking": {
+      "metaTitle": "Commande n° {number}",
+      "title": "Commande n° {number}",
+      "placedOn": "Passée le {date}",
+      "progress": "Avancement de la commande",
+      "current": "étape en cours",
+      "steps": {
+        "placed": "Commande reçue",
+        "confirmed": "Confirmée par téléphone",
+        "shipped": "Expédiée",
+        "delivered": "Livrée",
+        "cancelled": "Annulée"
+      },
+      "hints": {
+        "placed": "Nous vous appelons pour confirmer votre commande.",
+        "confirmed": "Votre commande est en préparation.",
+        "shipped": "Le livreur vous appellera avant de passer.",
+        "delivered": "Merci pour votre confiance !",
+        "cancelled": "Une question ? Contactez-nous."
+      },
+      "items": "Articles",
+      "deliveryTo": "Livraison à {city}",
+      "phone": "Téléphone",
+      "payment": "Paiement en espèces à la livraison",
+      "help": "Une question sur cette commande ?",
+      "helpWhatsapp": "Écrire sur WhatsApp",
+      "helpMessage": "Bonjour, j'ai une question sur ma commande n° {number}.",
+      "another": "Rechercher une autre commande"
+    }
   }
 }

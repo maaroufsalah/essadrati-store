@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import { useCart } from "@/components/cart/cart-provider";
 import { type CodFieldValues, CodFields } from "@/components/cod/cod-fields";
-import { CodSuccess } from "@/components/cod/cod-success";
 import { CodSummary } from "@/components/cod/cod-summary";
 import { ProductImage } from "@/components/commerce/product-image";
 import { Button } from "@/components/ui/button";
@@ -25,7 +24,7 @@ interface CheckoutFormProps {
 /** Multi-product COD checkout: cart summary, customer fields, totals by city. */
 export function CheckoutForm({ locale, cities, codEnabled }: CheckoutFormProps) {
   const t = useTranslations();
-  const { cart, loaded, format, freeShippingThreshold, reset, setOpen } = useCart();
+  const { cart, loaded, format, freeShippingThreshold, setOpen } = useCart();
   const [state, action, pending] = useActionState(placeCheckoutOrder, IDLE);
   const [, startTransition] = useTransition();
   const [fields, setFields] = useState<CodFieldValues>({ name: "", phone: "", cityId: "" });
@@ -49,12 +48,6 @@ export function CheckoutForm({ locale, cities, codEnabled }: CheckoutFormProps) 
       })),
     });
   }, [cart, format.currency, loaded]);
-
-  useEffect(() => {
-    if (state.status === "success") reset();
-  }, [reset, state.status]);
-
-  if (state.status === "success") return <CodSuccess order={state.order} format={format} />;
 
   if (loaded && cart.lines.length === 0) {
     return (

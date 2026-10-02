@@ -27,7 +27,9 @@
     "whatsapp": "WhatsApp",
     "email": "Email",
     "ice": "ICE {ice}",
-    "rights": "© {year} {storeName}. All rights reserved."
+    "rights": "© {year} {storeName}. All rights reserved.",
+    "help": "Help",
+    "trackOrder": "Track my order"
   },
   "social": {
     "instagram": "Instagram",
@@ -127,9 +129,6 @@
     "total": "Total to pay on delivery",
     "submit": "Confirm order",
     "submitting": "Sending your order…",
-    "successTitle": "Thank you, your order is placed!",
-    "successText": "Order #{number}. We will call you shortly on {phone} to confirm it.",
-    "successContinue": "Continue shopping",
     "secure": "No online payment · Pay in cash on delivery",
     "errors": {
       "phone": "Invalid Moroccan number (e.g. 06 12 34 56 78)",
@@ -164,5 +163,59 @@
     "empty": "Your cart is empty.",
     "backToShop": "Browse products",
     "metaTitle": "Checkout"
+  },
+  "order": {
+    "lookup": {
+      "metaTitle": "Track my order",
+      "title": "Track my order",
+      "intro": "Enter the number you received after ordering and the phone you used.",
+      "number": "Order number",
+      "numberPlaceholder": "e.g. 128",
+      "phone": "Phone",
+      "submit": "Search",
+      "submitting": "Searching…",
+      "errors": {
+        "phone": "Invalid Moroccan number (e.g. 06 12 34 56 78)",
+        "number": "Invalid order number",
+        "notFound": "No order matches this number and phone.",
+        "generic": "The search failed. Please try again shortly."
+      }
+    },
+    "thanks": {
+      "metaTitle": "Thank you for your order",
+      "title": "Thank you {name}, your order is placed!",
+      "text": "Order #{number}. We will call you shortly on {phone} to confirm it.",
+      "track": "Track my order",
+      "continue": "Continue shopping"
+    },
+    "tracking": {
+      "metaTitle": "Order #{number}",
+      "title": "Order #{number}",
+      "placedOn": "Placed on {date}",
+      "progress": "Order progress",
+      "current": "current step",
+      "steps": {
+        "placed": "Order received",
+        "confirmed": "Confirmed by phone",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      },
+      "hints": {
+        "placed": "We will call you to confirm your order.",
+        "confirmed": "Your order is being prepared.",
+        "shipped": "The courier will call you before coming.",
+        "delivered": "Thank you for your trust!",
+        "cancelled": "Any question? Contact us."
+      },
+      "items": "Items",
+      "deliveryTo": "Delivery to {city}",
+      "phone": "Phone",
+      "payment": "Cash on delivery",
+      "help": "A question about this order?",
+      "helpWhatsapp": "Message us on WhatsApp",
+      "helpMessage": "Hello, I have a question about my order #{number}.",
+      "another": "Find another order"
+    }
   }
 }

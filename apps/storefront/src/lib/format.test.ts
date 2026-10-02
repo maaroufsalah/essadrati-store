@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { discountPercent, formatNumber, formatPrice, type StoreFormat } from "./format";
+import { discountPercent, formatDate, formatNumber, formatPrice, type StoreFormat } from "./format";
 import { toProductCardData } from "./product-view";
 
 const fr: StoreFormat = { locale: "fr", currency: "MAD", numberingSystem: "latn" };
@@ -59,5 +59,17 @@ describe("toProductCardData", () => {
     expect(card.price).toBeNull();
     expect(card.rating).toBeNull();
     expect(card.featured).toBe(false);
+  });
+});
+
+describe("formatDate", () => {
+  it("uses the store time zone and digits", () => {
+    const tokyo = { ...fr, timeZone: "Asia/Tokyo" };
+    expect(formatDate("2026-10-02T23:30:00.000Z", tokyo, { dateStyle: "short" })).toBe(
+      "03/10/2026",
+    );
+    expect(
+      formatDate("2026-10-02T10:00:00.000Z", { ...arab, timeZone: "UTC" }, { year: "numeric" }),
+    ).toBe("٢٠٢٦");
   });
 });

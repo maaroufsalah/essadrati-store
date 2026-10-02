@@ -9,6 +9,7 @@ export const KIT_ROUTES = {
   adminPages: "/admin/pages",
   cities: "/store/cities",
   codOrders: "/store/cod/orders",
+  codOrderLookup: "/store/cod/orders/lookup",
 } as const;
 
 /** Next.js cache tags. The backend revalidates them after each write. */

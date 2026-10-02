@@ -100,6 +100,17 @@ Bouton WhatsApp flottant si `whatsappOrderEnabled` et un numéro sont renseigné
 poussés dans `window.dataLayer` (`nocido_<Event>`) et émis en `nocido:track`, avec un
 `eventId` pour la déduplication pixel/serveur. Les pixels sont branchés à l'étape 18.
 
+## Commande : merci et suivi
+
+Après une commande (fiche produit ou checkout), la server action redirige vers
+`/[locale]/order/[id]/thanks` (fonctionne aussi sans JavaScript). Cette page émet `Purchase`
+une seule fois par commande (`eventId` = id de commande, garde dans `localStorage`) et recharge
+le panier. `/[locale]/order/[id]` affiche l'état COD et la timeline (date et fuseau de la
+boutique, `localization.timezone`), les articles et un lien WhatsApp d'aide si un numéro est
+configuré. `/[locale]/order` retrouve une commande avec son numéro **et** le téléphone utilisé.
+Toutes ces pages sont `noindex` et jamais mises en cache. Lien « Suivre ma commande » dans le
+pied de page.
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la

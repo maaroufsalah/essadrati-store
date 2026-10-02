@@ -5,6 +5,8 @@ export interface StoreFormat {
   locale: Locale;
   currency: string;
   numberingSystem: NumberingSystem;
+  /** IANA time zone of the store, for dates. */
+  timeZone?: string;
 }
 
 export function storeFormat(settings: PublicStoreSettings, locale: Locale): StoreFormat {
@@ -12,6 +14,7 @@ export function storeFormat(settings: PublicStoreSettings, locale: Locale): Stor
     locale,
     currency: settings.localization.defaultCurrency,
     numberingSystem: settings.localization.numberingSystem,
+    timeZone: settings.localization.timezone,
   };
 }
 
@@ -37,6 +40,17 @@ export function formatNumber(
   options?: Intl.NumberFormatOptions,
 ): string {
   return new Intl.NumberFormat(tag(format), options).format(value);
+}
+
+/** "2 octobre 2026, 11:28" in the store time zone and digits. */
+export function formatDate(
+  iso: string,
+  format: StoreFormat,
+  options: Intl.DateTimeFormatOptions = { dateStyle: "long", timeStyle: "short" },
+): string {
+  return new Intl.DateTimeFormat(tag(format), { ...options, timeZone: format.timeZone }).format(
+    new Date(iso),
+  );
 }
 
 /** Rounded discount percentage, or null when there is no real discount. */

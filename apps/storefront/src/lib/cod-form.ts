@@ -1,11 +1,10 @@
-/** Result of the COD form server action (serializable). */
+/**
+ * Result of the COD form server action (serializable). A placed order
+ * redirects to its thank you page instead of returning a state.
+ */
 export type CodFormState =
   | { status: "idle" }
-  | { status: "error"; fieldErrors: Partial<Record<string, CodErrorKey>>; formError?: CodErrorKey }
-  | {
-      status: "success";
-      order: { id: string; displayId: number; total: number; phone: string };
-    };
+  | { status: "error"; fieldErrors: Partial<Record<string, CodErrorKey>>; formError?: CodErrorKey };
 
 /** Message keys under `cod.errors` in the messages files. */
 export type CodErrorKey =

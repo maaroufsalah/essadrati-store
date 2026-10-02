@@ -90,6 +90,12 @@ Routes :
 - `POST /store/cod/orders` : `{ cart_id }` ou `{ items }`, `customer { name, phone }`,
   `city_id`, `address?`, `note?`, `locale?`. Les frais sont calculés côté serveur
   (gratuits au-delà de `commerce.freeShippingThreshold`, minimum `commerce.minOrderAmount`).
+  Le panier est créé dans le locale du client (`fr-MA`…) : titres des lignes traduits.
+- `GET /store/cod/orders/:id` : suivi public (état, timeline placed → confirmed → shipped →
+  delivered ou cancelled, articles, totaux, prénom, ville, téléphone masqué). L'id ULID de la
+  commande sert de lien secret ; jamais de nom complet, d'adresse ni de téléphone en clair.
+- `POST /store/cod/orders/lookup` : `{ phone, display_id }` → `{ order_id }` si les deux
+  correspondent, sinon le même 404 (`order.notFound`).
 - `POST /admin/cod/orders/:id/confirm|cancel`, CRUD `/admin/cod/zones` et `/admin/cod/cities`,
   `POST /admin/cod/cities/import` (CSV : `slug,name_ar,name_fr,name_en,zone_code,fee,days_min,days_max,active`).
 - `POST /store/carts/:id/shipping-methods` et `/store/carts/:id/complete` sont fermées (403) :

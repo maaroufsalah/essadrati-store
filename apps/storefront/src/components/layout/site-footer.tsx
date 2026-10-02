@@ -7,6 +7,7 @@ import {
 } from "@nocido/types";
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import type { ReactNode } from "react";
 
 interface SiteFooterProps {
@@ -49,7 +50,7 @@ export async function SiteFooter({ settings, locale }: SiteFooterProps) {
 
   return (
     <footer className="border-border bg-muted/50 pb-safe mt-auto border-t">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:grid-cols-4">
         <div className="space-y-3">
           <p className="font-display text-fg text-xl font-bold">{storeName}</p>
           {tagline ? <p className="text-muted-fg max-w-xs text-sm">{tagline}</p> : null}
@@ -103,6 +104,19 @@ export async function SiteFooter({ settings, locale }: SiteFooterProps) {
             ) : null}
           </ul>
         </div>
+
+        <nav aria-labelledby="footer-help" className="space-y-3">
+          <h2 id="footer-help" className="text-fg text-sm font-semibold">
+            {t("footer.help")}
+          </h2>
+          <ul className="space-y-3 text-sm">
+            <li>
+              <Link href="/order" className={linkClass}>
+                {t("footer.trackOrder")}
+              </Link>
+            </li>
+          </ul>
+        </nav>
 
         {networks.length > 0 ? (
           <div className="space-y-3">
