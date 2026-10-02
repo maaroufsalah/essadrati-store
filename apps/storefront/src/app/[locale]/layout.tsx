@@ -6,7 +6,8 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
-import { CartDrawer } from "@/components/cart/cart-drawer";
+import { preconnect } from "react-dom";
+import { CartDrawerLazy } from "@/components/cart/cart-drawer-lazy";
 import { CartProvider } from "@/components/cart/cart-provider";
 import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -84,6 +85,9 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locales } = routingFromSettings(settings);
   if (!locales.includes(locale)) notFound();
 
+  // Product images are served by the backend origin: open the connection early (LCP).
+  preconnect(new URL(publicEnv.NEXT_PUBLIC_MEDUSA_BACKEND_URL).origin);
+
   const tHome = await getTranslations("home");
   const whatsappHref =
     settings.commerce.whatsappOrderEnabled && settings.contact.whatsapp
@@ -115,7 +119,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
                   {children}
                 </main>
                 <SiteFooter settings={settings} locale={locale} />
-                <CartDrawer />
+                <CartDrawerLazy />
                 {whatsappHref ? (
                   <FloatingWhatsApp href={whatsappHref} label={tHome("whatsappCta")} />
                 ) : null}

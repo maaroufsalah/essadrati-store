@@ -156,6 +156,24 @@ pages `showInFooter` apparaissent dans la colonne « Aide » du pied de page, tr
   `content_ids` des pixels. Google refuse les images SVG : utiliser des JPEG/PNG en production.
 - Toutes ces routes sont mises en cache une heure (ISR) et se basent sur `NEXT_PUBLIC_SITE_URL`.
 
+## Performance (mobile)
+
+Objectif Lighthouse mobile ≥ 90 sur accueil, catégorie et produit (voir `e2e/`). Règles :
+
+- Aucun import de valeur de `@nocido/types` dans un module atteint par le client : utiliser
+  `@nocido/types/client` (constantes et fonctions sans zod). Les types (`import type`) restent
+  libres.
+- Radix par paquets individuels (`@radix-ui/react-dialog`…), jamais le paquet parapluie
+  `radix-ui` ; le tiroir panier et le menu mobile se chargent au premier usage.
+- `motion` uniquement via `components/motion/primitives` (LazyMotion + `m`, sous le pli) ;
+  rien d'animé dans le bloc LCP (texte du héros, titre produit).
+- Carrousels `scroll-snap` : `scroll-padding` égal au padding latéral, sinon le navigateur fait
+  défiler au chargement et la mesure du LCP est annulée.
+- Pas de préchargement automatique des liens vers l'accueil ni du sélecteur de langue ; les
+  autres langues du sélecteur en police système (pas de sous-ensemble arabe des polices sur
+  une page française).
+- `preconnect` vers l'origine des médias (backend).
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la

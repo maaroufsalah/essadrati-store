@@ -30,7 +30,8 @@ export function Hero({ eyebrow, title, subtitle, cta, whatsapp, image, products 
         className="bg-primary/15 pointer-events-none absolute end-[-10%] -top-40 size-[36rem] rounded-full blur-3xl"
       />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-2 lg:gap-16 lg:py-24">
-        <div className="animate-in fade-in slide-in-from-bottom-4 flex flex-col items-start gap-5 duration-700">
+        {/* No entrance animation: this block holds the LCP text. */}
+        <div className="flex flex-col items-start gap-5">
           {eyebrow ? (
             <span className="rounded-base bg-muted text-accent px-3 py-1 text-xs font-semibold tracking-wide uppercase">
               {eyebrow}

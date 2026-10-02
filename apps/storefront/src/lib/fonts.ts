@@ -33,7 +33,7 @@ const amiri = Amiri({
 
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic", "latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
   display: "swap",
   preload: false,
   variable: "--font-ibm-plex-sans-arabic",

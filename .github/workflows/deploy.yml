@@ -55,7 +55,10 @@ jobs:
           tags: |
             type=sha,format=long,prefix=
             type=raw,value=latest
+      # The storefront bakes its public URLs and key at build time: build it
+      # once the repository variables exist.
       - uses: docker/build-push-action@v6
+        if: matrix.app == 'backend' || vars.NEXT_PUBLIC_SITE_URL != ''
         with:
           context: .
           file: infra/docker/${{ matrix.app }}.Dockerfile

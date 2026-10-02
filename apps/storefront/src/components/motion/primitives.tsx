@@ -1,21 +1,22 @@
 "use client";
 
-import {
-  animate,
-  motion,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-  type HTMLMotionProps,
-} from "motion/react";
+import { domAnimation, type HTMLMotionProps, LazyMotion, m, MotionConfig } from "motion/react";
 import { type ReactNode, useEffect, useRef } from "react";
 
 /**
  * Motion primitives. Use them below the fold only: content above the fold
- * must never wait for JavaScript (LCP). MotionConfig (providers.tsx) turns
- * every animation off when the user prefers reduced motion.
+ * must never wait for JavaScript (LCP). Each primitive loads the reduced
+ * DOM feature set (LazyMotion) and turns animations off when the user
+ * prefers reduced motion, so pages without them never load motion.
  */
+
+function Scope({ children }: { children: ReactNode }) {
+  return (
+    <LazyMotion features={domAnimation} strict>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </LazyMotion>
+  );
+}
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -30,36 +31,40 @@ export function Reveal({
   className?: string;
 }) {
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{ duration: 0.6, ease: EASE, delay }}
-    >
-      {children}
-    </motion.div>
+    <Scope>
+      <m.div
+        className={className}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-10% 0px" }}
+        transition={{ duration: 0.6, ease: EASE, delay }}
+      >
+        {children}
+      </m.div>
+    </Scope>
   );
 }
 
 /** Container whose StaggerItem children appear one after the other. */
 export function Stagger({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-10% 0px" }}
-      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
-    >
-      {children}
-    </motion.div>
+    <Scope>
+      <m.div
+        className={className}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-10% 0px" }}
+        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
+      >
+        {children}
+      </m.div>
+    </Scope>
   );
 }
 
 export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <motion.div
+    <m.div
       className={className}
       variants={{
         hidden: { opacity: 0, y: 16 },
@@ -67,25 +72,35 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
 /** Subtle press feedback for cards and tiles. */
 export function Pressable({ children, ...props }: HTMLMotionProps<"div">) {
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2 }}
-      {...props}
-    >
-      {children}
-    </motion.div>
+    <Scope>
+      <m.div
+        whileHover={{ y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.2 }}
+        {...props}
+      >
+        {children}
+      </m.div>
+    </Scope>
   );
 }
 
-/** Counts up to `value` when scrolled into view, formatted by `format`. */
+/** Ease-out cubic, close to EASE for a counter. */
+const easeOut = (progress: number) => 1 - (1 - progress) ** 3;
+const COUNT_DURATION = 1400;
+
+/**
+ * Counts up to `value` when scrolled into view, formatted by `format`.
+ * Plain requestAnimationFrame (no motion engine). The server renders the
+ * final value, so it is right without JavaScript and with reduced motion.
+ */
 export function CountUp({
   value,
   format,
@@ -96,24 +111,32 @@ export function CountUp({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const reduced = useReducedMotion();
-  const count = useMotionValue(0);
-  const text = useTransform(count, (latest) => format(Math.round(latest)));
 
   useEffect(() => {
-    if (!inView) return;
-    if (reduced) {
-      count.set(value);
-      return;
-    }
-    const controls = animate(count, value, { duration: 1.4, ease: EASE });
-    return () => controls.stop();
-  }, [count, inView, reduced, value]);
+    const node = ref.current;
+    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let frame = 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return;
+      observer.disconnect();
+      const start = performance.now();
+      const tick = (now: number) => {
+        const progress = Math.min(1, (now - start) / COUNT_DURATION);
+        node.textContent = format(Math.round(value * easeOut(progress)));
+        if (progress < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+    });
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [format, value]);
 
   return (
-    <motion.span ref={ref} className={className}>
-      {text}
-    </motion.span>
+    <span ref={ref} className={className}>
+      {format(value)}
+    </span>
   );
 }

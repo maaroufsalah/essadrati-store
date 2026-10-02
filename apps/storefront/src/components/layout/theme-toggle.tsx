@@ -1,6 +1,6 @@
 "use client";
 
-import { THEME_MODES, type ThemeMode } from "@nocido/types";
+import { THEME_MODES, type ThemeMode } from "@nocido/types/client";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";

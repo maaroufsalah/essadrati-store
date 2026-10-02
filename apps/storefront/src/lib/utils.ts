@@ -1,4 +1,4 @@
-import { COLOR_TOKENS } from "@nocido/types";
+import { COLOR_TOKENS } from "@nocido/types/client";
 import { type ClassValue, clsx } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 

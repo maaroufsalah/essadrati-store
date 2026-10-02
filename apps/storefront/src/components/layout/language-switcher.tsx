@@ -11,7 +11,12 @@ function nativeName(locale: Locale): string {
   return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
 }
 
-/** Links to the current page in every enabled locale. */
+/**
+ * Links to the current page in every enabled locale. No prefetch (switching
+ * language is rare), and the other languages are labelled in the system font:
+ * a French page does not download the Arabic subset of the brand fonts just
+ * for « العربية ».
+ */
 export function LanguageSwitcher({
   locales,
   className,
@@ -34,10 +39,13 @@ export function LanguageSwitcher({
           locale={locale}
           lang={locale}
           hrefLang={locale}
+          prefetch={false}
           aria-current={locale === current ? "true" : undefined}
           className={cn(
             "touch-target rounded-base inline-flex items-center justify-center px-2 text-sm",
-            locale === current ? "bg-muted text-fg font-semibold" : "text-muted-fg hover:text-fg",
+            locale === current
+              ? "bg-muted text-fg font-semibold"
+              : "text-muted-fg hover:text-fg font-[system-ui]",
           )}
         >
           {nativeName(locale)}

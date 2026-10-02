@@ -1,4 +1,4 @@
-import { LOCALES } from "@nocido/types";
+import { LOCALES } from "@nocido/types/client";
 import { defineRouting } from "next-intl/routing";
 
 /**

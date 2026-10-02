@@ -1,0 +1,9 @@
+{
+  "extends": "@nocido/config/tsconfig/library.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": ["playwright.config.ts", "tests"]
+}

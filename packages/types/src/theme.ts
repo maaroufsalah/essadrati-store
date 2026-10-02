@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { COLOR_TOKENS, type ColorToken, THEME_MODES } from "./theme-core";
 
 /** Named theme presets shipped by @nocido/theme. */
 export const THEME_PRESET_IDS = [
@@ -14,24 +15,7 @@ export type ThemePresetId = (typeof THEME_PRESET_IDS)[number];
 export const themePresetIdSchema = z.enum(THEME_PRESET_IDS);
 
 /** Color tokens. Each one becomes a CSS variable, e.g. cardFg -> --color-card-fg. */
-export const COLOR_TOKENS = [
-  "bg",
-  "fg",
-  "card",
-  "cardFg",
-  "primary",
-  "primaryFg",
-  "accent",
-  "accentFg",
-  "muted",
-  "mutedFg",
-  "border",
-  "ring",
-  "success",
-  "warning",
-  "danger",
-] as const;
-export type ColorToken = (typeof COLOR_TOKENS)[number];
+export { COLOR_TOKENS, type ColorToken } from "./theme-core";
 
 /** Colors are stored as 6-digit hex so contrast can be computed exactly. */
 export const hexColorSchema = z
@@ -53,8 +37,7 @@ export type ColorOverrides = Partial<ColorTokens>;
 export const COLOR_MODES = ["light", "dark"] as const;
 export type ColorMode = (typeof COLOR_MODES)[number];
 
-export const THEME_MODES = ["system", "light", "dark"] as const;
-export type ThemeMode = (typeof THEME_MODES)[number];
+export { THEME_MODES, type ThemeMode } from "./theme-core";
 
 /**
  * Curated Google Fonts with Arabic support. Font metadata (family name,

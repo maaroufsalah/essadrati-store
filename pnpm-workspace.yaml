@@ -1,6 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "e2e"
   - "!apps/backend/.medusa/**"
 
 # pnpm 10 blocks dependency build scripts by default.

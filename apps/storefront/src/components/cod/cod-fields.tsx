@@ -1,6 +1,7 @@
 "use client";
 
-import { type CodCity, type Locale, resolveLocalized } from "@nocido/types";
+import type { CodCity, Locale } from "@nocido/types";
+import { resolveLocalized } from "@nocido/types/client";
 import { useTranslations } from "next-intl";
 import { useId } from "react";
 import { FieldMessage, Input, Label } from "@/components/ui/input";

@@ -52,3 +52,90 @@ jobs:
             grep -E "error|Error|ERR!|FAIL|✖" "$log" | grep -v "^\s*$" | head -25 \
               | sed -E "s/\x1b\[[0-9;]*m//g; s/^/::error title=${log}::/"
           done
+
+  e2e:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: essadrati
+          POSTGRES_PASSWORD: essadrati
+          POSTGRES_DB: essadrati_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U essadrati"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      TURBO_TELEMETRY_DISABLED: "1"
+      NEXT_TELEMETRY_DISABLED: "1"
+      DATABASE_URL: postgres://essadrati:essadrati@localhost:5432/essadrati_ci
+      MEDUSA_BACKEND_URL: http://localhost:9000
+      STORE_CORS: http://localhost:3000
+      ADMIN_CORS: http://localhost:9000
+      AUTH_CORS: http://localhost:9000,http://localhost:3000
+      SETUP_COUNTRY: ma
+      SETUP_CURRENCY: mad
+      STOREFRONT_URL: http://localhost:3000
+      NEXT_PUBLIC_MEDUSA_BACKEND_URL: http://localhost:9000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the backend and its packages
+        run: pnpm turbo run build --filter=@nocido/backend... 2>&1 | tee ci-build.log; exit "${PIPESTATUS[0]}"
+      - name: Migrate, set up and seed the store
+        working-directory: apps/backend
+        run: |
+          pnpm db:migrate
+          pnpm store:setup | tee setup.log
+          key="$(grep -oE 'pk_[a-f0-9]{32,}' setup.log | head -1)"
+          [ -n "$key" ] || { echo "::error::no publishable key in store:setup output"; exit 1; }
+          echo "NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=$key" >> "$GITHUB_ENV"
+          pnpm catalog:seed
+      - name: Start the backend
+        working-directory: apps/backend
+        run: |
+          nohup pnpm dev > ../../backend.log 2>&1 &
+          for attempt in $(seq 1 90); do curl -sf http://localhost:9000/health && exit 0; sleep 2; done
+          echo "::error::backend did not start"; tail -50 ../../backend.log; exit 1
+      - name: Build and start the storefront
+        run: |
+          pnpm --filter @nocido/storefront build 2>&1 | tee ci-storefront.log
+          nohup pnpm --filter @nocido/storefront start > storefront.log 2>&1 &
+          for attempt in $(seq 1 60); do curl -sf http://localhost:3000/api/health && break; sleep 2; done
+          for path in /fr /fr/c/asal-hor /fr/p/asal-ferrane /fr/checkout; do
+            curl -sf -o /dev/null "http://localhost:3000$path" || echo "::warning::warm-up failed for $path"
+          done
+      - name: Playwright (COD checkout, 390 / 768 / 1440)
+        run: |
+          pnpm --filter @nocido/e2e exec playwright install --with-deps chromium
+          pnpm --filter @nocido/e2e e2e 2>&1 | tee ci-e2e.log; exit "${PIPESTATUS[0]}"
+      - name: Lighthouse CI (mobile, performance >= 90)
+        run: pnpm --filter @nocido/e2e lhci 2>&1 | tee ci-lighthouse.log; exit "${PIPESTATUS[0]}"
+      - name: Report errors
+        if: failure()
+        run: |
+          for log in ci-*.log; do
+            [ -f "$log" ] || continue
+            grep -E "error|Error|✘|×|FAIL|failure" "$log" | head -25 \
+              | sed -E "s/\x1b\[[0-9;]*m//g; s/^/::error title=${log}::/"
+          done
+          tail -30 backend.log | sed -E "s/\x1b\[[0-9;]*m//g; s/^/::warning title=backend.log::/" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-reports
+          path: |
+            e2e/playwright-report
+            e2e/.lighthouseci
+            backend.log
+            storefront.log
+          retention-days: 14

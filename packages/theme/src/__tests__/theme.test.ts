@@ -133,7 +133,8 @@ describe("generateTokens", () => {
     expect(native.vars.dark["--color-bg"]).toBe("#1A120A");
     expect(native.radius).toEqual({ base: 12, card: 24, button: 9999 });
     expect(native.fonts.display.bold).toBe("Amiri_700Bold");
-    expect(native.fonts.body.medium).toBe("IBMPlexSansArabic_500Medium");
+    // IBM Plex Sans Arabic ships 400 and 700 only: medium falls back to regular.
+    expect(native.fonts.body.medium).toBe("IBMPlexSansArabic_400Regular");
   });
 });
 

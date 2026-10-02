@@ -36,6 +36,8 @@ interface CartContextValue {
   loaded: boolean;
   pending: boolean;
   open: boolean;
+  /** True once the drawer has been opened: its code is loaded on demand. */
+  opened: boolean;
   error: boolean;
   setOpen: (open: boolean) => void;
   add: (input: AddInput) => Promise<boolean>;
@@ -72,7 +74,12 @@ export function CartProvider({
   const locale = useLocale();
   const [cart, setCart] = useState<CartView>(EMPTY_CART);
   const [loaded, setLoaded] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [open, setOpenState] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const setOpen = useCallback((value: boolean) => {
+    if (value) setOpened(true);
+    setOpenState(value);
+  }, []);
   const [error, setError] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -117,7 +124,7 @@ export function CartProvider({
       }
       return ok;
     },
-    [apply, format.currency, locale],
+    [apply, format.currency, locale, setOpen],
   );
 
   const update = useCallback(
@@ -142,6 +149,7 @@ export function CartProvider({
       loaded,
       pending,
       open,
+      opened,
       error,
       setOpen,
       add,
@@ -159,9 +167,11 @@ export function CartProvider({
       freeShippingThreshold,
       loaded,
       open,
+      opened,
       pending,
       refresh,
       remove,
+      setOpen,
       update,
     ],
   );

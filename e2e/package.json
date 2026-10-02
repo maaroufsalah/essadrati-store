@@ -1,0 +1,22 @@
+{
+  "name": "@nocido/e2e",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end COD checkout (Playwright) and Lighthouse CI against a running storefront.",
+  "scripts": {
+    "e2e": "playwright test",
+    "e2e:report": "playwright show-report playwright-report",
+    "lhci": "lhci autorun --config=./lighthouserc.cjs",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1",
+    "@nocido/config": "workspace:*",
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.4",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3"
+  }
+}

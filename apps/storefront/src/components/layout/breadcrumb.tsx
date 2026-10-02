@@ -20,7 +20,11 @@ export function Breadcrumb({ items, label }: { items: Crumb[]; label: string }) 
               </>
             ) : null}
             {item.href && index < items.length - 1 ? (
-              <Link href={item.href} className="hover:text-fg underline-offset-4 hover:underline">
+              <Link
+                href={item.href}
+                prefetch={false}
+                className="hover:text-fg underline-offset-4 hover:underline"
+              >
                 {item.label}
               </Link>
             ) : (

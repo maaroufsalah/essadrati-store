@@ -116,6 +116,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |
 | 16c     | **Checkpoint 3** (avec l'app mobile)                                                     | reporté |
 | 21bis   | Infra VPS : Nginx, scripts Postgres, sauvegardes, CI/CD (préparé, rien lancé sur le VPS) | préparé |
+| 22      | Tests : Vitest, Playwright COD 3 viewports, Lighthouse CI mobile ≥ 90, CI GitHub         | fait    |
 | 23      | README final : déploiement VPS et adaptation du kit à un client                          |         |
 
 ## URLs

@@ -13,7 +13,7 @@ export interface TestimonialView {
 /** Customer reviews: swipeable row on phones, three columns from 1024px. */
 export function Testimonials({ items, label }: { items: TestimonialView[]; label: string }) {
   return (
-    <Stagger className="-mx-4 flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto px-4 pb-2 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
+    <Stagger className="-mx-4 flex snap-x snap-mandatory scroll-px-4 [scrollbar-width:none] gap-4 overflow-x-auto px-4 pb-2 lg:mx-0 lg:grid lg:scroll-px-0 lg:grid-cols-3 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
       {items.map((item) => (
         <StaggerItem key={item.key} className="w-[85%] shrink-0 snap-start sm:w-[60%] lg:w-auto">
           <figure

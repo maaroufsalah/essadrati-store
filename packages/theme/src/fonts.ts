@@ -38,7 +38,9 @@ export const FONTS: Record<FontId, FontDefinition> = {
     "IBM Plex Sans Arabic",
     "sans-serif",
     ["body", "display"],
-    [400, 500, 600, 700],
+    // Two weights only: medium and semibold text renders in 400 / 700,
+    // two font files less before the first paint (mobile LCP).
+    [400, 700],
   ),
   "noto-naskh-arabic": font(
     "noto-naskh-arabic",

@@ -37,8 +37,10 @@ export async function SiteHeader({ settings, locale, locales }: SiteHeaderProps)
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-4 sm:px-6">
           <MobileNav storeName={storeName} items={NAV_ITEMS} locales={locales} />
 
+          {/* No prefetch: the home page bundle (animations) would compete with the LCP of every page. */}
           <Link
             href="/"
+            prefetch={false}
             aria-label={t("header.homeLink", { storeName })}
             className="rounded-base flex min-w-0 items-center"
           >
