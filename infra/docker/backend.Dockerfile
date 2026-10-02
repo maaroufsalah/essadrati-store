@@ -19,6 +19,9 @@ FROM base AS builder
 COPY --from=pruner /repo/out/json/ .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY --from=pruner /repo/out/full/ .
+# The admin dashboard calls its own origin (admin domain proxied to the backend).
+ARG ADMIN_BACKEND_URL=/
+ENV ADMIN_BACKEND_URL=$ADMIN_BACKEND_URL
 RUN pnpm turbo run build --filter=@nocido/backend...
 # Self-contained production node_modules, workspace packages included.
 RUN pnpm --filter @nocido/backend deploy --legacy --prod /deploy \
@@ -26,9 +29,11 @@ RUN pnpm --filter @nocido/backend deploy --legacy --prod /deploy \
 
 # 3. Minimal runtime, non-root.
 FROM node:${NODE_VERSION}-alpine AS runner
-RUN apk add --no-cache tini
+# Chromium and Noto fonts (Latin + Arabic) render the PDF invoices.
+RUN apk add --no-cache tini chromium font-noto font-noto-arabic
 ENV NODE_ENV=production \
-    PORT=9000
+    PORT=9000 \
+    PDF_BROWSER_PATH=/usr/bin/chromium-browser
 WORKDIR /app
 COPY --from=builder --chown=node:node /deploy ./
 COPY --chmod=755 infra/docker/backend-entrypoint.sh /usr/local/bin/backend-entrypoint.sh

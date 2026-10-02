@@ -34,6 +34,9 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
   UFW, fail2ban, sshd ou `nginx.conf`. Créer uniquement des ressources préfixées
   `essadrati`. Projet déployé dans `/opt/essadrati`.
 - Toute commande non réversible sur le VPS est affichée d'abord, puis on attend l'OK.
+- Ports hôte 3120 (storefront) / 3121 (backend), sous-réseaux Docker 172.31.10.0/24 et
+  172.31.11.0/24 (172.30.0.0/16 est pris). UFW autorise déjà 5432 depuis 172.16.0.0/12 :
+  seule une ligne `pg_hba` préfixée essadrati est à ajouter. Voir `infra/README.md`.
 - Postgres n'est jamais exposé. En dev on passe par un tunnel SSH :
 
   ```sh
@@ -108,7 +111,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 14      | **Checkpoint 2**                                                                         |         |
 | 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |
 | 16c     | **Checkpoint 3** (avec l'app mobile)                                                     | reporté |
-| 21bis   | Infra VPS : Nginx, scripts Postgres, sauvegardes, CI/CD                                  |         |
+| 21bis   | Infra VPS : Nginx, scripts Postgres, sauvegardes, CI/CD (préparé, rien lancé sur le VPS) | préparé |
 | 23      | README final : déploiement VPS et adaptation du kit à un client                          |         |
 
 ## URLs

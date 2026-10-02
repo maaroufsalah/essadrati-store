@@ -1,7 +1,8 @@
 # Production on the VPS.
 # - PostgreSQL runs on the host, outside Docker. Containers reach it through
 #   host.docker.internal (mapped to the Docker host gateway).
-# - Nginx runs on the host and proxies to 127.0.0.1:9000 and 127.0.0.1:3000.
+# - Nginx runs on the host and proxies to 127.0.0.1:3121 (backend) and
+#   127.0.0.1:3120 (storefront); 3000/3001 are taken by other apps.
 #   Nothing is published on a public interface.
 # - Redis lives on an internal network with no route to the outside.
 # Compose-level values come from .env.prod (see .env.prod.example).
@@ -30,10 +31,16 @@ services:
     environment:
       NODE_ENV: production
       REDIS_URL: redis://:${REDIS_PASSWORD:?set REDIS_PASSWORD}@redis:6379
+      # PDF invoices: Chromium is installed in the image. Its sandbox needs
+      # user namespaces, unavailable with cap_drop ALL and no-new-privileges.
+      PDF_BROWSER_PATH: /usr/bin/chromium-browser
+      PDF_BROWSER_NO_SANDBOX: "true"
+    # Chromium renders in shared memory.
+    shm_size: 256m
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "127.0.0.1:${BACKEND_PORT:-9000}:9000"
+      - "127.0.0.1:${BACKEND_PORT:-3121}:9000"
     volumes:
       - ${UPLOADS_DIR:?set UPLOADS_DIR}:/app/uploads
     networks:
@@ -59,7 +66,7 @@ services:
       # Server-side calls stay on the Docker network.
       MEDUSA_INTERNAL_URL: http://backend:9000
     ports:
-      - "127.0.0.1:${STOREFRONT_PORT:-3000}:3000"
+      - "127.0.0.1:${STOREFRONT_PORT:-3120}:3000"
     networks:
       - edge
     depends_on:
@@ -99,15 +106,19 @@ services:
       retries: 10
 
 networks:
-  # Fixed subnet so the host PostgreSQL pg_hba.conf and UFW can allow it.
+  # Fixed subnet inside 172.16.0.0/12, the range the host already opens to
+  # PostgreSQL (UFW) and that the essadrati pg_hba.conf line allows.
   edge:
     driver: bridge
     ipam:
       config:
-        - subnet: ${DOCKER_EDGE_SUBNET:-172.30.10.0/24}
+        - subnet: ${DOCKER_EDGE_SUBNET:-172.31.10.0/24}
   internal:
     driver: bridge
     internal: true
+    ipam:
+      config:
+        - subnet: ${DOCKER_INTERNAL_SUBNET:-172.31.11.0/24}
 
 volumes:
   redis-data:

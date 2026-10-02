@@ -1,0 +1,37 @@
+# Lint, typecheck, unit tests and builds. Runs on pull requests and on
+# branches other than main; on main it runs through deploy.yml (workflow_call).
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TELEMETRY_DISABLED: "1"
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Build-time public values; the storefront falls back to kit defaults
+      # when the backend is unreachable during the build.
+      NEXT_PUBLIC_MEDUSA_BACKEND_URL: http://localhost:9000
+      NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: pk_ci
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm turbo run build --filter=@nocido/backend... --filter=@nocido/storefront...

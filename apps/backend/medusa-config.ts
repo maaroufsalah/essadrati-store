@@ -81,7 +81,10 @@ module.exports = defineConfig({
   },
   admin: {
     disable: process.env.DISABLE_ADMIN === "true",
-    backendUrl: BACKEND_URL,
+    // Inlined into the dashboard at build time. In production the dashboard
+    // is served on its own domain, proxied to this backend: "/" keeps its
+    // calls same-origin and survives a domain change without a rebuild.
+    backendUrl: env("ADMIN_BACKEND_URL", IS_PRODUCTION ? "/" : BACKEND_URL),
   },
   // UI-only admin plugin (apps/admin): StoreSettings and theme pages.
   plugins: [{ resolve: "@nocido/admin", options: {} }],

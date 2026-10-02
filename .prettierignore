@@ -7,3 +7,6 @@ dist
 .expo
 coverage
 playwright-report
+
+# Nginx snippets (not a Prettier language)
+infra/nginx/*.inc

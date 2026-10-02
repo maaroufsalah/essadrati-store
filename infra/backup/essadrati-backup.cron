@@ -1,0 +1,6 @@
+# Sauvegarde quotidienne essadrati (base + médias) - 05h00
+# (ibhar 03h00, pg-hote 03h15, delivery 03h30, wimo 04h00, kine 04h30 :
+#  on décale pour ne pas cumuler les I/O)
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+0 5 * * * root /opt/essadrati/infra/backup/essadrati-backup.sh >/dev/null 2>&1
