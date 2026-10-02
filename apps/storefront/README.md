@@ -54,6 +54,19 @@ Les réglages sont lus de façon tolérante (`settingsFallback`) : une section a
 invalide reprend les défauts du kit sans faire tomber le reste (décalage de versions pendant
 un déploiement).
 
+## Catégorie
+
+`/[locale]/c/[handle]` : grille 2/3/4 colonnes, filtres prix et poids (feuille en bas sur
+mobile et tablette, barre latérale dès 1024 px), tri (recommandés, prix, nouveautés),
+pagination de 12. L'état vit dans l'URL (`?w=500g,1kg&min=100&max=400&sort=price_asc&page=2`) :
+formulaires GET qui marchent sans JavaScript, appliqués côté client avec JavaScript.
+
+L'API store de Medusa ne filtre ni ne trie par prix : les produits de la catégorie (jusqu'à
+100, en cache `catalog`) sont filtrés en mémoire (`lib/category.ts`, testé). La catégorie est
+résolue avant le streaming (pas de `loading.tsx`) : un handle inconnu renvoie un vrai 404 ;
+les résultats sont streamés derrière un squelette. Métadonnées et hreflang par langue
+(`lib/seo.ts`).
+
 ## Messages
 
 `messages/{ar,fr,en}.json` contiennent uniquement le texte d'interface. `fr.json` est la

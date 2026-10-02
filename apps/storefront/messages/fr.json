@@ -64,5 +64,29 @@
     "originalPrice": "Prix initial",
     "ratingLabel": "Noté {rating} sur 5, {count} avis",
     "weight": "Poids"
+  },
+  "category": {
+    "breadcrumb": "Fil d'Ariane",
+    "filters": "Filtres",
+    "price": "Prix",
+    "min": "Min.",
+    "max": "Max.",
+    "weight": "Poids / contenance",
+    "apply": "Appliquer",
+    "reset": "Réinitialiser",
+    "sort": "Trier par",
+    "sortFeatured": "Recommandés",
+    "sortPriceAsc": "Prix croissant",
+    "sortPriceDesc": "Prix décroissant",
+    "sortNewest": "Nouveautés",
+    "results": "{count, plural, =0 {Aucun produit} one {{countText} produit} other {{countText} produits}}",
+    "empty": "Aucun produit ne correspond à ces filtres.",
+    "pagination": "Pagination",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {page}",
+    "currentPage": "Page {page}, page actuelle",
+    "metaTitle": "{category}",
+    "metaDescription": "{category} : découvrez notre sélection, livrée partout au Maroc avec paiement à la livraison."
   }
 }

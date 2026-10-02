@@ -13,8 +13,9 @@ function keys(value: unknown, prefix = ""): string[] {
   );
 }
 
+/** Distinct placeholders: plural forms differ per language (Arabic has six). */
 function placeholders(text: string): string[] {
-  return [...text.matchAll(/\{(\w+)\}/g)].map((match) => match[1] ?? "").sort();
+  return [...new Set([...text.matchAll(/\{(\w+)\}/g)].map((match) => match[1] ?? ""))].sort();
 }
 
 describe("messages", () => {

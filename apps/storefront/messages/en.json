@@ -64,5 +64,29 @@
     "originalPrice": "Regular price",
     "ratingLabel": "Rated {rating} out of 5, {count} reviews",
     "weight": "Weight"
+  },
+  "category": {
+    "breadcrumb": "Breadcrumb",
+    "filters": "Filters",
+    "price": "Price",
+    "min": "Min",
+    "max": "Max",
+    "weight": "Weight / size",
+    "apply": "Apply",
+    "reset": "Reset",
+    "sort": "Sort by",
+    "sortFeatured": "Recommended",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "sortNewest": "Newest",
+    "results": "{count, plural, =0 {No products} one {{countText} product} other {{countText} products}}",
+    "empty": "No product matches these filters.",
+    "pagination": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {page}",
+    "currentPage": "Page {page}, current page",
+    "metaTitle": "{category}",
+    "metaDescription": "{category}: discover our selection, delivered across Morocco with cash on delivery."
   }
 }

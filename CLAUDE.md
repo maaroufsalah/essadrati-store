@@ -96,7 +96,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 10      | Module CMS `pages`                                                                       | fait    |
 | 11      | Storefront UI kit                                                                        | fait    |
 | 12      | Storefront accueil                                                                       | fait    |
-| 13      | Storefront catégorie                                                                     |         |
+| 13      | Storefront catégorie                                                                     | fait    |
 | 14      | Storefront produit + commande COD                                                        |         |
 | 15–21   | Panier/checkout, suivi commande, CMS, tracking, SEO, notifications, PDF                  |         |
 | 14      | **Checkpoint 2**                                                                         |         |
