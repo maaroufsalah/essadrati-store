@@ -53,7 +53,20 @@
     "shopCategory": "Voir {category}",
     "trustTitle": "Nos engagements",
     "testimonialFrom": "{name}, {city}",
-    "viewProduct": "Voir le produit"
+    "viewProduct": "Voir le produit",
+    "slider": {
+      "label": "À la une",
+      "carousel": "carrousel",
+      "slide": "diapositive",
+      "previous": "Diapositive précédente",
+      "next": "Diapositive suivante",
+      "pause": "Mettre en pause le défilement",
+      "play": "Reprendre le défilement",
+      "cta": "Découvrir",
+      "slideOf": "{index} sur {count}",
+      "goTo": "Aller à la diapositive {index}"
+    },
+    "bannerCta": "Découvrir"
   },
   "notFound": {
     "title": "Page introuvable",

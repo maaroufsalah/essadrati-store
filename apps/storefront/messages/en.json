@@ -53,7 +53,20 @@
     "shopCategory": "Shop {category}",
     "trustTitle": "Our commitments",
     "testimonialFrom": "{name}, {city}",
-    "viewProduct": "View product"
+    "viewProduct": "View product",
+    "slider": {
+      "label": "Featured",
+      "carousel": "carousel",
+      "slide": "slide",
+      "previous": "Previous slide",
+      "next": "Next slide",
+      "pause": "Pause autoplay",
+      "play": "Resume autoplay",
+      "cta": "Discover",
+      "slideOf": "{index} of {count}",
+      "goTo": "Go to slide {index}"
+    },
+    "bannerCta": "Shop now"
   },
   "notFound": {
     "title": "Page not found",

@@ -53,7 +53,20 @@
     "shopCategory": "تسوق {category}",
     "trustTitle": "التزاماتنا",
     "testimonialFrom": "{name}، {city}",
-    "viewProduct": "عرض المنتج"
+    "viewProduct": "عرض المنتج",
+    "slider": {
+      "label": "عروض مميزة",
+      "carousel": "عرض شرائح",
+      "slide": "شريحة",
+      "previous": "الشريحة السابقة",
+      "next": "الشريحة التالية",
+      "pause": "إيقاف التمرير التلقائي",
+      "play": "تشغيل التمرير التلقائي",
+      "cta": "اكتشف",
+      "slideOf": "{index} من {count}",
+      "goTo": "الانتقال إلى الشريحة {index}"
+    },
+    "bannerCta": "تسوق الآن"
   },
   "notFound": {
     "title": "الصفحة غير موجودة",

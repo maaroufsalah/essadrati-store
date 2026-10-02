@@ -13,3 +13,13 @@
     color: var(--color-primary-fg);
   }
 }
+
+/* Hero slider: progress of the active dot, which also times the autoplay. */
+@keyframes slider-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
