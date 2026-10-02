@@ -227,5 +227,16 @@ réordonnancement doit lister **tous** les ids (liste périmée refusée : `reor
 L'ordre et l'affichage des blocs de l'accueil (`homepage.sections`) et les options du slider
 (`homepage.slider`) restent dans les StoreSettings.
 
+**Nettoyage des images** (`src/lib/media-cleanup.ts`) : quand une slide ou une bannière
+remplace une image, ou est supprimée, le fichier abandonné est effacé du File Module
+(`static/`), après la revalidation du storefront, sauf s'il est encore référencé (autres slides
+ou bannières, StoreSettings, pages CMS, produits ; recherche par id et URL). Un échec ne fait
+que journaliser. L'admin supprime aussi les fichiers téléversés dans un éditeur puis jamais
+enregistrés (`DELETE /admin/uploads/:id`).
+
+**Recherche de liens** : `GET /admin/home-links?type=category|product&q=…&locale=fr` renvoie 10
+cibles dont le handle, le nom de base ou le nom traduit (table `translation`) contient `q` ;
+`&handle=…` renvoie celle qui a ce handle (libellé d'un lien enregistré).
+
 `catalog:seed` crée 3 slides et 3 bannières (`data/seed/home.json`, visuels SVG générés) tant
 que les listes sont vides ; `SEED_HOME=force` les recrée.

@@ -11,6 +11,7 @@ export const KIT_ROUTES = {
   adminHeroSlides: "/admin/hero-slides",
   categoryBanners: "/store/category-banners",
   adminCategoryBanners: "/admin/category-banners",
+  adminHomeLinks: "/admin/home-links",
   cities: "/store/cities",
   codOrders: "/store/cod/orders",
   codOrderLookup: "/store/cod/orders/lookup",
