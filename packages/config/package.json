@@ -13,7 +13,8 @@
     "./eslint/node": "./eslint/node.js",
     "./eslint/next": "./eslint/next.js",
     "./eslint/guards": "./eslint/guards.js",
-    "./tailwind/preset.css": "./tailwind/preset.css"
+    "./tailwind/preset.css": "./tailwind/preset.css",
+    "./eslint/react": "./eslint/react.js"
   },
   "scripts": {
     "lint": "eslint .",

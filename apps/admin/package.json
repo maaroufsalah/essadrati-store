@@ -1,0 +1,65 @@
+{
+  "name": "@nocido/admin",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Medusa admin plugin (UI only): StoreSettings and theme pages.",
+  "license": "UNLICENSED",
+  "files": [
+    ".medusa/server"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    "./admin": {
+      "import": "./.medusa/server/src/admin/index.mjs",
+      "require": "./.medusa/server/src/admin/index.js",
+      "default": "./.medusa/server/src/admin/index.js"
+    },
+    "./*": "./.medusa/server/src/*.js"
+  },
+  "scripts": {
+    "build": "medusa plugin:build",
+    "typecheck": "tsc --noEmit -p src/admin/tsconfig.json",
+    "lint": "eslint .",
+    "clean": "node -e \"require('fs').rmSync('.medusa',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@hookform/resolvers": "5.9.1",
+    "@nocido/api-client": "workspace:*",
+    "@nocido/theme": "workspace:*",
+    "@nocido/types": "workspace:*",
+    "react-hook-form": "7.89.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@medusajs/admin-sdk": "2.21.1",
+    "@medusajs/cli": "2.21.1",
+    "@medusajs/framework": "2.21.1",
+    "@medusajs/icons": "2.21.1",
+    "@medusajs/js-sdk": "2.21.1",
+    "@medusajs/medusa": "2.21.1",
+    "@medusajs/ui": "4.2.5",
+    "@nocido/config": "workspace:*",
+    "@swc/core": "1.16.2",
+    "@types/node": "22.20.4",
+    "eslint": "9.39.5",
+    "prop-types": "15.8.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3",
+    "vite": "7.3.6",
+    "yalc": "1.0.0-pre.53"
+  },
+  "peerDependencies": {
+    "@medusajs/admin-sdk": "2.21.1",
+    "@medusajs/framework": "2.21.1",
+    "@medusajs/icons": "2.21.1",
+    "@medusajs/js-sdk": "2.21.1",
+    "@medusajs/ui": "4.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

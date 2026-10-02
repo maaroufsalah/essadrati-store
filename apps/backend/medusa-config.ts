@@ -83,6 +83,8 @@ module.exports = defineConfig({
     disable: process.env.DISABLE_ADMIN === "true",
     backendUrl: BACKEND_URL,
   },
+  // UI-only admin plugin (apps/admin): StoreSettings and theme pages.
+  plugins: [{ resolve: "@nocido/admin", options: {} }],
   featureFlags: {
     translation: true,
   },

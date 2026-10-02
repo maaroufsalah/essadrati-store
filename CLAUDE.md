@@ -89,7 +89,7 @@ Ne pas changer de version majeure ni de mineure sans accord explicite.
 | 4       | Module Medusa `store-settings` (API admin + store)                                       | fait    |
 | 5       | Fondations storefront : i18n RTL, thème sans flash, settings, header/footer              | fait    |
 |         | **Checkpoint 1**                                                                         | validé  |
-| 6       | Plugin admin : pages Settings                                                            |         |
+| 6       | Plugin admin : pages Settings                                                            | fait    |
 | 7–13    | À détailler (plan fourni par Salah-Eddine)                                               |         |
 | 14      | **Checkpoint 2**                                                                         |         |
 | 16a–16d | App mobile Expo (`apps/mobile`) : **reportée après la mise en production du storefront** | reporté |

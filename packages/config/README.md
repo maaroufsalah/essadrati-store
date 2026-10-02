@@ -20,12 +20,13 @@ Configuration partagée par toutes les apps et tous les packages du kit.
 
 ## ESLint (flat config, ESLint 9)
 
-| Export                         | Pour                                                 |
-| ------------------------------ | ---------------------------------------------------- |
-| `@nocido/config/eslint/base`   | TypeScript typé, `any` interdit, imports de types    |
-| `@nocido/config/eslint/node`   | Backend et scripts                                   |
-| `@nocido/config/eslint/next`   | Storefront : Next, hooks React, a11y, garde-fous kit |
-| `@nocido/config/eslint/guards` | Garde-fous seuls, réutilisés par le mobile           |
+| Export                         | Pour                                                     |
+| ------------------------------ | -------------------------------------------------------- |
+| `@nocido/config/eslint/base`   | TypeScript typé, `any` interdit, imports de types        |
+| `@nocido/config/eslint/node`   | Backend et scripts                                       |
+| `@nocido/config/eslint/next`   | Storefront : Next, hooks React, a11y, garde-fous kit     |
+| `@nocido/config/eslint/guards` | Garde-fous seuls, réutilisés par le mobile               |
+| `@nocido/config/eslint/react`  | Plugin admin Medusa : hooks React, a11y, sans garde-fous |
 
 ```js
 // apps/storefront/eslint.config.js
